@@ -4,6 +4,9 @@ import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 
 class RetrofitClient {
+    private val localServer = "http://10.0.2.2:3000"
+    private val cloudServer = "https://peppermint-soulkey.appspot.com/"
+
     companion object {
         private val retrofitClient: RetrofitClient = RetrofitClient()
 
@@ -14,11 +17,10 @@ class RetrofitClient {
 
     fun buildRetrofit(): RetrofitService {
         val retrofit: Retrofit? = Retrofit.Builder()
-            .baseUrl("http://10.0.2.2:3000")
+            .baseUrl(localServer)
             .addConverterFactory(GsonConverterFactory.create())
             .build()
 
-        val service: RetrofitService = retrofit!!.create(RetrofitService::class.java)
-        return service
+        return retrofit!!.create(RetrofitService::class.java)
     }
 }

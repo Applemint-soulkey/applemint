@@ -50,8 +50,8 @@ class DetailActivity : AppCompatActivity() {
                 //TODO: Modify Database
                 //TODO: Call dropbox api to save content_url
                 //TODO: Save check data to Server
-                this.onBackPressed()
-                Toast.makeText(this, "Save contents on Dropbox!", Toast.LENGTH_SHORT).show()
+                val articleFbId = intent.getStringExtra("fb_id")
+                detailViewModel.requestDapina(articleFbId)
             }
             R.id.item_browser -> {
                 val originUrl = findViewById<TextView>(R.id.tv_detail_url).text

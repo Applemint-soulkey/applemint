@@ -1,6 +1,8 @@
 package com.soulkey.applemint.viewmodel
 
 import android.app.Application
+import android.content.Context
+import android.content.Intent
 import android.util.Log
 import android.view.View
 import android.widget.Toast
@@ -8,7 +10,9 @@ import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import com.google.gson.JsonObject
+import com.soulkey.applemint.DetailActivity
 import com.soulkey.applemint.DetailActivity.ExternalLink
+import com.soulkey.applemint.MainActivity
 import com.soulkey.applemint.model.article.ArticleRepository
 import com.soulkey.applemint.model.network.RetrofitClient
 import org.jsoup.Jsoup
@@ -22,6 +26,20 @@ class DetailViewModel(application: Application) : AndroidViewModel(application){
 
     fun deleteById(fbId:String){
         repository.deleteById(fbId)
+    }
+
+    fun requestDapina(fbId: String){
+        val call = RetrofitClient.getInstance().buildRetrofit().dapina(fbId)
+        call.enqueue(object: Callback<JsonObject>{
+            override fun onFailure(call: Call<JsonObject>, t: Throwable) {
+                Log.d("sulfur", t.message)
+                Toast.makeText(getApplication(), "dapina fail.. Check peppermint", Toast.LENGTH_SHORT).show()
+            }
+            override fun onResponse(call: Call<JsonObject>, response: Response<JsonObject>) {
+                repository.deleteById(fbId)
+                //TODO implements Acitivity Navigator
+            }
+        })
     }
 
     fun toggleBookmark(id: String, value:Boolean, view: View){

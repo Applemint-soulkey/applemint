@@ -15,4 +15,7 @@ interface RetrofitService {
 
     @GET("bookmark")
     fun bookmark(@Query("id") id: String, @Query("value") value: Boolean): Call<JsonObject>
+
+    @GET("dapina")
+    fun dapina(@Query("id") id: String): Call<JsonObject>
 }
