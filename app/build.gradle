@@ -44,6 +44,7 @@ dependencies {
     //firebase
     implementation 'com.google.firebase:firebase-analytics:17.2.0'
     implementation 'com.google.firebase:firebase-auth:19.1.0'
+    implementation 'com.google.firebase:firebase-firestore:20.2.0'
 
     //Room
     implementation "androidx.room:room-runtime:$room_version"
@@ -60,6 +61,8 @@ dependencies {
 
     //RxKotlin
     implementation "io.reactivex.rxjava2:rxkotlin:$rxkotlin_version"
+
+    debugImplementation 'com.amitshekhar.android:debug-db:1.0.6'
 
     androidTestImplementation 'androidx.test:runner:1.2.0'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.2.0'

@@ -20,12 +20,11 @@ class LoginActivity : AppCompatActivity() {
             val inputPassword = et_password.text.toString()
             if(inputEmail.isNotEmpty() and inputPassword.isNotEmpty()){
                 auth.signInWithEmailAndPassword(inputEmail, inputPassword).addOnCompleteListener {
-                    when(it.isSuccessful){
-                        true-> {
-                            startActivity(Intent(applicationContext, MainActivity::class.java))
-                            finish()
-                        }
-                        false-> Toast.makeText(applicationContext, "Login Failed!", Toast.LENGTH_SHORT).show()
+                    if (it.isSuccessful){
+                        startActivity(Intent(applicationContext, MainActivity::class.java))
+                        finish()
+                    } else {
+                        Toast.makeText(applicationContext, "Login Failed!", Toast.LENGTH_SHORT).show()
                     }
                 }
             }
