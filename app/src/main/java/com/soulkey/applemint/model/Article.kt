@@ -19,14 +19,8 @@ data class Article(
     @ColumnInfo(name = "type")
     val type: String,
 
-    @ColumnInfo(name = "title")
-    val title: String,
-
-    @ColumnInfo(name = "description")
-    val description: String,
-
-    @ColumnInfo(name = "thumbnail")
-    val thumbnail: String,
+    @ColumnInfo(name = "content")
+    val content: String,
 
     @ColumnInfo(name = "timestamp")
     val timestamp: Date

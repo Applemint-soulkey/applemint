@@ -24,7 +24,7 @@
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintBottom_toTopOf="@id/til_et_email">
 
-            <TextView
+            <com.google.android.material.textview.MaterialTextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="APPLEMINT"
@@ -36,15 +36,16 @@
             android:id="@+id/til_et_email"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginLeft="20dp"
+            android:layout_marginRight="20dp"
+            android:hint="E-mail"
             app:layout_constraintTop_toBottomOf="@id/container_title"
             app:layout_constraintBottom_toTopOf="@id/til_et_password">
-            <EditText
+            <com.google.android.material.textfield.TextInputEditText
                 android:id="@+id/et_email"
+                android:background="@color/white"
                 android:layout_width="match_parent"
                 android:layout_height="60dp"
-                android:layout_marginLeft="20dp"
-                android:layout_marginRight="20dp"
-                android:hint="E-mail"
                 android:text="@string/temp_login_email"
                 android:fontFamily="@font/opensans_bold"
                 android:singleLine="true"
@@ -55,35 +56,39 @@
             android:id="@+id/til_et_password"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginLeft="20dp"
+            android:layout_marginRight="20dp"
+            android:hint="Password"
             app:layout_constraintTop_toBottomOf="@id/til_et_email"
             app:layout_constraintBottom_toBottomOf="parent">
 
-            <EditText
+            <com.google.android.material.textfield.TextInputEditText
                 android:id="@+id/et_password"
+                android:background="@color/white"
                 android:layout_width="match_parent"
                 android:layout_height="60dp"
-                android:layout_marginLeft="20dp"
-                android:layout_marginRight="20dp"
+
                 android:fontFamily="@font/opensans_bold"
-                android:hint="Password"
                 android:text="@string/temp_login_password"
                 android:singleLine="true"
                 android:inputType="textPassword"/>
 
         </com.google.android.material.textfield.TextInputLayout>
 
+
+
     </androidx.constraintlayout.widget.ConstraintLayout>
 
-    <Button
+    <com.google.android.material.button.MaterialButton
         android:id="@+id/btn_login"
         android:layout_width="match_parent"
         android:layout_height="60dp"
-        android:layout_marginLeft="10dp"
-        android:layout_marginRight="10dp"
-        android:layout_marginBottom="10dp"
+        android:layout_marginLeft="20dp"
+        android:layout_marginRight="20dp"
         android:text="LOGIN"
-        android:textColor="@color/white"
         android:background="@color/color_1d1d1d"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintBottom_toBottomOf="parent"/>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

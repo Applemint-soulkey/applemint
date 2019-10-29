@@ -12,9 +12,12 @@ import com.soulkey.applemint.model.Article
 import kotlinx.android.synthetic.main.fragment_articles.*
 import kotlinx.android.synthetic.main.item_article.view.*
 import org.koin.androidx.viewmodel.ext.android.sharedViewModel
+import android.content.Intent
+import android.net.Uri
+
 
 class ArticleFragment : Fragment() {
-    private val articleViewModel by sharedViewModel<MainViewModel>()
+    internal val articleViewModel by sharedViewModel<MainViewModel>()
     lateinit var articleAdapter: ArticleAdapter
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -47,10 +50,22 @@ class ArticleFragment : Fragment() {
 
         override fun onBindViewHolder(holder: ArticleViewHolder, position: Int) {
             val data = items[position]
-            if (data.title.isNotEmpty()) holder.itemView.tv_article_title.text = data.title
+            if (data.content.isNotEmpty()) holder.itemView.tv_article_title.text = data.content
             else holder.itemView.tv_article_title.text = data.url
             holder.itemView.tv_article_desc.text = data.url
             holder.itemView.tv_article_type.text = data.type
+            when (data.type) {
+                "youtube"-> holder.itemView.tv_article_type.setBackgroundResource(R.drawable.backgroud_article_youtube_tag)
+                "twitch"-> holder.itemView.tv_article_type.setBackgroundResource(R.drawable.backgroud_article_twtich_tag)
+                "battlepage"-> holder.itemView.tv_article_type.setBackgroundResource(R.drawable.backgroud_article_battlepage_tag)
+                "dogdrip"-> holder.itemView.tv_article_type.setBackgroundResource(R.drawable.backgroud_article_dogdrip_tag)
+                "fmkorea"-> holder.itemView.tv_article_type.setBackgroundResource(R.drawable.backgroud_article_fmkorea_tag)
+                "direct"-> holder.itemView.tv_article_type.setBackgroundResource(R.drawable.backgroud_article_direct_tag)
+                "imgur"-> holder.itemView.tv_article_type.setBackgroundResource(R.drawable.backgroud_article_imgur_tag)
+                else-> holder.itemView.tv_article_type.setBackgroundResource(R.drawable.backgroud_article_etc_tag)
+            }
+            holder.itemView.setOnClickListener {startActivity(Intent(Intent.ACTION_VIEW, Uri.parse(data.url)))}
+            holder.itemView.btn_remove_article.setOnClickListener {articleViewModel.removeArticle(data.fb_id)}
         }
 
         inner class ArticleViewHolder(itemView: View): RecyclerView.ViewHolder(itemView)

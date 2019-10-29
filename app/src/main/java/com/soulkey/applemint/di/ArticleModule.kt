@@ -10,7 +10,9 @@ import org.koin.androidx.viewmodel.dsl.viewModel
 import org.koin.dsl.module
 
 val ArticleModule = module {
-    single { Room.databaseBuilder(get(), AppDatabase::class.java, "app_database").allowMainThreadQueries().build() }
+    single { Room.databaseBuilder(get(), AppDatabase::class.java, "app_database")
+        .fallbackToDestructiveMigration()
+        .allowMainThreadQueries().build() }
     single { get<AppDatabase>().articleDao() }
 
     single<ArticleRepository> { ArticleRepositoryImpl(get()) }

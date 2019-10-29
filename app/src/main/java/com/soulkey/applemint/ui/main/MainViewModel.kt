@@ -13,4 +13,8 @@ class MainViewModel(private val articleRepo: ArticleRepository) : ViewModel() {
     fun getArticles(): LiveData<List<Article>>{
         return articleRepo.getArticles()
     }
+
+    fun removeArticle(fb_id: String) {
+        articleRepo.removeArticle(fb_id)
+    }
 }

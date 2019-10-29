@@ -6,4 +6,5 @@ import com.soulkey.applemint.model.Article
 interface ArticleRepository {
     fun loadArticles()
     fun getArticles(): LiveData<List<Article>>
+    fun removeArticle(id: String)
 }

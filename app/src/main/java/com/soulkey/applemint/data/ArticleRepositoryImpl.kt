@@ -14,6 +14,13 @@ class ArticleRepositoryImpl(private val articleDao: ArticleDao) : ArticleReposit
         return articleDao.getAllArticles()
     }
 
+    override fun removeArticle(id: String) {
+        db.collection("article").document(id).delete().addOnSuccessListener {
+            articleDao.deleteByFbId(id)
+            Timber.v("diver:/ $id delete success")
+        }
+    }
+
     override fun loadArticles() {
         val insertList = mutableListOf<Article>()
         db.collection("article").get().addOnSuccessListener {
@@ -25,9 +32,7 @@ class ArticleRepositoryImpl(private val articleDao: ArticleDao) : ArticleReposit
                     document.id,
                     data["url"].toString(),
                     data["type"].toString(),
-                    data["title"].toString(),
-                    data["description"].toString(),
-                    data["thumbnail"].toString(),
+                    data["textContent"].toString(),
                     (data["timestamp"] as Timestamp).toDate()
                 )
                 if (!fbIds.contains(document.id)) insertList.add(article)

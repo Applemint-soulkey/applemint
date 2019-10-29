@@ -30,14 +30,15 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
     override fun onNavigationItemSelected(item: MenuItem): Boolean {
         when (item.itemId){
             R.id.item_home-> {
+                tv_main_title.text = getString(R.string.app_name)
                 supportFragmentManager.beginTransaction().apply {
                     replace(R.id.container_main_body, DashboardFragment())
-                    addToBackStack(null)
-                }.commit()            }
+                }.commit()
+            }
             R.id.item_article->{
+                tv_main_title.text = getString(R.string.articles)
                 supportFragmentManager.beginTransaction().apply {
                     replace(R.id.container_main_body, ArticleFragment())
-                    addToBackStack(null)
                 }.commit()
             }
             R.id.item_logout ->{
