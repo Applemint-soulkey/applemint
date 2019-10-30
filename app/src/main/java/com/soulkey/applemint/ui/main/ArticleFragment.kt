@@ -14,7 +14,11 @@ import kotlinx.android.synthetic.main.item_article.view.*
 import org.koin.androidx.viewmodel.ext.android.sharedViewModel
 import android.content.Intent
 import android.net.Uri
-
+import android.view.animation.Animation
+import android.view.animation.Transformation
+import android.view.animation.TranslateAnimation
+import androidx.constraintlayout.widget.ConstraintLayout
+import androidx.core.view.children
 
 class ArticleFragment : Fragment() {
     internal val articleViewModel by sharedViewModel<MainViewModel>()
@@ -33,15 +37,61 @@ class ArticleFragment : Fragment() {
         recycler_article.apply {
             adapter = articleAdapter
         }
+
         articleViewModel.getArticles().observe(this, Observer {
-            articleAdapter.items = it
-            articleAdapter.notifyDataSetChanged()
+            articleAdapter.articles = it
+            articleAdapter.filterItems()
         })
+        articleViewModel.filters.observe(this, Observer {
+            articleAdapter.filters = it
+            articleAdapter.filterItems()
+        })
+        articleViewModel.isFilterOpen.observe(this, Observer {
+            if (it) {
+
+            }else {
+
+            }
+        })
+
+        articleViewModel.filters.value = getCheckedFilter()
+        for (chip in chip_group_filter_article.children){
+            chip.setOnClickListener(ChipStateChangedListener())
+        }
     }
 
-    inner class ArticleAdapter(var items: List<Article>) : RecyclerView.Adapter<ArticleAdapter.ArticleViewHolder>() {
+
+    inner class ChipStateChangedListener : View.OnClickListener{
+        override fun onClick(v: View?) {
+            articleViewModel.filters.value = getCheckedFilter()
+        }
+    }
+
+    internal fun getCheckedFilter(): List<String>{
+        val filterList = mutableListOf<String>()
+        if (chip_filter_battlepage.isChecked) filterList.add("battlepage")
+        if (chip_filter_dogdrip.isChecked) filterList.add("dogdrip")
+        if (chip_filter_fmkorea.isChecked) filterList.add("fmkorea")
+        if (chip_filter_direct.isChecked) filterList.add("direct")
+        if (chip_filter_etc.isChecked) filterList.add("etc")
+        if (chip_filter_imgur.isChecked) filterList.add("imgur")
+        if (chip_filter_twtich.isChecked) filterList.add("twitch")
+        if (chip_filter_youtube.isChecked) filterList.add("youtube")
+        return filterList
+    }
+
+    inner class ArticleAdapter(list: List<Article>) : RecyclerView.Adapter<ArticleAdapter.ArticleViewHolder>() {
+        var articles = list
+        var filters = listOf<String>()
+        lateinit var items: List<Article>
+
         override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ArticleViewHolder {
             return ArticleViewHolder(LayoutInflater.from(context).inflate(R.layout.item_article, parent, false))
+        }
+
+        fun filterItems() {
+            items = if (filters.isNotEmpty()) articles.filter { filters.contains(it.type) } else articles
+            notifyDataSetChanged()
         }
 
         override fun getItemCount(): Int {

@@ -19,7 +19,7 @@ interface ArticleDao {
     @Query("DELETE FROM tb_article WHERE fb_id=:id")
     fun deleteByFbId(id: String)
 
-    @Query("SELECT * FROM tb_article ORDER BY type DESC")
+    @Query("SELECT * FROM tb_article ORDER BY timestamp DESC")
     fun getAllArticles(): LiveData<List<Article>>
 
     @Query("SELECT fb_id FROM tb_article")

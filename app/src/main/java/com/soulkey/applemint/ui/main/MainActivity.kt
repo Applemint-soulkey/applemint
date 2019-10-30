@@ -1,10 +1,15 @@
 package com.soulkey.applemint.ui.main
 
 import android.content.Intent
+import android.opengl.Visibility
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.MenuItem
+import android.view.View
+import android.view.animation.Animation
+import android.view.animation.Transformation
 import androidx.core.view.GravityCompat
+import androidx.lifecycle.Observer
 import com.google.android.material.navigation.NavigationView
 import com.google.firebase.auth.FirebaseAuth
 import com.soulkey.applemint.R
@@ -19,24 +24,34 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         super.onCreate(savedInstanceState)
         setContentView(R.layout.main_activity)
         mainViewModel.initialize()
+        mainViewModel.isFilterOpen.value = true
         navigation_main.setNavigationItemSelectedListener(this)
 
         iv_btn_menu.setOnClickListener {
             drawer_main.openDrawer(GravityCompat.START)
         }
 
+        iv_article_filter.setOnClickListener {
+            mainViewModel.isFilterOpen.value = !mainViewModel.isFilterOpen.value!!
+        }
+
+        supportFragmentManager.beginTransaction().apply {
+            replace(R.id.container_main_body, DashboardFragment())
+        }.commit()
     }
 
     override fun onNavigationItemSelected(item: MenuItem): Boolean {
         when (item.itemId){
             R.id.item_home-> {
                 tv_main_title.text = getString(R.string.app_name)
+                iv_article_filter.visibility = View.INVISIBLE
                 supportFragmentManager.beginTransaction().apply {
                     replace(R.id.container_main_body, DashboardFragment())
                 }.commit()
             }
             R.id.item_article->{
                 tv_main_title.text = getString(R.string.articles)
+                iv_article_filter.visibility = View.VISIBLE
                 supportFragmentManager.beginTransaction().apply {
                     replace(R.id.container_main_body, ArticleFragment())
                 }.commit()

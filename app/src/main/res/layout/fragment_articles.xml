@@ -6,6 +6,114 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/container_chip_filter"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <com.google.android.material.chip.ChipGroup
+            android:id="@+id/chip_group_filter_article"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:paddingStart="8dp"
+            android:paddingEnd="8dp"
+            android:paddingTop="8dp"
+            android:paddingBottom="16dp"
+            android:background="@color/color_1d1d1d"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent">
+            <com.google.android.material.chip.Chip
+                android:id="@+id/chip_filter_battlepage"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="battlepage"
+                android:textColor="@color/white"
+                android:checkable="true"
+                app:chipIconVisible="false"
+                app:closeIconVisible="false"
+                app:checkedIcon="@drawable/ic_check_circle_24px"
+                app:chipBackgroundColor="@color/color_battlepage"/>
+            <com.google.android.material.chip.Chip
+                android:id="@+id/chip_filter_dogdrip"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="dogdrip"
+                android:textColor="@color/white"
+                android:checkable="true"
+                app:chipIconVisible="false"
+                app:closeIconVisible="false"
+                app:checkedIcon="@drawable/ic_check_circle_24px"
+                app:chipBackgroundColor="@color/color_dogdrip"/>
+            <com.google.android.material.chip.Chip
+                android:id="@+id/chip_filter_fmkorea"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="fmkorea"
+                android:textColor="@color/white"
+                android:checkable="true"
+                app:chipIconVisible="false"
+                app:closeIconVisible="false"
+                app:checkedIcon="@drawable/ic_check_circle_24px"
+                app:chipBackgroundColor="@color/color_fmkorea"/>
+            <com.google.android.material.chip.Chip
+                android:id="@+id/chip_filter_imgur"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="imgur"
+                android:textColor="@color/white"
+                android:checkable="true"
+                app:chipIconVisible="false"
+                app:closeIconVisible="false"
+                app:checkedIcon="@drawable/ic_check_circle_24px"
+                app:chipBackgroundColor="@color/color_imgur"/>
+            <com.google.android.material.chip.Chip
+                android:id="@+id/chip_filter_youtube"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="youtube"
+                android:textColor="@color/white"
+                android:checkable="true"
+                app:chipIconVisible="false"
+                app:closeIconVisible="false"
+                app:checkedIcon="@drawable/ic_check_circle_24px"
+                app:chipBackgroundColor="@color/color_youtube"/>
+            <com.google.android.material.chip.Chip
+                android:id="@+id/chip_filter_twtich"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="twitch"
+                android:textColor="@color/white"
+                android:checkable="true"
+                app:chipIconVisible="false"
+                app:closeIconVisible="false"
+                app:checkedIcon="@drawable/ic_check_circle_24px"
+                app:chipBackgroundColor="@color/color_twitch"/>
+            <com.google.android.material.chip.Chip
+                android:id="@+id/chip_filter_direct"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="direct"
+                android:textColor="@color/white"
+                android:checkable="true"
+                app:chipIconVisible="false"
+                app:closeIconVisible="false"
+                app:checkedIcon="@drawable/ic_check_circle_24px"
+                app:chipBackgroundColor="@color/color_direct"/>
+            <com.google.android.material.chip.Chip
+                android:id="@+id/chip_filter_etc"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="etc"
+                android:textColor="@color/white"
+                android:checkable="true"
+                app:chipIconVisible="false"
+                app:closeIconVisible="false"
+                app:checkedIcon="@drawable/ic_check_circle_24px"
+                app:chipBackgroundColor="@color/color_etc"/>
+        </com.google.android.material.chip.ChipGroup>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recycler_article"
@@ -13,7 +121,7 @@
         android:layout_height="wrap_content"
         android:background="@color/color_background"
         app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
-        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/container_chip_filter"
         />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
