@@ -1,15 +1,11 @@
 package com.soulkey.applemint.ui.main
 
 import android.content.Intent
-import android.opengl.Visibility
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.MenuItem
 import android.view.View
-import android.view.animation.Animation
-import android.view.animation.Transformation
 import androidx.core.view.GravityCompat
-import androidx.lifecycle.Observer
 import com.google.android.material.navigation.NavigationView
 import com.google.firebase.auth.FirebaseAuth
 import com.soulkey.applemint.R

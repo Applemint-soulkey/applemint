@@ -22,10 +22,10 @@ class ArticleRepositoryImpl(private val articleDao: ArticleDao) : ArticleReposit
     }
 
     override fun loadArticles() {
-        val insertList = mutableListOf<Article>()
-        db.collection("article").get().addOnSuccessListener {
+        db.collection("article").get().addOnSuccessListener {snapshot->
             val fbIds = articleDao.getFbIds()
-            for (document in it){
+            val cloudMap = mutableMapOf<String, Article>()
+            snapshot.map {document->
                 val data = document.data
                 val article = Article(
                     null,
@@ -35,10 +35,17 @@ class ArticleRepositoryImpl(private val articleDao: ArticleDao) : ArticleReposit
                     data["textContent"].toString(),
                     (data["timestamp"] as Timestamp).toDate()
                 )
-                if (!fbIds.contains(document.id)) insertList.add(article)
+                cloudMap[document.id] = article
             }
+            Timber.v("diver:/ local size=${fbIds.size}")
+            Timber.v("diver:/ cloud size=${cloudMap.keys.size}")
+            fbIds.filter { id-> !cloudMap.keys.contains(id) }.map { remove_id->
+                Timber.v("diver:/ $remove_id is already removed!")
+                articleDao.deleteByFbId(remove_id)
+            }
+            val insertList = cloudMap.values.filter {article ->  !fbIds.contains(article.fb_id) }
             articleDao.insertAll(insertList)
-            Timber.v("diver:/ "+insertList.size.toString())
+            Timber.v("diver:/ ${insertList.size} articles updated")
         }
     }
 }

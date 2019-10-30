@@ -14,10 +14,6 @@ import kotlinx.android.synthetic.main.item_article.view.*
 import org.koin.androidx.viewmodel.ext.android.sharedViewModel
 import android.content.Intent
 import android.net.Uri
-import android.view.animation.Animation
-import android.view.animation.Transformation
-import android.view.animation.TranslateAnimation
-import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.view.children
 
 class ArticleFragment : Fragment() {
@@ -28,6 +24,7 @@ class ArticleFragment : Fragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
+        articleViewModel.initialize()
         return inflater.inflate(R.layout.fragment_articles, container, false)
     }
 
@@ -59,7 +56,6 @@ class ArticleFragment : Fragment() {
             chip.setOnClickListener(ChipStateChangedListener())
         }
     }
-
 
     inner class ChipStateChangedListener : View.OnClickListener{
         override fun onClick(v: View?) {
