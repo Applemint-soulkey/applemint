@@ -4,8 +4,11 @@
         android:id="@+id/item_home"
         android:title="@string/home"/>
     <item
-        android:id="@+id/item_article"
+        android:id="@+id/item_new_article"
         android:title="@string/articles"/>
+    <item
+        android:id="@+id/item_read_later"
+        android:title="@string/read_later"/>
     <item
         android:id="@+id/item_logout"
         android:title="@string/log_out"/>

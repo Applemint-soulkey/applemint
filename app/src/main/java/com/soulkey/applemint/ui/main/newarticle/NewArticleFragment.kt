@@ -1,4 +1,4 @@
-package com.soulkey.applemint.ui.main
+package com.soulkey.applemint.ui.main.newarticle
 
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -16,8 +16,9 @@ import android.content.Intent
 import android.net.Uri
 import androidx.core.view.children
 import androidx.recyclerview.widget.ItemTouchHelper
+import com.soulkey.applemint.ui.main.MainViewModel
 
-class ArticleFragment : Fragment() {
+class NewArticleFragment : Fragment() {
     internal val articleViewModel by sharedViewModel<MainViewModel>()
     lateinit var articleAdapter: ArticleAdapter
     override fun onCreateView(
@@ -25,15 +26,7 @@ class ArticleFragment : Fragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        articleAdapter = ArticleAdapter(articleViewModel.initialize())
-        articleViewModel.getArticles().observe(this, Observer {
-            articleAdapter.articles = it
-        })
-        articleViewModel.filters.observe(this, Observer {
-            articleAdapter.filters = it
-            articleAdapter.filterItems()
-        })
-
+        articleAdapter = ArticleAdapter(articleViewModel.getInitialData().filter { it.state == "new" })
         return inflater.inflate(R.layout.fragment_articles, container, false)
     }
 
@@ -52,33 +45,13 @@ class ArticleFragment : Fragment() {
             })
         }
 
-        val callback = ArticleItemTouchHelper(0, ItemTouchHelper.LEFT, object: ArticleItemTouchHelper.ArticleItemTouchHelperListener{
-            override fun onSwiped(
-                viewHolder: RecyclerView.ViewHolder,
-                direction: Int,
-                position: Int
-            ) {
-                articleAdapter.items.removeAt(position)
-                articleAdapter.notifyItemRemoved(position)
-                val removeId = (viewHolder as ArticleAdapter.ArticleViewHolder).itemData.fb_id
-                articleViewModel.removeArticle(removeId)
-            }
+        articleViewModel.getNewArticles().observe(this, Observer {
+            articleAdapter.articles = it
         })
-        val callback2 = ArticleItemTouchHelper(0, ItemTouchHelper.RIGHT, object: ArticleItemTouchHelper.ArticleItemTouchHelperListener{
-            override fun onSwiped(
-                viewHolder: RecyclerView.ViewHolder,
-                direction: Int,
-                position: Int
-            ) {
-                articleAdapter.items.removeAt(position)
-                articleAdapter.notifyItemRemoved(position)
-                val removeId = (viewHolder as ArticleAdapter.ArticleViewHolder).itemData.fb_id
-                articleViewModel.removeArticle(removeId)
-            }
+        articleViewModel.filters.observe(this, Observer {
+            articleAdapter.filters = it
+            articleAdapter.filterItems()
         })
-        ItemTouchHelper(callback).attachToRecyclerView(recycler_article)
-        ItemTouchHelper(callback2).attachToRecyclerView(recycler_article)
-
         articleViewModel.isFilterOpen.observe(this, Observer {
             if (it) container_el_chip_filter.expand()
             else container_el_chip_filter.collapse()
@@ -87,6 +60,28 @@ class ArticleFragment : Fragment() {
         for (chip in chip_group_filter_article.children){
             chip.setOnClickListener(ChipStateChangedListener())
         }
+
+        //Swipe Function
+        val leftSwipeCallback = ArticleItemTouchHelper(0, ItemTouchHelper.LEFT,
+            object : ArticleItemTouchHelper.ArticleItemTouchHelperListener {
+                override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int, position: Int) {
+                    articleAdapter.items.removeAt(position)
+                    articleAdapter.notifyItemRemoved(position)
+                    val removeId = (viewHolder as ArticleAdapter.ArticleViewHolder).itemData.fb_id
+                    articleViewModel.removeArticle(removeId)
+                }
+            })
+        val rightSwipeCallback = ArticleItemTouchHelper(0, ItemTouchHelper.RIGHT,
+            object : ArticleItemTouchHelper.ArticleItemTouchHelperListener {
+                override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int, position: Int) {
+                    articleAdapter.items.removeAt(position)
+                    articleAdapter.notifyItemRemoved(position)
+                    val keepId = (viewHolder as ArticleAdapter.ArticleViewHolder).itemData.fb_id
+                    articleViewModel.keepArticle(keepId)
+                }
+            })
+        ItemTouchHelper(leftSwipeCallback).attachToRecyclerView(recycler_article)
+        ItemTouchHelper(rightSwipeCallback).attachToRecyclerView(recycler_article)
 
     }
 

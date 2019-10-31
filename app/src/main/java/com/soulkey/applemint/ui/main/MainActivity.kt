@@ -10,6 +10,7 @@ import com.google.android.material.navigation.NavigationView
 import com.google.firebase.auth.FirebaseAuth
 import com.soulkey.applemint.R
 import com.soulkey.applemint.ui.login.LoginActivity
+import com.soulkey.applemint.ui.main.newarticle.NewArticleFragment
 import kotlinx.android.synthetic.main.main_activity.*
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import timber.log.Timber
@@ -44,11 +45,13 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
                     replace(R.id.container_main_body, DashboardFragment())
                 }.commit()
             }
-            R.id.item_article->{
+            R.id.item_new_article->{
                 tv_main_title.text = getString(R.string.articles)
                 iv_article_filter.visibility = View.VISIBLE
                 supportFragmentManager.beginTransaction().apply {
-                    replace(R.id.container_main_body, ArticleFragment())
+                    replace(R.id.container_main_body,
+                        NewArticleFragment()
+                    )
                 }.commit()
             }
             R.id.item_logout ->{

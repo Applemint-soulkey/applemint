@@ -20,10 +20,13 @@ interface ArticleDao {
     fun deleteByFbId(id: String)
 
     @Query("SELECT * FROM tb_article ORDER BY timestamp DESC")
-    fun getAllArticles(): LiveData<List<Article>>
+    fun getArticleData(): List<Article>
 
-    @Query("SELECT * FROM tb_article ORDER BY timestamp DESC")
-    fun getAritlceSingle(): List<Article>
+    @Query("SELECT * FROM tb_article WHERE state='new' ORDER BY timestamp DESC")
+    fun getNewArticles(): LiveData<List<Article>>
+
+    @Query("UPDATE tb_article SET state='keep' WHERE fb_id=:id")
+    fun setKeepStateArticle(id: String)
 
     @Query("SELECT fb_id FROM tb_article")
     fun getFbIds(): List<String>

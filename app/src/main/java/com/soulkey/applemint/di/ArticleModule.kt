@@ -16,8 +16,8 @@ val ArticleModule = module {
         .build()
     }
     single { get<AppDatabase>().articleDao() }
-
     single<ArticleRepository> { ArticleRepositoryImpl(get()) }
+
     viewModel { MainViewModel(get()) }
-    viewModel { LoginViewModel() }
+    viewModel { LoginViewModel(get()) }
 }

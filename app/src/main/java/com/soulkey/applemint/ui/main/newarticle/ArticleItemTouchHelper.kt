@@ -1,4 +1,4 @@
-package com.soulkey.applemint.ui.main
+package com.soulkey.applemint.ui.main.newarticle
 
 import android.graphics.Canvas
 import android.graphics.Color
@@ -22,7 +22,7 @@ class ArticleItemTouchHelper(dragDirs: Int, swipeDirs: Int, private val listener
 
     override fun onSelectedChanged(viewHolder: RecyclerView.ViewHolder?, actionState: Int) {
         viewHolder?.let {
-            val foregroundView = (it as ArticleFragment.ArticleAdapter.ArticleViewHolder).itemView.container_card_article_foreground
+            val foregroundView = (it as NewArticleFragment.ArticleAdapter.ArticleViewHolder).itemView.container_card_article_foreground
             ItemTouchHelper.Callback.getDefaultUIUtil().onSelected(foregroundView)
         }
     }

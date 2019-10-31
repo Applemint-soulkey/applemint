@@ -23,5 +23,8 @@ data class Article(
     val content: String,
 
     @ColumnInfo(name = "timestamp")
-    val timestamp: Date
+    val timestamp: Date,
+
+    @ColumnInfo(name = "state")
+    val state: String
 )
