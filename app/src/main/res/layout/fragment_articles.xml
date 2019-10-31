@@ -6,16 +6,26 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <androidx.constraintlayout.widget.ConstraintLayout
-        android:id="@+id/container_chip_filter"
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/recycler_article"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:background="@color/color_background"
+        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"/>
+
+    <net.cachapa.expandablelayout.ExpandableLayout
+        android:id="@+id/container_el_chip_filter"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:clickable="true"
         app:layout_constraintTop_toTopOf="parent">
 
         <com.google.android.material.chip.ChipGroup
             android:id="@+id/chip_group_filter_article"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:layout_height="wrap_content"
             android:paddingStart="8dp"
             android:paddingEnd="8dp"
             android:paddingTop="8dp"
@@ -113,15 +123,10 @@
                 app:chipBackgroundColor="@color/color_etc"/>
         </com.google.android.material.chip.ChipGroup>
 
-    </androidx.constraintlayout.widget.ConstraintLayout>
 
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/recycler_article"
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:background="@color/color_background"
-        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
-        app:layout_constraintTop_toBottomOf="@id/container_chip_filter"
-        app:layout_constraintBottom_toBottomOf="parent"/>
+    </net.cachapa.expandablelayout.ExpandableLayout>
+
+
+
 
 </androidx.constraintlayout.widget.ConstraintLayout>

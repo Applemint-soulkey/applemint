@@ -31,8 +31,16 @@ class ArticleFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         articleAdapter = ArticleAdapter(listOf())
+        articleViewModel.isFilterOpen.value = false
         recycler_article.apply {
             adapter = articleAdapter
+            addOnScrollListener(object : RecyclerView.OnScrollListener() {
+                override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
+                    super.onScrolled(recyclerView, dx, dy)
+                    if (articleViewModel.isFilterOpen.value == true)
+                        articleViewModel.isFilterOpen.value = false
+                }
+            })
         }
 
         articleViewModel.getArticles().observe(this, Observer {
@@ -45,13 +53,15 @@ class ArticleFragment : Fragment() {
         })
         articleViewModel.isFilterOpen.observe(this, Observer {
             if (it) {
-
-            }else {
-
+                container_el_chip_filter.expand()
+            }
+            else {
+                container_el_chip_filter.collapse()
             }
         })
 
         articleViewModel.filters.value = getCheckedFilter()
+
         for (chip in chip_group_filter_article.children){
             chip.setOnClickListener(ChipStateChangedListener())
         }
@@ -94,26 +104,29 @@ class ArticleFragment : Fragment() {
             return items.size
         }
 
-        override fun onBindViewHolder(holder: ArticleViewHolder, position: Int) {
-            val data = items[position]
-            if (data.content.isNotEmpty()) holder.itemView.tv_article_title.text = data.content
-            else holder.itemView.tv_article_title.text = data.url
-            holder.itemView.tv_article_desc.text = data.url
-            holder.itemView.tv_article_type.text = data.type
-            when (data.type) {
-                "youtube"-> holder.itemView.tv_article_type.setBackgroundResource(R.drawable.backgroud_article_youtube_tag)
-                "twitch"-> holder.itemView.tv_article_type.setBackgroundResource(R.drawable.backgroud_article_twtich_tag)
-                "battlepage"-> holder.itemView.tv_article_type.setBackgroundResource(R.drawable.backgroud_article_battlepage_tag)
-                "dogdrip"-> holder.itemView.tv_article_type.setBackgroundResource(R.drawable.backgroud_article_dogdrip_tag)
-                "fmkorea"-> holder.itemView.tv_article_type.setBackgroundResource(R.drawable.backgroud_article_fmkorea_tag)
-                "direct"-> holder.itemView.tv_article_type.setBackgroundResource(R.drawable.backgroud_article_direct_tag)
-                "imgur"-> holder.itemView.tv_article_type.setBackgroundResource(R.drawable.backgroud_article_imgur_tag)
-                else-> holder.itemView.tv_article_type.setBackgroundResource(R.drawable.backgroud_article_etc_tag)
-            }
-            holder.itemView.setOnClickListener {startActivity(Intent(Intent.ACTION_VIEW, Uri.parse(data.url)))}
-            holder.itemView.btn_remove_article.setOnClickListener {articleViewModel.removeArticle(data.fb_id)}
+        override fun onBindViewHolder(holder: ArticleViewHolder, position: Int)  {
+            holder.bind(items[position])
         }
 
-        inner class ArticleViewHolder(itemView: View): RecyclerView.ViewHolder(itemView)
+        inner class ArticleViewHolder(itemView: View): RecyclerView.ViewHolder(itemView) {
+            fun bind(data: Article) {
+                if (data.content.isNotEmpty()) itemView.tv_article_title.text = data.content
+                else itemView.tv_article_title.text = data.url
+                itemView.tv_article_desc.text = data.url
+                itemView.tv_article_type.text = data.type
+                when (data.type) {
+                    "youtube"-> itemView.tv_article_type.setBackgroundResource(R.drawable.backgroud_article_youtube_tag)
+                    "twitch"-> itemView.tv_article_type.setBackgroundResource(R.drawable.backgroud_article_twtich_tag)
+                    "battlepage"-> itemView.tv_article_type.setBackgroundResource(R.drawable.backgroud_article_battlepage_tag)
+                    "dogdrip"-> itemView.tv_article_type.setBackgroundResource(R.drawable.backgroud_article_dogdrip_tag)
+                    "fmkorea"-> itemView.tv_article_type.setBackgroundResource(R.drawable.backgroud_article_fmkorea_tag)
+                    "direct"-> itemView.tv_article_type.setBackgroundResource(R.drawable.backgroud_article_direct_tag)
+                    "imgur"-> itemView.tv_article_type.setBackgroundResource(R.drawable.backgroud_article_imgur_tag)
+                    else-> itemView.tv_article_type.setBackgroundResource(R.drawable.backgroud_article_etc_tag)
+                }
+                itemView.setOnClickListener {startActivity(Intent(Intent.ACTION_VIEW, Uri.parse(data.url)))}
+                itemView.btn_remove_article.setOnClickListener {articleViewModel.removeArticle(data.fb_id)}
+            }
+        }
     }
 }

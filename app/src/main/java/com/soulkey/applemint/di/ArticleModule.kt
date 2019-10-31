@@ -12,7 +12,9 @@ import org.koin.dsl.module
 val ArticleModule = module {
     single { Room.databaseBuilder(get(), AppDatabase::class.java, "app_database")
         .fallbackToDestructiveMigration()
-        .allowMainThreadQueries().build() }
+        .allowMainThreadQueries()
+        .build()
+    }
     single { get<AppDatabase>().articleDao() }
 
     single<ArticleRepository> { ArticleRepositoryImpl(get()) }

@@ -24,6 +24,7 @@ class ArticleRepositoryImpl(private val articleDao: ArticleDao) : ArticleReposit
     override fun loadArticles() {
         db.collection("article").get().addOnSuccessListener {snapshot->
             val fbIds = articleDao.getFbIds()
+            val insertList: List<Article>
             val cloudMap = mutableMapOf<String, Article>()
             snapshot.map {document->
                 val data = document.data
@@ -43,9 +44,12 @@ class ArticleRepositoryImpl(private val articleDao: ArticleDao) : ArticleReposit
                 Timber.v("diver:/ $remove_id is already removed!")
                 articleDao.deleteByFbId(remove_id)
             }
-            val insertList = cloudMap.values.filter {article ->  !fbIds.contains(article.fb_id) }
-            articleDao.insertAll(insertList)
+            insertList = cloudMap.values.filter {article ->  !fbIds.contains(article.fb_id) }
             Timber.v("diver:/ ${insertList.size} articles updated")
+
+            articleDao.insertAll(insertList)
+            Timber.v("diver:/ insertList size=${insertList.size}")
         }
+
     }
 }

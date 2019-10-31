@@ -19,8 +19,7 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.main_activity)
-        mainViewModel.initialize()
-        mainViewModel.isFilterOpen.value = true
+        mainViewModel.isFilterOpen.value = false
         navigation_main.setNavigationItemSelectedListener(this)
 
         iv_btn_menu.setOnClickListener {
