@@ -64,7 +64,20 @@ class ArticleFragment : Fragment() {
                 articleViewModel.removeArticle(removeId)
             }
         })
+        val callback2 = ArticleItemTouchHelper(0, ItemTouchHelper.RIGHT, object: ArticleItemTouchHelper.ArticleItemTouchHelperListener{
+            override fun onSwiped(
+                viewHolder: RecyclerView.ViewHolder,
+                direction: Int,
+                position: Int
+            ) {
+                articleAdapter.items.removeAt(position)
+                articleAdapter.notifyItemRemoved(position)
+                val removeId = (viewHolder as ArticleAdapter.ArticleViewHolder).itemData.fb_id
+                articleViewModel.removeArticle(removeId)
+            }
+        })
         ItemTouchHelper(callback).attachToRecyclerView(recycler_article)
+        ItemTouchHelper(callback2).attachToRecyclerView(recycler_article)
 
         articleViewModel.isFilterOpen.observe(this, Observer {
             if (it) container_el_chip_filter.expand()
@@ -102,7 +115,7 @@ class ArticleFragment : Fragment() {
         lateinit var items: MutableList<Article>
 
         override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ArticleViewHolder {
-            return ArticleViewHolder(LayoutInflater.from(context).inflate(R.layout.item_article2, parent, false))
+            return ArticleViewHolder(LayoutInflater.from(context).inflate(R.layout.item_article, parent, false))
         }
 
         fun filterItems() {
