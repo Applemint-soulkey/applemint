@@ -15,6 +15,7 @@ import org.koin.androidx.viewmodel.ext.android.sharedViewModel
 import android.content.Intent
 import android.net.Uri
 import androidx.core.view.children
+import androidx.recyclerview.widget.ItemTouchHelper
 
 class ArticleFragment : Fragment() {
     internal val articleViewModel by sharedViewModel<MainViewModel>()
@@ -24,13 +25,21 @@ class ArticleFragment : Fragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        articleViewModel.initialize()
+        articleAdapter = ArticleAdapter(articleViewModel.initialize())
+        articleViewModel.getArticles().observe(this, Observer {
+            articleAdapter.articles = it
+        })
+        articleViewModel.filters.observe(this, Observer {
+            articleAdapter.filters = it
+            articleAdapter.filterItems()
+        })
+
         return inflater.inflate(R.layout.fragment_articles, container, false)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        articleAdapter = ArticleAdapter(listOf())
+
         articleViewModel.isFilterOpen.value = false
         recycler_article.apply {
             adapter = articleAdapter
@@ -43,28 +52,29 @@ class ArticleFragment : Fragment() {
             })
         }
 
-        articleViewModel.getArticles().observe(this, Observer {
-            articleAdapter.articles = it
-            articleAdapter.filterItems()
+        val callback = ArticleItemTouchHelper(0, ItemTouchHelper.LEFT, object: ArticleItemTouchHelper.ArticleItemTouchHelperListener{
+            override fun onSwiped(
+                viewHolder: RecyclerView.ViewHolder,
+                direction: Int,
+                position: Int
+            ) {
+                articleAdapter.items.removeAt(position)
+                articleAdapter.notifyItemRemoved(position)
+                val removeId = (viewHolder as ArticleAdapter.ArticleViewHolder).itemData.fb_id
+                articleViewModel.removeArticle(removeId)
+            }
         })
-        articleViewModel.filters.observe(this, Observer {
-            articleAdapter.filters = it
-            articleAdapter.filterItems()
-        })
+        ItemTouchHelper(callback).attachToRecyclerView(recycler_article)
+
         articleViewModel.isFilterOpen.observe(this, Observer {
-            if (it) {
-                container_el_chip_filter.expand()
-            }
-            else {
-                container_el_chip_filter.collapse()
-            }
+            if (it) container_el_chip_filter.expand()
+            else container_el_chip_filter.collapse()
         })
-
         articleViewModel.filters.value = getCheckedFilter()
-
         for (chip in chip_group_filter_article.children){
             chip.setOnClickListener(ChipStateChangedListener())
         }
+
     }
 
     inner class ChipStateChangedListener : View.OnClickListener{
@@ -89,14 +99,14 @@ class ArticleFragment : Fragment() {
     inner class ArticleAdapter(list: List<Article>) : RecyclerView.Adapter<ArticleAdapter.ArticleViewHolder>() {
         var articles = list
         var filters = listOf<String>()
-        lateinit var items: List<Article>
+        lateinit var items: MutableList<Article>
 
         override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ArticleViewHolder {
-            return ArticleViewHolder(LayoutInflater.from(context).inflate(R.layout.item_article, parent, false))
+            return ArticleViewHolder(LayoutInflater.from(context).inflate(R.layout.item_article2, parent, false))
         }
 
         fun filterItems() {
-            items = if (filters.isNotEmpty()) articles.filter { filters.contains(it.type) } else articles
+            items = if (filters.isNotEmpty()) articles.filter { filters.contains(it.type) }.toMutableList() else articles.toMutableList()
             notifyDataSetChanged()
         }
 
@@ -109,7 +119,9 @@ class ArticleFragment : Fragment() {
         }
 
         inner class ArticleViewHolder(itemView: View): RecyclerView.ViewHolder(itemView) {
+            lateinit var itemData: Article
             fun bind(data: Article) {
+                itemData = data
                 if (data.content.isNotEmpty()) itemView.tv_article_title.text = data.content
                 else itemView.tv_article_title.text = data.url
                 itemView.tv_article_desc.text = data.url
@@ -125,7 +137,6 @@ class ArticleFragment : Fragment() {
                     else-> itemView.tv_article_type.setBackgroundResource(R.drawable.backgroud_article_etc_tag)
                 }
                 itemView.setOnClickListener {startActivity(Intent(Intent.ACTION_VIEW, Uri.parse(data.url)))}
-                itemView.btn_remove_article.setOnClickListener {articleViewModel.removeArticle(data.fb_id)}
             }
         }
     }

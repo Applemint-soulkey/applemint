@@ -22,6 +22,9 @@ interface ArticleDao {
     @Query("SELECT * FROM tb_article ORDER BY timestamp DESC")
     fun getAllArticles(): LiveData<List<Article>>
 
+    @Query("SELECT * FROM tb_article ORDER BY timestamp DESC")
+    fun getAritlceSingle(): List<Article>
+
     @Query("SELECT fb_id FROM tb_article")
     fun getFbIds(): List<String>
 }

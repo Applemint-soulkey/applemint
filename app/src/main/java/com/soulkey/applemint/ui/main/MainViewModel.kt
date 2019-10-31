@@ -15,9 +15,10 @@ class MainViewModel(private val articleRepo: ArticleRepository) : ViewModel() {
         MutableLiveData<Boolean>()
     }
 
-    fun initialize(){
+    fun initialize() : List<Article>{
         Timber.v("diver:/ call on initialize")
         articleRepo.loadArticles()
+        return articleRepo.getArticlesSingle()
     }
 
     fun getArticles(): LiveData<List<Article>>{

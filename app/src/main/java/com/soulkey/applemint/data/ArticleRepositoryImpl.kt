@@ -10,6 +10,10 @@ import timber.log.Timber
 class ArticleRepositoryImpl(private val articleDao: ArticleDao) : ArticleRepository {
     private val db = FirebaseFirestore.getInstance()
 
+    override fun getArticlesSingle(): List<Article> {
+        return articleDao.getAritlceSingle()
+    }
+
     override fun getArticles(): LiveData<List<Article>> {
         return articleDao.getAllArticles()
     }
