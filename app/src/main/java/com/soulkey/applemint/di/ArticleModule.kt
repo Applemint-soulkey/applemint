@@ -6,6 +6,7 @@ import com.soulkey.applemint.data.ArticleRepositoryImpl
 import com.soulkey.applemint.db.AppDatabase
 import com.soulkey.applemint.ui.login.LoginViewModel
 import com.soulkey.applemint.ui.main.MainViewModel
+import org.koin.android.ext.koin.androidContext
 import org.koin.androidx.viewmodel.dsl.viewModel
 import org.koin.dsl.module
 
@@ -16,8 +17,8 @@ val ArticleModule = module {
         .build()
     }
     single { get<AppDatabase>().articleDao() }
-    single<ArticleRepository> { ArticleRepositoryImpl(get()) }
+    single<ArticleRepository> { ArticleRepositoryImpl(get(), androidContext()) }
 
     viewModel { MainViewModel(get()) }
-    viewModel { LoginViewModel(get()) }
+    viewModel { LoginViewModel(get(), androidContext()) }
 }

@@ -1,5 +1,7 @@
 package com.soulkey.applemint.ui.login
 
+import android.content.Context
+import android.widget.Toast
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.google.firebase.Timestamp
@@ -8,7 +10,7 @@ import com.soulkey.applemint.data.ArticleRepository
 import com.soulkey.applemint.model.Article
 import timber.log.Timber
 
-class LoginViewModel(private val articleRepository: ArticleRepository) : ViewModel() {
+class LoginViewModel(private val articleRepository: ArticleRepository, private val context: Context) : ViewModel() {
     val isArticleUpdated: MutableLiveData<Boolean> by lazy {
         MutableLiveData<Boolean>()
     }
@@ -43,6 +45,9 @@ class LoginViewModel(private val articleRepository: ArticleRepository) : ViewMod
             articleRepository.insertAll(insertList)
             Timber.v("diver:/ insertList size=${insertList.size}")
             isArticleUpdated.value = true
+        }.addOnFailureListener {
+            isArticleUpdated.value = false
+            Toast.makeText(context, "Failed To Update Articles..", Toast.LENGTH_SHORT).show()
         }
     }
 }
