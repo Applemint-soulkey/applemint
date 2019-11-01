@@ -23,8 +23,16 @@ class MainViewModel(private val articleRepo: ArticleRepository) : ViewModel() {
         return articleRepo.getNewArticles()
     }
 
+    fun getReadLaters(): LiveData<List<Article>> {
+        return articleRepo.getReadLater()
+    }
+
     fun removeArticle(fb_id: String) {
         articleRepo.removeArticle(fb_id)
+    }
+
+    fun restoreArticle(item: Article) {
+        articleRepo.restoreArticle(item)
     }
 
     fun keepArticle(fb_id: String) {

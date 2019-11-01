@@ -25,6 +25,9 @@ interface ArticleDao {
     @Query("SELECT * FROM tb_article WHERE state='new' ORDER BY timestamp DESC")
     fun getNewArticles(): LiveData<List<Article>>
 
+    @Query("SELECT * FROM tb_article WHERE state='keep' ORDER BY timestamp DESC")
+    fun getReadLaters(): LiveData<List<Article>>
+
     @Query("UPDATE tb_article SET state='keep' WHERE fb_id=:id")
     fun setKeepStateArticle(id: String)
 

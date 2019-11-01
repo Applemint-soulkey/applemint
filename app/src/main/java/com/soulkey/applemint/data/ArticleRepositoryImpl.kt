@@ -1,5 +1,6 @@
 package com.soulkey.applemint.data
 
+import android.widget.Toast
 import androidx.lifecycle.LiveData
 import com.google.firebase.Timestamp
 import com.google.firebase.firestore.FirebaseFirestore
@@ -14,17 +15,31 @@ class ArticleRepositoryImpl(private val articleDao: ArticleDao) : ArticleReposit
         return articleDao.getNewArticles()
     }
 
+    override fun getReadLater(): LiveData<List<Article>> {
+        return articleDao.getReadLaters()
+    }
+
     override fun removeArticle(id: String) {
-        db.collection("article").document(id).delete().addOnSuccessListener {
-            articleDao.deleteByFbId(id)
-            Timber.v("diver:/ $id delete success")
-        }
+        db.collection("article").document(id).delete()
+            .addOnSuccessListener {
+                articleDao.deleteByFbId(id)
+                Timber.v("diver:/ $id delete success")
+            }
+            .addOnFailureListener {
+            }
     }
 
     override fun keepArticle(id: String) {
         db.collection("article").document(id).update("state", "keep").addOnSuccessListener {
             articleDao.setKeepStateArticle(id)
             Timber.v("diver:/ $id keeping success")
+        }
+    }
+
+    override fun restoreArticle(item: Article) {
+        db.collection("article").document(item.fb_id).set(item).addOnSuccessListener {
+            Timber.v("diver:/ restore success")
+            articleDao.insert(item)
         }
     }
 
