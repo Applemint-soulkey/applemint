@@ -116,13 +116,17 @@ class ArticleItemTouchHelper(dragDirs: Int, swipeDirs: Int, private val listener
             //Right Swipe
             backgroundView.setBackgroundColor(Color.parseColor("#1d1d1d"))
             viewHolder.itemView.iv_card_article_save.visibility = View.VISIBLE
+            viewHolder.itemView.tv_card_article_save.visibility = View.VISIBLE
             viewHolder.itemView.iv_card_article_delete.visibility = View.INVISIBLE
+            viewHolder.itemView.tv_card_article_delete.visibility = View.INVISIBLE
         }
         else if (dX < 0){
             //Left Swipe
             backgroundView.setBackgroundColor(Color.parseColor("#C4302b"))
             viewHolder.itemView.iv_card_article_delete.visibility = View.VISIBLE
+            viewHolder.itemView.tv_card_article_delete.visibility = View.VISIBLE
             viewHolder.itemView.iv_card_article_save.visibility = View.INVISIBLE
+            viewHolder.itemView.tv_card_article_save.visibility = View.INVISIBLE
         }
         ItemTouchHelper.Callback.getDefaultUIUtil().onDraw(c, recyclerView, foregroundView, dX, dY, actionState, isCurrentlyActive)
     }

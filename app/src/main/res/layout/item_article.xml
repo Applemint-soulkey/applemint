@@ -27,6 +27,19 @@
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintRight_toRightOf="parent"/>
 
+        <TextView
+            android:id="@+id/tv_card_article_delete"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginRight="20dp"
+            android:text="DELETE"
+            android:textSize="40dp"
+            android:textColor="@color/white"
+            android:fontFamily="@font/opensans_bold"
+            app:layout_constraintRight_toLeftOf="@id/iv_card_article_delete"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"/>
+
         <ImageView
             android:id="@+id/iv_card_article_save"
             android:layout_width="wrap_content"
@@ -37,6 +50,19 @@
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintLeft_toLeftOf="parent"/>
 
+        <TextView
+            android:id="@+id/tv_card_article_save"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="20dp"
+            android:text="READ LATER"
+            android:textSize="40dp"
+            android:textColor="@color/white"
+            android:fontFamily="@font/opensans_bold"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toEndOf="@id/iv_card_article_save"/>
+
     </androidx.constraintlayout.widget.ConstraintLayout>
 
 
@@ -46,8 +72,6 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@color/white">
-
-
 
         <TextView
             android:id="@+id/tv_article_type"
