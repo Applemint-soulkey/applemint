@@ -4,7 +4,6 @@ import android.content.Context
 import android.widget.Toast
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import com.google.firebase.Timestamp
 import com.google.firebase.firestore.FirebaseFirestore
 import com.soulkey.applemint.data.ArticleRepository
 import com.soulkey.applemint.model.Article
@@ -14,36 +13,24 @@ class LoginViewModel(private val articleRepository: ArticleRepository, private v
     val isArticleUpdated: MutableLiveData<Boolean> by lazy {
         MutableLiveData<Boolean>()
     }
+    val updateProcess: MutableLiveData<String> by lazy {
+        MutableLiveData<String>()
+    }
 
     fun updateArticles(){
         val db = FirebaseFirestore.getInstance()
         isArticleUpdated.value = false
         db.collection("article").get().addOnSuccessListener {snapshot->
-            val cloudMap = mutableMapOf<String, Article>()
+            val articleList = snapshot.map {Article(it.id, it.data)}
             val fbIds = articleRepository.getFbIds()
-            snapshot.map {document->
-                val data = document.data
-                val article = Article(
-                    null,
-                    document.id,
-                    data["url"].toString(),
-                    data["type"].toString(),
-                    data["textContent"].toString(),
-                    (data["timestamp"] as Timestamp).toDate(),
-                    data["state"].toString()
-                )
-                cloudMap[document.id] = article
-            }
-            Timber.v("diver:/ local size=${fbIds.size}")
-            Timber.v("diver:/ cloud size=${cloudMap.keys.size}")
-            fbIds.filter { id-> !cloudMap.keys.contains(id) }.map { remove_id->
-                Timber.v("diver:/ $remove_id is already removed!")
-                articleRepository.deleteById(remove_id)
-            }
-            val insertList = cloudMap.values.filter {article ->  !fbIds.contains(article.fb_id) }
-            Timber.v("diver:/ ${insertList.size} articles updated")
-            articleRepository.insertAll(insertList)
-            Timber.v("diver:/ insertList size=${insertList.size}")
+            val cloudFbIds = articleList.map { it.fb_id }
+
+            updateProcess.value = "Remove already read items.."
+            articleRepository.deleteByIds(fbIds.filter { !cloudFbIds.contains(it) })
+
+            updateProcess.value = "Load new items from Server.."
+            articleRepository.insertAll(articleList.filter {!fbIds.contains(it.fb_id)})
+
             isArticleUpdated.value = true
         }.addOnFailureListener {
             isArticleUpdated.value = false

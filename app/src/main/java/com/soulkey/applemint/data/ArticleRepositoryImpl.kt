@@ -65,6 +65,10 @@ class ArticleRepositoryImpl(private val articleDao: ArticleDao, private val cont
         articleDao.deleteByFbId(id)
     }
 
+    override fun deleteByIds(list: List<String>) {
+        articleDao.deleteByFbIds(list)
+    }
+
     override fun insertAll(list: List<Article>) {
         articleDao.insertAll(list)
     }

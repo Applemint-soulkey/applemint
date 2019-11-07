@@ -29,6 +29,19 @@
             android:fontFamily="@font/beauty_mountain"/>
     </LinearLayout>
 
+    <com.google.android.material.textview.MaterialTextView
+        android:id="@+id/tv_login_update_msg"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="50dp"
+        android:text="Connect to Server.."
+        android:textSize="14dp"
+        android:visibility="invisible"
+        android:fontFamily="@font/opensans_regular"
+        app:layout_constraintTop_toBottomOf="@id/container_title"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"/>
+
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/container_login_input"

@@ -12,5 +12,6 @@ interface ArticleRepository {
     fun keepArticle(id: String)
     fun getFbIds(): List<String>
     fun deleteById(id: String)
+    fun deleteByIds(list: List<String>)
     fun insertAll(list: List<Article>)
 }

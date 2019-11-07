@@ -2,6 +2,7 @@ package com.soulkey.applemint.ui.login
 
 import android.content.Intent
 import android.os.Bundle
+import android.os.Handler
 import android.transition.TransitionManager
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
@@ -28,10 +29,16 @@ class LoginActivity : AppCompatActivity() {
         constraintSet.clone(this, R.layout.login_acitivity_loading)
 
         val auth = FirebaseAuth.getInstance()
+        loginViewModel.updateProcess.observe(this, Observer {
+            tv_login_update_msg.text = it
+        })
+
         loginViewModel.isArticleUpdated.observe(this, Observer {
             if (it) {
-                startActivity(Intent(applicationContext, MainActivity::class.java))
-                finish()
+                Handler().postDelayed({
+                    startActivity(Intent(applicationContext, MainActivity::class.java))
+                    finish()
+                }, 1000)
             }
         })
 
