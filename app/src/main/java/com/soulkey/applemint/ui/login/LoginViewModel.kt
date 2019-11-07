@@ -7,7 +7,6 @@ import androidx.lifecycle.ViewModel
 import com.google.firebase.firestore.FirebaseFirestore
 import com.soulkey.applemint.data.ArticleRepository
 import com.soulkey.applemint.model.Article
-import timber.log.Timber
 
 class LoginViewModel(private val articleRepository: ArticleRepository, private val context: Context) : ViewModel() {
     val isArticleUpdated: MutableLiveData<Boolean> by lazy {
