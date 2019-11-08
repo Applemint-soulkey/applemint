@@ -14,6 +14,7 @@ import com.soulkey.applemint.R
 import com.soulkey.applemint.model.Article
 import kotlinx.android.synthetic.main.fragment_articles.view.*
 import kotlinx.android.synthetic.main.item_article.view.*
+import kotlinx.android.synthetic.main.item_article_background.view.*
 
 class ArticleAdapter(list: List<Article>) : RecyclerView.Adapter<ArticleAdapter.ArticleViewHolder>() {
     var articles = list
@@ -43,8 +44,10 @@ class ArticleAdapter(list: List<Article>) : RecyclerView.Adapter<ArticleAdapter.
             itemData = data
             if (data.content.isNotEmpty()) itemView.tv_article_title.text = data.content
             else itemView.tv_article_title.text = data.url
-            itemView.tv_article_desc.text = data.url
+            itemView.tv_article_url.text = data.url
             itemView.tv_article_type.text = data.type
+
+            //Type Flag
             when (data.type) {
                 "youtube"-> itemView.tv_article_type.setBackgroundResource(R.drawable.backgroud_article_youtube_tag)
                 "twitch"-> itemView.tv_article_type.setBackgroundResource(R.drawable.backgroud_article_twtich_tag)
@@ -55,12 +58,22 @@ class ArticleAdapter(list: List<Article>) : RecyclerView.Adapter<ArticleAdapter.
                 "imgur"-> itemView.tv_article_type.setBackgroundResource(R.drawable.backgroud_article_imgur_tag)
                 else-> itemView.tv_article_type.setBackgroundResource(R.drawable.backgroud_article_etc_tag)
             }
+            //Expand Button
+            itemView.iv_card_article_expand.setOnClickListener {
+                itemView.expand_card_article_detail.toggle()
+                if (itemView.expand_card_article_detail.isExpanded) {
+                    itemView.iv_card_article_expand.animate().rotation(180f).setDuration(200).start()
+                    itemView.iv_card_article_expand.rotation = 180f
+                    itemView.tv_article_title.setSingleLine(false)
+                } else {
+                    itemView.iv_card_article_expand.animate().rotation(0f).setDuration(200).start()
+                    itemView.iv_card_article_expand.rotation = 0f
+                    itemView.tv_article_title.setSingleLine(true)
+                }
+            }
+
             itemView.setOnClickListener {
-                ContextCompat.startActivity(
-                    itemView.context,
-                    Intent(Intent.ACTION_VIEW, Uri.parse(data.url)),
-                    null
-                )
+                ContextCompat.startActivity(itemView.context, Intent(Intent.ACTION_VIEW, Uri.parse(data.url)), null)
             }
         }
     }

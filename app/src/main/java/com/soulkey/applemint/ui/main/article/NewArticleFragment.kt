@@ -34,13 +34,13 @@ class NewArticleFragment : Fragment() {
         articleViewModel.isFilterOpen.value = false
         recycler_article.apply {
             adapter = articleAdapter
-            addOnScrollListener(object : RecyclerView.OnScrollListener() {
-                override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
-                    super.onScrolled(recyclerView, dx, dy)
-                    if (articleViewModel.isFilterOpen.value == true)
-                        articleViewModel.isFilterOpen.value = false
-                }
-            })
+//            addOnScrollListener(object : RecyclerView.OnScrollListener() {
+//                override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
+//                    super.onScrolled(recyclerView, dx, dy)
+//                    if (articleViewModel.isFilterOpen.value == true)
+//                        articleViewModel.isFilterOpen.value = false
+//                }
+//            })
         }
 
         articleViewModel.getNewArticles().observe(this, Observer {
