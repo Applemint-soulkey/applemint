@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout
+    android:id="@+id/container_card_article_foreground"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_height="wrap_content"
+    android:layout_width="match_parent"
+    android:background="@drawable/background_white_card"
+    android:elevation="4dp">
+
+    <TextView
+        android:id="@+id/tv_article_type"
+        android:layout_width="wrap_content"
+        android:layout_height="32dp"
+        android:layout_marginTop="@dimen/outline_margin"
+        android:layout_marginStart="@dimen/outline_margin"
+        android:paddingStart="@dimen/inline_margin"
+        android:paddingEnd="@dimen/inline_margin"
+        android:gravity="center"
+        android:background="@drawable/background_article_tag"
+        android:text="@string/default_article_type"
+        android:textColor="@color/white"
+        android:fontFamily="@font/opensans_regular"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent"/>
+
+    <TextView
+        android:id="@+id/tv_article_title"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/outline_margin"
+        android:layout_marginEnd="@dimen/outline_margin"
+        android:layout_marginTop="@dimen/inline_margin"
+        android:text="@string/default_article_title"
+        android:textSize="21sp"
+        android:textColor="@color/color_1d1d1d"
+        android:fontFamily="@font/opensans_bold"
+        app:layout_constraintTop_toBottomOf="@id/tv_article_type"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toLeftOf="@id/btn_expand_card"/>
+
+    <TextView
+        android:id="@+id/tv_article_url"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/outline_margin"
+        android:layout_marginEnd="@dimen/outline_margin"
+        android:layout_marginTop="@dimen/inline_margin"
+        android:layout_marginBottom="@dimen/outline_margin"
+        android:text="@string/default_article_url"
+        android:textSize="14sp"
+        android:fontFamily="@font/opensans_regular"
+        android:singleLine="true"
+        android:ellipsize="marquee"
+        app:layout_constraintTop_toBottomOf="@id/tv_article_title"
+        app:layout_constraintBottom_toTopOf="@id/container_card_article_detail"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toLeftOf="@id/btn_expand_card"/>
+
+    <ImageButton
+        android:id="@+id/btn_expand_card"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginRight="@dimen/inline_margin"
+        android:background="@drawable/ic_keyboard_arrow_down_36px"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="@id/tv_article_type"
+        app:layout_constraintBottom_toBottomOf="@id/tv_article_url"/>
+
+    <net.cachapa.expandablelayout.ExpandableLayout
+        android:id="@+id/container_card_article_detail"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="@dimen/inline_margin"
+        app:el_expanded="true"
+        app:layout_constraintBottom_toBottomOf="parent">
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btn_card_article_bookmark"
+            style="@style/Widget.MaterialComponents.Button.TextButton"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="left|center_vertical"
+            android:background="@color/white"
+            android:text="Save to Bookmark"
+            android:textSize="14sp"
+            android:textColor="@color/color_etc"
+            android:fontFamily="@font/opensans_bold"
+            app:icon="@drawable/ic_bookmarks_24px"
+            app:iconPadding="@dimen/inline_margin"/>
+
+    </net.cachapa.expandablelayout.ExpandableLayout>
+
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>

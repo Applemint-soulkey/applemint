@@ -13,7 +13,7 @@ import com.google.android.material.snackbar.Snackbar
 import com.soulkey.applemint.R
 import com.soulkey.applemint.ui.main.MainViewModel
 import kotlinx.android.synthetic.main.fragment_articles.*
-import kotlinx.android.synthetic.main.item_article.view.*
+import kotlinx.android.synthetic.main.item_article_foreground.view.*
 import org.koin.androidx.viewmodel.ext.android.sharedViewModel
 
 class ReadLaterFragment : Fragment() {

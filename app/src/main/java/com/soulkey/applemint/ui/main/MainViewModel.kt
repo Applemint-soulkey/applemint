@@ -14,6 +14,7 @@ class MainViewModel(private val articleRepo: ArticleRepository) : ViewModel() {
         MutableLiveData<Boolean>()
     }
 
+
     fun getInitialData(): List<Article> {
         return articleRepo.getArticlesSingle()
     }

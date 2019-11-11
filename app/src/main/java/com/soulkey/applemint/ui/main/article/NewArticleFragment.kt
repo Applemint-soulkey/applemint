@@ -11,10 +11,11 @@ import com.soulkey.applemint.R
 import kotlinx.android.synthetic.main.fragment_articles.*
 import org.koin.androidx.viewmodel.ext.android.sharedViewModel
 import androidx.core.view.children
+import androidx.core.view.get
 import androidx.recyclerview.widget.ItemTouchHelper
 import com.google.android.material.snackbar.Snackbar
 import com.soulkey.applemint.ui.main.*
-import kotlinx.android.synthetic.main.item_article.view.*
+import kotlinx.android.synthetic.main.item_article_foreground.view.*
 
 class NewArticleFragment : Fragment() {
     internal val articleViewModel by sharedViewModel<MainViewModel>()
@@ -34,13 +35,6 @@ class NewArticleFragment : Fragment() {
         articleViewModel.isFilterOpen.value = false
         recycler_article.apply {
             adapter = articleAdapter
-//            addOnScrollListener(object : RecyclerView.OnScrollListener() {
-//                override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
-//                    super.onScrolled(recyclerView, dx, dy)
-//                    if (articleViewModel.isFilterOpen.value == true)
-//                        articleViewModel.isFilterOpen.value = false
-//                }
-//            })
         }
 
         articleViewModel.getNewArticles().observe(this, Observer {
