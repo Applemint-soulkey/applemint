@@ -25,7 +25,7 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".ui.main.article.ViewerActivity"
+            android:name=".ui.viewer.ViewerActivity"
             android:theme="@style/MaterialNoActionBar">
         </activity>
     </application>

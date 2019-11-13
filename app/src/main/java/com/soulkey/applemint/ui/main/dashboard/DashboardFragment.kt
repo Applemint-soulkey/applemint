@@ -1,4 +1,4 @@
-package com.soulkey.applemint.ui.main
+package com.soulkey.applemint.ui.main.dashboard
 
 import android.os.Bundle
 import android.view.LayoutInflater

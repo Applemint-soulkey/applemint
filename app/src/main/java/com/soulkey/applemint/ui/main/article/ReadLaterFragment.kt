@@ -19,7 +19,8 @@ import kotlinx.android.synthetic.main.view_chip_group_type.*
 import org.koin.androidx.viewmodel.ext.android.sharedViewModel
 
 class ReadLaterFragment : Fragment() {
-    internal val articleViewModel by sharedViewModel<MainViewModel>()
+    private val mainViewModel by sharedViewModel<MainViewModel>()
+    internal val articleViewModel by sharedViewModel<ArticleViewModel>()
     lateinit var articleAdapter: ArticleAdapter
 
     override fun onCreateView(
@@ -33,7 +34,7 @@ class ReadLaterFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         articleAdapter = ArticleAdapter(articleViewModel.getInitialData().filter { it.state == "keep" }, articleViewModel)
         super.onViewCreated(view, savedInstanceState)
-        articleViewModel.isFilterOpen.value = false
+        mainViewModel.isFilterOpen.value = false
         recycler_article.apply {
             adapter = articleAdapter
 //            addOnScrollListener(object : RecyclerView.OnScrollListener() {
@@ -52,7 +53,7 @@ class ReadLaterFragment : Fragment() {
             articleAdapter.filters = it
             articleAdapter.filterItems()
         })
-        articleViewModel.isFilterOpen.observe(this, Observer {
+        mainViewModel.isFilterOpen.observe(this, Observer {
             if (it) container_el_chip_filter.expand()
             else container_el_chip_filter.collapse()
         })

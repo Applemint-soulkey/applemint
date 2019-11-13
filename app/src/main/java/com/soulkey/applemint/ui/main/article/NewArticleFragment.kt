@@ -19,7 +19,9 @@ import kotlinx.android.synthetic.main.item_article_foreground.view.*
 import kotlinx.android.synthetic.main.view_chip_group_type.*
 
 class NewArticleFragment : Fragment() {
-    internal val articleViewModel by sharedViewModel<MainViewModel>()
+
+    internal val articleViewModel by sharedViewModel<ArticleViewModel>()
+    private val mainViewModel by sharedViewModel<MainViewModel>()
     lateinit var articleAdapter: ArticleAdapter
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -33,7 +35,7 @@ class NewArticleFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        articleViewModel.isFilterOpen.value = false
+        mainViewModel.isFilterOpen.value = false
         recycler_article.apply {
             adapter = articleAdapter
         }
@@ -45,7 +47,7 @@ class NewArticleFragment : Fragment() {
             articleAdapter.filters = it
             articleAdapter.filterItems()
         })
-        articleViewModel.isFilterOpen.observe(this, Observer {
+        mainViewModel.isFilterOpen.observe(this, Observer {
             if (it) container_el_chip_filter.expand()
             else container_el_chip_filter.collapse()
         })

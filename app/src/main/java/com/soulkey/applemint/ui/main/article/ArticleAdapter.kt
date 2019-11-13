@@ -23,12 +23,12 @@ import com.google.android.material.radiobutton.MaterialRadioButton
 import com.soulkey.applemint.R
 import com.soulkey.applemint.config.typeTagMapper
 import com.soulkey.applemint.model.Article
-import com.soulkey.applemint.ui.main.MainViewModel
+import com.soulkey.applemint.ui.viewer.ViewerActivity
 import kotlinx.android.synthetic.main.item_article_background.view.*
 import kotlinx.android.synthetic.main.item_article_foreground.view.*
 import kotlinx.android.synthetic.main.view_bottomsheet_bookmark.view.*
 
-class ArticleAdapter(list: List<Article>, val viewModel: MainViewModel) : RecyclerView.Adapter<ArticleAdapter.ArticleViewHolder>() {
+class ArticleAdapter(list: List<Article>, val viewModel: ArticleViewModel) : RecyclerView.Adapter<ArticleAdapter.ArticleViewHolder>() {
     var articles = list
     var filters = listOf<String>()
 

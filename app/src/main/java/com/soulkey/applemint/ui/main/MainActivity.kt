@@ -10,9 +10,10 @@ import com.google.android.material.navigation.NavigationView
 import com.google.firebase.auth.FirebaseAuth
 import com.soulkey.applemint.R
 import com.soulkey.applemint.ui.login.LoginActivity
-import com.soulkey.applemint.ui.main.article.BookmarkFragment
+import com.soulkey.applemint.ui.main.bookmark.BookmarkFragment
 import com.soulkey.applemint.ui.main.article.NewArticleFragment
 import com.soulkey.applemint.ui.main.article.ReadLaterFragment
+import com.soulkey.applemint.ui.main.dashboard.DashboardFragment
 import kotlinx.android.synthetic.main.main_activity.*
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import timber.log.Timber
@@ -34,7 +35,9 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         }
 
         supportFragmentManager.beginTransaction().apply {
-            replace(R.id.container_main_body, DashboardFragment())
+            replace(R.id.container_main_body,
+                DashboardFragment()
+            )
         }.commit()
     }
 
@@ -44,7 +47,9 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
                 tv_main_title.text = getString(R.string.app_name)
                 iv_article_filter.visibility = View.INVISIBLE
                 supportFragmentManager.beginTransaction().apply {
-                    replace(R.id.container_main_body, DashboardFragment())
+                    replace(R.id.container_main_body,
+                        DashboardFragment()
+                    )
                 }.commit()
             }
             R.id.item_new_article->{
@@ -65,7 +70,9 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
                 tv_main_title.text = getString(R.string.item_bookmark)
                 iv_article_filter.visibility = View.VISIBLE
                 supportFragmentManager.beginTransaction().apply {
-                    replace(R.id.container_main_body, BookmarkFragment())
+                    replace(R.id.container_main_body,
+                        BookmarkFragment()
+                    )
                 }.commit()
             }
             R.id.item_logout ->{

@@ -1,4 +1,4 @@
-package com.soulkey.applemint.ui.main.article
+package com.soulkey.applemint.ui.viewer
 
 import android.os.Bundle
 import android.webkit.WebViewClient

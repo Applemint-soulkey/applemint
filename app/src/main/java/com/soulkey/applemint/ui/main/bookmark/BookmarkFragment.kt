@@ -1,4 +1,4 @@
-package com.soulkey.applemint.ui.main.article
+package com.soulkey.applemint.ui.main.bookmark
 
 import android.content.Context
 import android.graphics.Color
@@ -21,7 +21,8 @@ import kotlinx.android.synthetic.main.item_bookmark_foreground.view.*
 import org.koin.androidx.viewmodel.ext.android.sharedViewModel
 
 class BookmarkFragment : Fragment() {
-    internal val viewModel by sharedViewModel<MainViewModel>()
+    internal val mainViewModel by sharedViewModel<MainViewModel> ()
+    private val viewModel by sharedViewModel<BookmarkViewModel>()
     lateinit var adapter: BookmarkAdapter
 
     override fun onCreateView(
@@ -29,13 +30,11 @@ class BookmarkFragment : Fragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        val view = inflater.inflate(R.layout.fragment_bookmark, container, false)
-        return view
+        return inflater.inflate(R.layout.fragment_bookmark, container, false)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        adapter = BookmarkAdapter(listOf()).also {recycler_bookmark.adapter = it}
         viewModel.getCategories().let {categories ->
             categories.map { category ->
                 val categoryChip = Chip(context)
@@ -48,22 +47,31 @@ class BookmarkFragment : Fragment() {
                 chip_group_bookmark_filter_category.addView(categoryChip)
             }
         }
-        viewModel.isFilterOpen.value = false
-        viewModel.isFilterOpen.observe(this, Observer {
+        mainViewModel.isFilterOpen.value = false
+        mainViewModel.isFilterOpen.observe(this, Observer {
             if (it) container_bookmark_filter.expand()
             else container_bookmark_filter.collapse()
             (activity?.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager).also {imm->
                 imm.hideSoftInputFromWindow(view.windowToken, 0)
             }
         })
+
+
+        recycler_bookmark.addOnScrollListener(object: RecyclerView.OnScrollListener(){
+            override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
+                super.onScrolled(recyclerView, dx, dy)
+                container_bookmark_filter.collapse()
+            }
+        })
+        adapter = BookmarkAdapter(listOf()).also {recycler_bookmark.adapter = it}
         viewModel.getBookmarks().observe(this, Observer {
             adapter.bookmarks = it
             adapter.notifyDataSetChanged()
         })
+
     }
 
     inner class BookmarkAdapter(var bookmarks: List<Bookmark>): RecyclerView.Adapter<BookmarkAdapter.BookmarkViewHolder>() {
-
         override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): BookmarkViewHolder {
             return BookmarkViewHolder(LayoutInflater.from(parent.context).inflate(R.layout.item_bookmark, parent, false))
         }
