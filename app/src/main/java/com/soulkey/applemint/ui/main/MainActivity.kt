@@ -1,10 +1,12 @@
 package com.soulkey.applemint.ui.main
 
+import android.content.Context
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.MenuItem
 import android.view.View
+import android.view.inputmethod.InputMethodManager
 import androidx.core.view.GravityCompat
 import com.google.android.material.navigation.NavigationView
 import com.google.firebase.auth.FirebaseAuth
@@ -28,6 +30,11 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
 
         iv_btn_menu.setOnClickListener {
             drawer_main.openDrawer(GravityCompat.START)
+            (getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager).also { imm->
+                currentFocus?.let {
+                    imm.hideSoftInputFromWindow(it.windowToken, 0)
+                }
+            }
         }
 
         iv_article_filter.setOnClickListener {

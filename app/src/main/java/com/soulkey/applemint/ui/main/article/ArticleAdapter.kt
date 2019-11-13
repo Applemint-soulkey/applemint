@@ -19,22 +19,27 @@ import com.afollestad.materialdialogs.actions.setActionButtonEnabled
 import com.afollestad.materialdialogs.bottomsheets.BottomSheet
 import com.afollestad.materialdialogs.customview.customView
 import com.afollestad.materialdialogs.customview.getCustomView
+import com.google.android.material.chip.ChipGroup
 import com.google.android.material.radiobutton.MaterialRadioButton
 import com.soulkey.applemint.R
+import com.soulkey.applemint.config.getFilters
 import com.soulkey.applemint.config.typeTagMapper
 import com.soulkey.applemint.model.Article
 import com.soulkey.applemint.ui.viewer.ViewerActivity
 import kotlinx.android.synthetic.main.item_article_background.view.*
 import kotlinx.android.synthetic.main.item_article_foreground.view.*
 import kotlinx.android.synthetic.main.view_bottomsheet_bookmark.view.*
+import kotlinx.android.synthetic.main.view_chip_group_type.*
 
 class ArticleAdapter(list: List<Article>, val viewModel: ArticleViewModel) : RecyclerView.Adapter<ArticleAdapter.ArticleViewHolder>() {
     var articles = list
-    var filters = listOf<String>()
+    var items = list.toMutableList()
 
-    lateinit var items: MutableList<Article>
-    fun filterItems() {
-        items = if (filters.isNotEmpty()) articles.filter { filters.contains(it.type) }.toMutableList() else articles.toMutableList()
+    fun filter(group : ChipGroup) {
+        val typeFilter = getFilters(group)
+        items = articles
+            .filter { typeFilter.contains(it.type) || typeFilter.isEmpty() }
+            .toMutableList()
         notifyDataSetChanged()
     }
 

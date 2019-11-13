@@ -11,7 +11,6 @@ import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.snackbar.Snackbar
 import com.soulkey.applemint.R
-import com.soulkey.applemint.config.getCheckedFilter
 import com.soulkey.applemint.ui.main.MainViewModel
 import kotlinx.android.synthetic.main.fragment_articles.*
 import kotlinx.android.synthetic.main.item_article_foreground.view.*
@@ -32,34 +31,20 @@ class ReadLaterFragment : Fragment() {
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        articleAdapter = ArticleAdapter(articleViewModel.getInitialData().filter { it.state == "keep" }, articleViewModel)
         super.onViewCreated(view, savedInstanceState)
-        mainViewModel.isFilterOpen.value = false
-        recycler_article.apply {
-            adapter = articleAdapter
-//            addOnScrollListener(object : RecyclerView.OnScrollListener() {
-//                override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
-//                    super.onScrolled(recyclerView, dx, dy)
-//                    if (articleViewModel.isFilterOpen.value == true)
-//                        articleViewModel.isFilterOpen.value = false
-//                }
-//            })
-        }
-
+        articleAdapter = ArticleAdapter(listOf(), articleViewModel).also { recycler_article.adapter = it }
         articleViewModel.getReadLaters().observe(this, Observer {
             articleAdapter.articles = it
+            articleAdapter.items = it.toMutableList()
+            articleAdapter.notifyDataSetChanged()
         })
-        articleViewModel.filters.observe(this, Observer {
-            articleAdapter.filters = it
-            articleAdapter.filterItems()
-        })
+        mainViewModel.isFilterOpen.value = false
         mainViewModel.isFilterOpen.observe(this, Observer {
             if (it) container_el_chip_filter.expand()
             else container_el_chip_filter.collapse()
         })
-        articleViewModel.filters.value = getCheckedFilter(view)
         for (chip in chip_group_filter_article.children){
-            chip.setOnClickListener(ChipStateChangedListener())
+            chip.setOnClickListener { articleAdapter.filter(chip_group_filter_article) }
         }
 
         val leftSwipeCallback = ArticleItemTouchHelper(0, ItemTouchHelper.LEFT,
@@ -81,12 +66,5 @@ class ReadLaterFragment : Fragment() {
                 }
             })
         ItemTouchHelper(leftSwipeCallback).attachToRecyclerView(recycler_article)
-
-    }
-
-    inner class ChipStateChangedListener : View.OnClickListener{
-        override fun onClick(v: View?) {
-            articleViewModel.filters.value = getCheckedFilter(view)
-        }
     }
 }

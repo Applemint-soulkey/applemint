@@ -1,6 +1,9 @@
 package com.soulkey.applemint.config
 
 import android.view.View
+import androidx.core.view.children
+import com.google.android.material.chip.Chip
+import com.google.android.material.chip.ChipGroup
 import com.soulkey.applemint.R
 import kotlinx.android.synthetic.main.view_chip_group_type.view.*
 
@@ -21,19 +24,11 @@ fun typeTagMapper(type: String) : Int {
     }
 }
 
-fun getCheckedFilter(view: View?): List<String>{
-    val filterList = mutableListOf<String>()
-    view?.let {
-        if (it.chip_filter_battlepage.isChecked) filterList.add("battlepage")
-        if (it.chip_filter_dogdrip.isChecked) filterList.add("dogdrip")
-        if (it.chip_filter_fmkorea.isChecked) filterList.add("fmkorea")
-        if (it.chip_filter_direct.isChecked) filterList.add("direct")
-        if (it.chip_filter_etc.isChecked) filterList.add("etc")
-        if (it.chip_filter_imgur.isChecked) filterList.add("imgur")
-        if (it.chip_filter_twtich.isChecked) filterList.add("twitch")
-        if (it.chip_filter_youtube.isChecked) filterList.add("youtube")
-    }
-    return filterList
+fun getFilters(group: ChipGroup): List<String>  {
+    return group.children
+        .filter {(it as Chip).isChecked }
+        .map {(it as Chip).text.toString() }
+        .toList()
 }
 
 fun typeMapper(keyword: String): itemType {
