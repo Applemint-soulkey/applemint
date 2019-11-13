@@ -33,7 +33,7 @@ class LoginActivity : AppCompatActivity() {
             tv_login_update_msg.text = it
         })
 
-        loginViewModel.isArticleUpdated.observe(this, Observer {
+        loginViewModel.isUpdated.observe(this, Observer {
             if (it) {
                 Handler().postDelayed({
                     startActivity(Intent(applicationContext, MainActivity::class.java))
@@ -51,6 +51,7 @@ class LoginActivity : AppCompatActivity() {
                         TransitionManager.beginDelayedTransition(activity_login)
                         constraintSet.applyTo(activity_login)
                         loginViewModel.updateArticles()
+                        loginViewModel.updateBookmarks()
                     } else {
                         Toast.makeText(applicationContext, "Login Failed!", Toast.LENGTH_SHORT).show()
                     }

@@ -1,7 +1,6 @@
 package com.soulkey.applemint.db
 
 import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
 import androidx.room.*
 import com.soulkey.applemint.model.Article
 

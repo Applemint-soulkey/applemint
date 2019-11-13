@@ -11,9 +11,11 @@ import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.snackbar.Snackbar
 import com.soulkey.applemint.R
+import com.soulkey.applemint.config.getCheckedFilter
 import com.soulkey.applemint.ui.main.MainViewModel
 import kotlinx.android.synthetic.main.fragment_articles.*
 import kotlinx.android.synthetic.main.item_article_foreground.view.*
+import kotlinx.android.synthetic.main.view_chip_group_type.*
 import org.koin.androidx.viewmodel.ext.android.sharedViewModel
 
 class ReadLaterFragment : Fragment() {
@@ -25,11 +27,11 @@ class ReadLaterFragment : Fragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        articleAdapter = ArticleAdapter(articleViewModel.getInitialData().filter { it.state == "keep" })
         return inflater.inflate(R.layout.fragment_articles, container, false)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        articleAdapter = ArticleAdapter(articleViewModel.getInitialData().filter { it.state == "keep" }, articleViewModel)
         super.onViewCreated(view, savedInstanceState)
         articleViewModel.isFilterOpen.value = false
         recycler_article.apply {

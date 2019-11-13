@@ -11,11 +11,12 @@ import com.soulkey.applemint.R
 import kotlinx.android.synthetic.main.fragment_articles.*
 import org.koin.androidx.viewmodel.ext.android.sharedViewModel
 import androidx.core.view.children
-import androidx.core.view.get
 import androidx.recyclerview.widget.ItemTouchHelper
 import com.google.android.material.snackbar.Snackbar
+import com.soulkey.applemint.config.getCheckedFilter
 import com.soulkey.applemint.ui.main.*
 import kotlinx.android.synthetic.main.item_article_foreground.view.*
+import kotlinx.android.synthetic.main.view_chip_group_type.*
 
 class NewArticleFragment : Fragment() {
     internal val articleViewModel by sharedViewModel<MainViewModel>()
@@ -25,7 +26,7 @@ class NewArticleFragment : Fragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        articleAdapter = ArticleAdapter(articleViewModel.getInitialData().filter { it.state == "new" })
+        articleAdapter = ArticleAdapter(articleViewModel.getInitialData().filter { it.state == "new" }, viewModel = articleViewModel)
         return inflater.inflate(R.layout.fragment_articles, container, false)
     }
 

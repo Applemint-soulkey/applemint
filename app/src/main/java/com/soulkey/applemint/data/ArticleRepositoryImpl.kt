@@ -3,8 +3,10 @@ package com.soulkey.applemint.data
 import android.content.Context
 import android.widget.Toast
 import androidx.lifecycle.LiveData
+import com.google.android.gms.tasks.Task
 import com.google.firebase.Timestamp
 import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.firestore.QuerySnapshot
 import com.soulkey.applemint.db.ArticleDao
 import com.soulkey.applemint.model.Article
 import timber.log.Timber
@@ -51,6 +53,35 @@ class ArticleRepositoryImpl(private val articleDao: ArticleDao, private val cont
             .addOnFailureListener {
                 Toast.makeText(context, "Failed To Restore..", Toast.LENGTH_SHORT).show()
             }
+    }
+
+    override fun bookmarkArticle(category: String, item: Article) {
+        val bookmarkArticle = hashMapOf(
+            "content" to item.content,
+            "state" to "bookmark",
+            "timestamp" to Timestamp.now(),
+            "type" to item.type,
+            "category" to category,
+            "url" to item.url
+        )
+        db.collection("bookmark").document(item.fb_id).set(bookmarkArticle).addOnCompleteListener {saveTask->
+            if (saveTask.isSuccessful){
+                db.collection("article").document(item.fb_id).delete().addOnCompleteListener {deleteTask->
+                    if (deleteTask.isSuccessful) {
+                        articleDao.deleteByFbId(item.fb_id)
+                        Toast.makeText(context, "Bookmark Success!", Toast.LENGTH_SHORT).show()
+                    } else {
+                        Toast.makeText(context, "Failed to Bookmark..", Toast.LENGTH_SHORT).show()
+                    }
+                }
+            } else {
+                Toast.makeText(context, "Failed to Bookmark..", Toast.LENGTH_SHORT).show()
+            }
+        }
+    }
+
+    override fun bookmarkCategories(): List<String>? {
+        return db.collection("bookmark").get().result?.documents?.map { it["category"].toString() }?.distinct()
     }
 
     override fun getFbIds(): List<String> {

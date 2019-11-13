@@ -10,6 +10,7 @@ import com.google.android.material.navigation.NavigationView
 import com.google.firebase.auth.FirebaseAuth
 import com.soulkey.applemint.R
 import com.soulkey.applemint.ui.login.LoginActivity
+import com.soulkey.applemint.ui.main.article.BookmarkFragment
 import com.soulkey.applemint.ui.main.article.NewArticleFragment
 import com.soulkey.applemint.ui.main.article.ReadLaterFragment
 import kotlinx.android.synthetic.main.main_activity.*
@@ -50,18 +51,21 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
                 tv_main_title.text = getString(R.string.articles)
                 iv_article_filter.visibility = View.VISIBLE
                 supportFragmentManager.beginTransaction().apply {
-                    replace(R.id.container_main_body,
-                        NewArticleFragment()
-                    )
+                    replace(R.id.container_main_body, NewArticleFragment())
                 }.commit()
             }
             R.id.item_read_later->{
                 tv_main_title.text = getString(R.string.read_later)
                 iv_article_filter.visibility = View.VISIBLE
                 supportFragmentManager.beginTransaction().apply {
-                    replace(R.id.container_main_body,
-                        ReadLaterFragment()
-                    )
+                    replace(R.id.container_main_body, ReadLaterFragment())
+                }.commit()
+            }
+            R.id.item_bookmark->{
+                tv_main_title.text = getString(R.string.item_bookmark)
+                iv_article_filter.visibility = View.VISIBLE
+                supportFragmentManager.beginTransaction().apply {
+                    replace(R.id.container_main_body, BookmarkFragment())
                 }.commit()
             }
             R.id.item_logout ->{

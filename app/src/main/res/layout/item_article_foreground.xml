@@ -71,7 +71,7 @@
         android:id="@+id/container_card_article_detail"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:padding="@dimen/inline_margin"
+        android:padding="@dimen/tiny_margin"
         app:el_expanded="true"
         app:layout_constraintBottom_toBottomOf="parent">
 
@@ -80,14 +80,17 @@
             style="@style/Widget.MaterialComponents.Button.TextButton"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:gravity="left|center_vertical"
+            android:layout_marginLeft="@dimen/inline_margin"
+            android:layout_marginRight="@dimen/inline_margin"
             android:background="@color/white"
-            android:text="Save to Bookmark"
-            android:textSize="14sp"
-            android:textColor="@color/color_etc"
             android:fontFamily="@font/opensans_bold"
-            app:icon="@drawable/ic_bookmarks_24px"
-            app:iconPadding="@dimen/inline_margin"/>
+            android:gravity="start|center_vertical"
+            android:includeFontPadding="false"
+            android:text="Bookmark"
+            android:textColor="@color/color_etc"
+            android:textSize="14sp"
+            app:icon="@drawable/ic_bookmarks_14px"
+            app:iconPadding="@dimen/tiny_margin" />
 
     </net.cachapa.expandablelayout.ExpandableLayout>
 

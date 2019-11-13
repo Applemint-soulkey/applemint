@@ -3,6 +3,8 @@ package com.soulkey.applemint.di
 import androidx.room.Room
 import com.soulkey.applemint.data.ArticleRepository
 import com.soulkey.applemint.data.ArticleRepositoryImpl
+import com.soulkey.applemint.data.BookmarkRepository
+import com.soulkey.applemint.data.BookmarkRepositoryImpl
 import com.soulkey.applemint.db.AppDatabase
 import com.soulkey.applemint.ui.login.LoginViewModel
 import com.soulkey.applemint.ui.main.MainViewModel
@@ -17,8 +19,10 @@ val ArticleModule = module {
         .build()
     }
     single { get<AppDatabase>().articleDao() }
+    single { get<AppDatabase>().bookmarkDao() }
     single<ArticleRepository> { ArticleRepositoryImpl(get(), androidContext()) }
+    single<BookmarkRepository> {BookmarkRepositoryImpl(get())}
 
-    viewModel { MainViewModel(get()) }
-    viewModel { LoginViewModel(get(), androidContext()) }
+    viewModel { MainViewModel(get(), get()) }
+    viewModel { LoginViewModel(get(), get(), androidContext()) }
 }

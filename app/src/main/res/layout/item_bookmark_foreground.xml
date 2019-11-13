@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout
+    android:id="@+id/container_card_article_foreground"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_height="wrap_content"
+    android:layout_width="match_parent"
+    android:background="@drawable/background_white_card"
+    android:elevation="4dp">
+
+    <TextView
+        android:id="@+id/tv_bookmark_type"
+        android:layout_width="wrap_content"
+        android:layout_height="32dp"
+        android:layout_marginTop="@dimen/outline_margin"
+        android:layout_marginStart="@dimen/outline_margin"
+        android:paddingStart="@dimen/inline_margin"
+        android:paddingEnd="@dimen/inline_margin"
+        android:gravity="center"
+        android:background="@drawable/background_article_tag"
+        android:text="bookmark_type"
+        android:textColor="@color/white"
+        android:fontFamily="@font/opensans_regular"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent"/>
+
+    <TextView
+        android:id="@+id/tv_bookmark_category"
+        android:layout_width="wrap_content"
+        android:layout_height="32dp"
+        android:layout_marginTop="@dimen/outline_margin"
+        android:layout_marginStart="@dimen/outline_margin"
+        android:paddingStart="@dimen/inline_margin"
+        android:paddingEnd="@dimen/inline_margin"
+        android:gravity="center"
+        android:background="@drawable/background_article_tag"
+        android:text="bookmark_category"
+        android:textColor="@color/white"
+        android:fontFamily="@font/opensans_regular"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintLeft_toRightOf="@id/tv_bookmark_type"/>
+
+    <TextView
+        android:id="@+id/tv_bookmark_title"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/outline_margin"
+        android:layout_marginEnd="@dimen/outline_margin"
+        android:layout_marginTop="@dimen/inline_margin"
+        android:text="@string/default_article_title"
+        android:textSize="21sp"
+        android:textColor="@color/color_1d1d1d"
+        android:fontFamily="@font/opensans_bold"
+        app:layout_constraintTop_toBottomOf="@id/tv_bookmark_type"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"/>
+
+    <TextView
+        android:id="@+id/tv_bookmark_url"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/outline_margin"
+        android:layout_marginEnd="@dimen/outline_margin"
+        android:layout_marginTop="@dimen/inline_margin"
+        android:layout_marginBottom="@dimen/outline_margin"
+        android:text="@string/default_article_url"
+        android:textSize="14sp"
+        android:fontFamily="@font/opensans_regular"
+        android:singleLine="true"
+        android:ellipsize="marquee"
+        app:layout_constraintTop_toBottomOf="@id/tv_bookmark_title"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"/>
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>

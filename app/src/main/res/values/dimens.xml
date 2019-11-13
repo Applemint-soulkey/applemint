@@ -2,4 +2,5 @@
 <resources>
     <dimen name="outline_margin">16dp</dimen>
     <dimen name="inline_margin">8dp</dimen>
+    <dimen name="tiny_margin">4dp</dimen>
 </resources>
