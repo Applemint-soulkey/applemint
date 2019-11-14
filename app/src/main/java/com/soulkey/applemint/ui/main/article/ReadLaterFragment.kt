@@ -61,8 +61,7 @@ class ReadLaterFragment : Fragment() {
                             articleAdapter.notifyItemInserted(position)
                         }
                     }.show()
-                    val removeId = removeItem.fb_id
-                    articleViewModel.removeArticle(removeId)
+                    articleViewModel.removeArticle(removeItem.fb_id)
                 }
             })
         ItemTouchHelper(leftSwipeCallback).attachToRecyclerView(recycler_article)

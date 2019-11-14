@@ -9,11 +9,10 @@ import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.QuerySnapshot
 import com.soulkey.applemint.db.ArticleDao
 import com.soulkey.applemint.model.Article
+import com.soulkey.applemint.model.Bookmark
 import timber.log.Timber
 
-class ArticleRepositoryImpl(private val articleDao: ArticleDao, private val context: Context) : ArticleRepository {
-    private val db = FirebaseFirestore.getInstance()
-
+class ArticleRepositoryImpl(private val db: FirebaseFirestore, private val articleDao: ArticleDao, private val context: Context) : ArticleRepository {
     override fun getNewArticles(): LiveData<List<Article>> {
         return articleDao.getNewArticles()
     }
@@ -56,24 +55,10 @@ class ArticleRepositoryImpl(private val articleDao: ArticleDao, private val cont
     }
 
     override fun bookmarkArticle(category: String, item: Article) {
-        val bookmarkArticle = hashMapOf(
-            "content" to item.content,
-            "state" to "bookmark",
-            "timestamp" to Timestamp.now(),
-            "type" to item.type,
-            "category" to category,
-            "url" to item.url
-        )
-        db.collection("bookmark").document(item.fb_id).set(bookmarkArticle).addOnCompleteListener {saveTask->
-            if (saveTask.isSuccessful){
-                db.collection("article").document(item.fb_id).delete().addOnCompleteListener {deleteTask->
-                    if (deleteTask.isSuccessful) {
-                        articleDao.deleteByFbId(item.fb_id)
-                        Toast.makeText(context, "Bookmark Success!", Toast.LENGTH_SHORT).show()
-                    } else {
-                        Toast.makeText(context, "Failed to Bookmark..", Toast.LENGTH_SHORT).show()
-                    }
-                }
+        db.collection("article").document(item.fb_id).delete().addOnCompleteListener {deleteTask->
+            if (deleteTask.isSuccessful) {
+                articleDao.deleteByFbId(item.fb_id)
+                Toast.makeText(context, "Bookmark Success!", Toast.LENGTH_SHORT).show()
             } else {
                 Toast.makeText(context, "Failed to Bookmark..", Toast.LENGTH_SHORT).show()
             }

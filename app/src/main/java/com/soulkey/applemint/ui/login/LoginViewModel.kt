@@ -10,8 +10,7 @@ import com.soulkey.applemint.data.BookmarkRepository
 import com.soulkey.applemint.model.Article
 import com.soulkey.applemint.model.Bookmark
 
-class LoginViewModel(private val articleRepository: ArticleRepository, private val bookmarkRepository: BookmarkRepository, private val context: Context) : ViewModel() {
-    val db = FirebaseFirestore.getInstance()
+class LoginViewModel(private val db: FirebaseFirestore, private val articleRepository: ArticleRepository, private val bookmarkRepository: BookmarkRepository, private val context: Context) : ViewModel() {
     var isArticleUpdated = false
     var isBookmarkUpdated = false
     val isUpdated: MutableLiveData<Boolean> by lazy {

@@ -1,6 +1,7 @@
 package com.soulkey.applemint.di
 
 import androidx.room.Room
+import com.google.firebase.firestore.FirebaseFirestore
 import com.soulkey.applemint.data.ArticleRepository
 import com.soulkey.applemint.data.ArticleRepositoryImpl
 import com.soulkey.applemint.data.BookmarkRepository
@@ -20,13 +21,14 @@ val ArticleModule = module {
         .allowMainThreadQueries()
         .build()
     }
+    single { FirebaseFirestore.getInstance() }
     single { get<AppDatabase>().articleDao() }
     single { get<AppDatabase>().bookmarkDao() }
-    single<ArticleRepository> { ArticleRepositoryImpl(get(), androidContext()) }
-    single<BookmarkRepository> {BookmarkRepositoryImpl(get())}
+    single<ArticleRepository> { ArticleRepositoryImpl(get(), get(), androidContext()) }
+    single<BookmarkRepository> {BookmarkRepositoryImpl(get(), get())}
 
     viewModel { MainViewModel() }
     viewModel { ArticleViewModel(get(), get()) }
     viewModel { BookmarkViewModel(get()) }
-    viewModel { LoginViewModel(get(), get(), androidContext()) }
+    viewModel { LoginViewModel(get(), get(), get(), androidContext()) }
 }

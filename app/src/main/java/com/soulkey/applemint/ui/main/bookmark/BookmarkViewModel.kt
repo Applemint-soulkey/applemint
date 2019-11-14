@@ -13,4 +13,12 @@ class BookmarkViewModel(private val bookmarkRepo: BookmarkRepository) : ViewMode
     fun getCategories(): List<String> {
         return bookmarkRepo.getCategories()
     }
+
+    fun removeBookmark(fb_id: String) {
+        bookmarkRepo.removeBookmark(fb_id)
+    }
+
+    fun restoreBookmark(item: Bookmark){
+        bookmarkRepo.insert(item)
+    }
 }
