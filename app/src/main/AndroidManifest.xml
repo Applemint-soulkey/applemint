@@ -28,6 +28,7 @@
             android:name=".ui.viewer.ViewerActivity"
             android:theme="@style/MaterialNoActionBar">
         </activity>
+        <activity android:name=".ui.main.bookmark.BookmarkActivity" />
     </application>
 
 </manifest>

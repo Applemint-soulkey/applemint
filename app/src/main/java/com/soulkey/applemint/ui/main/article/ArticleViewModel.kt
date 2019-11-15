@@ -1,6 +1,7 @@
 package com.soulkey.applemint.ui.main.article
 
 import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.soulkey.applemint.data.ArticleRepository
 import com.soulkey.applemint.data.BookmarkRepository
@@ -8,6 +9,12 @@ import com.soulkey.applemint.model.Article
 import com.soulkey.applemint.model.Bookmark
 
 class ArticleViewModel(private val articleRepo: ArticleRepository, private val bookmarkRepo:BookmarkRepository): ViewModel(){
+    var typeFilter: MutableLiveData<List<String>> = MutableLiveData()
+
+    init {
+        typeFilter.value = listOf()
+    }
+
     fun bookmarkArticle(category: String, item: Article){
         articleRepo.removeArticle(item.fb_id)
         bookmarkRepo.insert(Bookmark(item, category))

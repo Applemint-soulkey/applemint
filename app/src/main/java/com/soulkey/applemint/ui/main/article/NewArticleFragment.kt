@@ -13,6 +13,7 @@ import org.koin.androidx.viewmodel.ext.android.sharedViewModel
 import androidx.core.view.children
 import androidx.recyclerview.widget.ItemTouchHelper
 import com.google.android.material.snackbar.Snackbar
+import com.soulkey.applemint.config.getFilters
 import com.soulkey.applemint.ui.main.*
 import kotlinx.android.synthetic.main.item_article_foreground.view.*
 import kotlinx.android.synthetic.main.view_chip_group_type.*
@@ -32,7 +33,19 @@ class NewArticleFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        articleAdapter = ArticleAdapter(listOf(), articleViewModel).also { recycler_article.adapter = it }
+
+        articleViewModel.typeFilter.value = listOf()
+        articleViewModel.typeFilter.observe(this, Observer {
+            mainViewModel.isFilterApply.value = !it.isNullOrEmpty()
+            articleAdapter.filter(it)
+        })
+
+        articleAdapter = ArticleAdapter(listOf(), articleViewModel).also {
+            recycler_article.apply { adapter = it }.setOnTouchListener { _, _ ->
+                mainViewModel.isFilterOpen.value = false
+                false
+            }
+        }
         articleViewModel.getNewArticles().observe(this, Observer {articles->
             articleAdapter.articles = articles
             articleAdapter.items = articles.toMutableList()
@@ -44,7 +57,9 @@ class NewArticleFragment : Fragment() {
             else container_el_chip_filter.collapse()
         })
         for (chip in chip_group_filter_article.children){
-            chip.setOnClickListener { articleAdapter.filter(chip_group_filter_article) }
+            chip.setOnClickListener {
+                articleViewModel.typeFilter.value = getFilters(chip_group_filter_article)
+            }
         }
 
         //Swipe Function

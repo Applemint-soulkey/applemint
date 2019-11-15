@@ -4,6 +4,7 @@ import android.content.Context
 import android.content.Intent
 import android.graphics.Canvas
 import android.graphics.Color
+import android.os.Handler
 import android.text.Editable
 import android.text.TextWatcher
 import android.view.LayoutInflater
@@ -29,14 +30,12 @@ import com.soulkey.applemint.ui.viewer.ViewerActivity
 import kotlinx.android.synthetic.main.item_article_background.view.*
 import kotlinx.android.synthetic.main.item_article_foreground.view.*
 import kotlinx.android.synthetic.main.view_bottomsheet_bookmark.view.*
-import kotlinx.android.synthetic.main.view_chip_group_type.*
 
 class ArticleAdapter(list: List<Article>, val viewModel: ArticleViewModel) : RecyclerView.Adapter<ArticleAdapter.ArticleViewHolder>() {
     var articles = list
     var items = list.toMutableList()
 
-    fun filter(group : ChipGroup) {
-        val typeFilter = getFilters(group)
+    fun filter(typeFilter : List<String>) {
         items = articles
             .filter { typeFilter.contains(it.type) || typeFilter.isEmpty() }
             .toMutableList()
@@ -76,8 +75,10 @@ class ArticleAdapter(list: List<Article>, val viewModel: ArticleViewModel) : Rec
                 openBookmarkDialog(it.context, adapterPosition)
             }
             itemView.setOnClickListener {
-                val intent = Intent(itemView.context, ViewerActivity::class.java).apply { putExtra("url", itemData.url) }
-                ContextCompat.startActivity(itemView.context, intent, null)
+                Handler().postDelayed( {
+                    val intent = Intent(itemView.context, ViewerActivity::class.java).apply { putExtra("url", itemData.url) }
+                    ContextCompat.startActivity(itemView.context, intent, null)
+                }, 300)
                 //ContextCompat.startActivity(itemView.context, Intent(Intent.ACTION_VIEW, Uri.parse(data.url)), null)
             }
         }

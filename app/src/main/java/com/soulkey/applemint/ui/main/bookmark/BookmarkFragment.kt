@@ -1,14 +1,11 @@
 package com.soulkey.applemint.ui.main.bookmark
 
 import android.content.Context
-import android.content.Intent
 import android.graphics.Color
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
+import android.view.*
 import android.view.inputmethod.InputMethodManager
 import androidx.core.content.ContextCompat
 import androidx.core.view.children
@@ -25,6 +22,7 @@ import kotlinx.android.synthetic.main.fragment_bookmark.*
 import kotlinx.android.synthetic.main.item_bookmark_foreground.view.*
 import kotlinx.android.synthetic.main.view_chip_group_type.*
 import org.koin.androidx.viewmodel.ext.android.sharedViewModel
+import timber.log.Timber
 
 class BookmarkFragment : Fragment() {
     private val mainViewModel by sharedViewModel<MainViewModel> ()
@@ -36,22 +34,32 @@ class BookmarkFragment : Fragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
+
         return inflater.inflate(R.layout.fragment_bookmark, container, false)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        viewModel.categoryFilter.value = listOf()
+        viewModel.typeFilter.value = listOf()
 
         // Initialize Bookmark List
-        adapter = BookmarkAdapter(listOf()).also {
-            recycler_bookmark.apply {adapter = it}.addOnScrollListener(object: RecyclerView.OnScrollListener() {
-                override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
+        adapter = BookmarkAdapter(listOf(), viewModel).also {
+            recycler_bookmark.apply { adapter = it }
+                .setOnTouchListener { _, _ ->
                     (activity?.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager).also {imm->
                         imm.hideSoftInputFromWindow(view.windowToken, 0)
                     }
+                    mainViewModel.isFilterOpen.value = false
+                    false
                 }
-            })
         }
+
+        viewModel.isFilterApply.observe(this, Observer {
+//            Timber.v("diver:/ current filter status= $it")
+            mainViewModel.isFilterApply.value = it
+        })
+
         viewModel.getBookmarks().observe(this, Observer {
             adapter.bookmarks = it
             adapter.items = it.toMutableList()
@@ -82,12 +90,24 @@ class BookmarkFragment : Fragment() {
             }
         })
 
+        iv_clear_bookmark_search.setOnClickListener {
+            et_bookmark_search.text?.clear()
+            et_bookmark_search.clearFocus()
+            (activity?.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager).also {imm->
+                imm.hideSoftInputFromWindow(view.windowToken, 0)
+            }
+        }
+
         // Add Filter Action on Search EditText
         et_bookmark_search.addTextChangedListener(object: TextWatcher{
             override fun afterTextChanged(s: Editable?) {
-                val categoryFilter = getFilters(chip_group_bookmark_filter_category)
-                val typeFilter = getFilters(chip_group_filter_article)
-                adapter.search(s.toString(), categoryFilter, typeFilter)
+                s?.let {
+                    iv_clear_bookmark_search.visibility = if (s.isEmpty()) View.INVISIBLE else View.VISIBLE
+                    adapter.search(
+                        keyword = s.toString(),
+                        categoryFilter = viewModel.categoryFilter.value!!,
+                        typeFilter = viewModel.typeFilter.value!!)
+                }
             }
             override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int){}
             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {}
@@ -96,18 +116,22 @@ class BookmarkFragment : Fragment() {
         // Add Filter Action on Category Chips
         for (chip in chip_group_bookmark_filter_category.children) {
             chip.setOnClickListener {
-                val categoryFilter = getFilters(chip_group_bookmark_filter_category)
-                val typeFilter = getFilters(chip_group_filter_article)
-                adapter.search(et_bookmark_search.text.toString(), categoryFilter, typeFilter)
+                viewModel.categoryFilter.value = getFilters(chip_group_bookmark_filter_category)
+                adapter.search(
+                    keyword = et_bookmark_search.text.toString(),
+                    categoryFilter = viewModel.categoryFilter.value!!,
+                    typeFilter = viewModel.typeFilter.value!!)
             }
         }
 
         // Add Filter Action on Type Chips
         for (chip in chip_group_filter_article.children){
             chip.setOnClickListener {
-                val categoryFilter = getFilters(chip_group_bookmark_filter_category)
-                val typeFilter = getFilters(chip_group_filter_article)
-                adapter.search(et_bookmark_search.text.toString(), categoryFilter, typeFilter)
+                viewModel.typeFilter.value = getFilters(chip_group_filter_article)
+                adapter.search(
+                    keyword = et_bookmark_search.text.toString(),
+                    categoryFilter = viewModel.categoryFilter.value!!,
+                    typeFilter = viewModel.typeFilter.value!!)
             }
         }
 
