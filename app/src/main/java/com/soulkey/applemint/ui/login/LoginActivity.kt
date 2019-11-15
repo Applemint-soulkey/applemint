@@ -18,7 +18,6 @@ import kotlinx.android.synthetic.main.login_acitivity.et_password
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class LoginActivity : AppCompatActivity() {
-
     private val loginViewModel: LoginViewModel by viewModel()
 
     override fun onCreate(savedInstanceState: Bundle?) {

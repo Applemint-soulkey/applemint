@@ -9,4 +9,5 @@ class MainViewModel() : ViewModel() {
     val isFilterOpen: MutableLiveData<Boolean> by lazy {
         MutableLiveData<Boolean>()
     }
+    val isFilterApply: MutableLiveData<Boolean> = MutableLiveData()
 }

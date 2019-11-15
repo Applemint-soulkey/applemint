@@ -7,7 +7,10 @@ import android.os.Bundle
 import android.view.MenuItem
 import android.view.View
 import android.view.inputmethod.InputMethodManager
+import androidx.appcompat.widget.DialogTitle
 import androidx.core.view.GravityCompat
+import androidx.fragment.app.Fragment
+import androidx.lifecycle.Observer
 import com.google.android.material.navigation.NavigationView
 import com.google.firebase.auth.FirebaseAuth
 import com.soulkey.applemint.R
@@ -40,6 +43,9 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         iv_article_filter.setOnClickListener {
             mainViewModel.isFilterOpen.value = !mainViewModel.isFilterOpen.value!!
         }
+        mainViewModel.isFilterApply.observe(this, Observer {
+            iv_filter_notification_dot.visibility = if (it) View.VISIBLE else View.INVISIBLE
+        })
 
         supportFragmentManager.beginTransaction().apply {
             replace(R.id.container_main_body,
@@ -48,42 +54,26 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         }.commit()
     }
 
+    private fun replaceFragment(fragment: Fragment, titleText: String = "Applemint", setFilterVisible:Boolean = false){
+        tv_main_title.text = titleText
+        iv_filter_notification_dot.visibility = View.INVISIBLE
+        iv_article_filter.visibility = if (setFilterVisible) View.VISIBLE else View.INVISIBLE
+        supportFragmentManager.beginTransaction().apply {
+            replace(R.id.container_main_body, fragment)
+        }.commit()
+    }
+
     override fun onNavigationItemSelected(item: MenuItem): Boolean {
         when (item.itemId){
-            R.id.item_home-> {
-                tv_main_title.text = getString(R.string.app_name)
-                iv_article_filter.visibility = View.INVISIBLE
-                supportFragmentManager.beginTransaction().apply {
-                    replace(R.id.container_main_body,
-                        DashboardFragment()
-                    )
-                }.commit()
-            }
-            R.id.item_new_article->{
-                tv_main_title.text = getString(R.string.articles)
-                iv_article_filter.visibility = View.VISIBLE
-                supportFragmentManager.beginTransaction().apply {
-                    replace(R.id.container_main_body, NewArticleFragment())
-                }.commit()
-            }
-            R.id.item_read_later->{
-                tv_main_title.text = getString(R.string.read_later)
-                iv_article_filter.visibility = View.VISIBLE
-                supportFragmentManager.beginTransaction().apply {
-                    replace(R.id.container_main_body, ReadLaterFragment())
-                }.commit()
-            }
-            R.id.item_bookmark->{
-                tv_main_title.text = getString(R.string.item_bookmark)
-                iv_article_filter.visibility = View.VISIBLE
-                supportFragmentManager.beginTransaction().apply {
-                    replace(R.id.container_main_body,
-                        BookmarkFragment()
-                    )
-                }.commit()
-            }
+            R.id.item_home->
+                replaceFragment(DashboardFragment())
+            R.id.item_new_article->
+                replaceFragment(NewArticleFragment(), titleText = getString(R.string.articles), setFilterVisible = true)
+            R.id.item_read_later->
+                replaceFragment(ReadLaterFragment(), titleText = getString(R.string.read_later), setFilterVisible = true)
+            R.id.item_bookmark->
+                replaceFragment(BookmarkFragment(), titleText = getString(R.string.item_bookmark), setFilterVisible = true)
             R.id.item_logout ->{
-                Timber.v("diver:/ call on navigation sign out")
                 FirebaseAuth.getInstance().signOut()
                 startActivity(Intent(applicationContext, LoginActivity::class.java))
                 finish()

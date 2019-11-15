@@ -12,19 +12,19 @@ data class Bookmark(
     val id: Long?,
 
     @ColumnInfo(name = "fb_id")
-    val fb_id: String,
+    var fb_id: String,
 
     @ColumnInfo(name = "url")
     val url: String,
 
     @ColumnInfo(name = "content")
-    val content: String,
+    var content: String,
 
     @ColumnInfo(name = "type")
     val type: String,
 
     @ColumnInfo(name = "category")
-    val category: String,
+    var category: String,
 
     @ColumnInfo(name = "timestamp")
     val timestamp: Date

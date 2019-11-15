@@ -5,7 +5,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_height="wrap_content"
     android:layout_width="match_parent"
-    android:background="@drawable/background_white_card"
+    android:background="@drawable/background_white_ripple_card"
     android:elevation="4dp">
 
     <TextView
@@ -93,7 +93,5 @@
             app:iconPadding="@dimen/tiny_margin" />
 
     </net.cachapa.expandablelayout.ExpandableLayout>
-
-
 
 </androidx.constraintlayout.widget.ConstraintLayout>

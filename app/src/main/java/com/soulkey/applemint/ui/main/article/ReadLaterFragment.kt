@@ -11,6 +11,7 @@ import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.snackbar.Snackbar
 import com.soulkey.applemint.R
+import com.soulkey.applemint.config.getFilters
 import com.soulkey.applemint.ui.main.MainViewModel
 import kotlinx.android.synthetic.main.fragment_articles.*
 import kotlinx.android.synthetic.main.item_article_foreground.view.*
@@ -32,7 +33,12 @@ class ReadLaterFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        articleAdapter = ArticleAdapter(listOf(), articleViewModel).also { recycler_article.adapter = it }
+        articleAdapter = ArticleAdapter(listOf(), articleViewModel).also {
+            recycler_article.apply { adapter = it }.setOnTouchListener { _, _ ->
+                mainViewModel.isFilterOpen.value = false
+                false
+            }
+        }
         articleViewModel.getReadLaters().observe(this, Observer {
             articleAdapter.articles = it
             articleAdapter.items = it.toMutableList()
@@ -44,7 +50,10 @@ class ReadLaterFragment : Fragment() {
             else container_el_chip_filter.collapse()
         })
         for (chip in chip_group_filter_article.children){
-            chip.setOnClickListener { articleAdapter.filter(chip_group_filter_article) }
+            chip.setOnClickListener {
+                articleViewModel.typeFilter.value = getFilters(chip_group_filter_article)
+                articleAdapter.filter(articleViewModel.typeFilter.value!!)
+            }
         }
 
         val leftSwipeCallback = ArticleItemTouchHelper(0, ItemTouchHelper.LEFT,
