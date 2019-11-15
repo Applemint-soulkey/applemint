@@ -37,7 +37,7 @@ class ArticleViewModel(private val articleRepo: ArticleRepository, private val b
     }
 
     fun restoreArticle(item: Article) {
-        articleRepo.restoreArticle(item)
+        articleRepo.insert(item)
     }
 
     fun keepArticle(fb_id: String) {

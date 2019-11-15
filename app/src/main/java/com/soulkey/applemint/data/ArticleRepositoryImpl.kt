@@ -8,6 +8,7 @@ import com.google.firebase.Timestamp
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.QuerySnapshot
 import com.soulkey.applemint.db.ArticleDao
+import com.soulkey.applemint.db.BookmarkDao
 import com.soulkey.applemint.model.Article
 import com.soulkey.applemint.model.Bookmark
 import timber.log.Timber
@@ -15,6 +16,10 @@ import timber.log.Timber
 class ArticleRepositoryImpl(private val db: FirebaseFirestore, private val articleDao: ArticleDao, private val context: Context) : ArticleRepository {
     override fun getNewArticles(): LiveData<List<Article>> {
         return articleDao.getNewArticles()
+    }
+
+    override fun deleteAll() {
+        articleDao.deleteAllArticles()
     }
 
     override fun getReadLater(): LiveData<List<Article>> {
@@ -43,46 +48,20 @@ class ArticleRepositoryImpl(private val db: FirebaseFirestore, private val artic
             }
     }
 
-    override fun restoreArticle(item: Article) {
-        db.collection("article").document(item.fb_id).set(item)
+    override fun insert(article: Article) {
+        val articleData = hashMapOf(
+            "url" to article.url,
+            "type" to article.type,
+            "timestamp" to article.timestamp,
+            "textContent" to article.content,
+            "state" to article.state,
+            "crawlSource" to article.source
+        )
+        db.collection("article").document(article.fb_id)
+            .set(articleData)
             .addOnSuccessListener {
-                Timber.v("diver:/ restore success")
-                articleDao.insert(item)
+                articleDao.insert(article)
             }
-            .addOnFailureListener {
-                Toast.makeText(context, "Failed To Restore..", Toast.LENGTH_SHORT).show()
-            }
-    }
-
-    override fun bookmarkArticle(category: String, item: Article) {
-        db.collection("article").document(item.fb_id).delete().addOnCompleteListener {deleteTask->
-            if (deleteTask.isSuccessful) {
-                articleDao.deleteByFbId(item.fb_id)
-                Toast.makeText(context, "Bookmark Success!", Toast.LENGTH_SHORT).show()
-            } else {
-                Toast.makeText(context, "Failed to Bookmark..", Toast.LENGTH_SHORT).show()
-            }
-        }
-    }
-
-    override fun bookmarkCategories(): List<String>? {
-        return db.collection("bookmark").get().result?.documents?.map { it["category"].toString() }?.distinct()
-    }
-
-    override fun getFbIds(): List<String> {
-        return articleDao.getFbIds()
-    }
-
-    override fun getArticlesSingle(): List<Article> {
-        return articleDao.getArticleData()
-    }
-
-    override fun deleteById(id: String) {
-        articleDao.deleteByFbId(id)
-    }
-
-    override fun deleteByIds(list: List<String>) {
-        articleDao.deleteByFbIds(list)
     }
 
     override fun insertAll(list: List<Article>) {

@@ -27,7 +27,10 @@ data class Article(
     val timestamp: Date,
 
     @ColumnInfo(name = "state")
-    val state: String
+    val state: String,
+
+    @ColumnInfo(name="source")
+    val source: String
 ){
     constructor(id: String, data: Map<String, Any>) : this(
         id = null,
@@ -36,6 +39,7 @@ data class Article(
         type = data["type"].toString(),
         content = data["textContent"].toString(),
         timestamp = (data["timestamp"] as Timestamp).toDate(),
-        state = data["state"].toString()
+        state = data["state"].toString(),
+        source = data["crawlSource"].toString()
     )
 }

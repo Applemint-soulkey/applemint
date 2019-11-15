@@ -58,11 +58,9 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
             override fun onDrawerOpened(drawerView: View) {}
             override fun onDrawerSlide(drawerView: View, slideOffset: Float) {}
             override fun onDrawerClosed(drawerView: View) {
-                currentFragment.let {
-                    supportFragmentManager.beginTransaction().apply {
-                        replace(R.id.container_main_body, currentFragment)
-                    }.commit()
-                }
+                supportFragmentManager.beginTransaction().apply {
+                    replace(R.id.container_main_body, currentFragment)
+                }.commit()
             }
         })
     }

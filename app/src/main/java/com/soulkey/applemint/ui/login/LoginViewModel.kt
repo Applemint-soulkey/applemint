@@ -11,8 +11,8 @@ import com.soulkey.applemint.model.Article
 import com.soulkey.applemint.model.Bookmark
 
 class LoginViewModel(private val db: FirebaseFirestore, private val articleRepository: ArticleRepository, private val bookmarkRepository: BookmarkRepository, private val context: Context) : ViewModel() {
-    var isArticleUpdated = false
-    var isBookmarkUpdated = false
+    private var isArticleUpdated = false
+    private var isBookmarkUpdated = false
     val isUpdated: MutableLiveData<Boolean> by lazy {
         MutableLiveData<Boolean>()
     }
@@ -46,15 +46,9 @@ class LoginViewModel(private val db: FirebaseFirestore, private val articleRepos
         isArticleUpdated = false
         db.collection("article").get().addOnSuccessListener {snapshot->
             val articleList = snapshot.map {Article(it.id, it.data)}
-            val fbIds = articleRepository.getFbIds()
-            val cloudFbIds = articleList.map { it.fb_id }
-
-            updateProcess.value = "Remove already read items.."
-            articleRepository.deleteByIds(fbIds.filter { !cloudFbIds.contains(it) })
-
+            articleRepository.deleteAll()
             updateProcess.value = "Load new items from Server.."
-            articleRepository.insertAll(articleList.filter {!fbIds.contains(it.fb_id)})
-
+            articleRepository.insertAll(articleList)
             isArticleUpdated = true
             isUpdated.value = isArticleUpdated && isBookmarkUpdated
         }.addOnFailureListener {
