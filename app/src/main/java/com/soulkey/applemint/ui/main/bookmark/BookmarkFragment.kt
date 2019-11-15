@@ -63,7 +63,9 @@ class BookmarkFragment : Fragment() {
         viewModel.getBookmarks().observe(this, Observer {
             adapter.bookmarks = it
             adapter.items = it.toMutableList()
-            adapter.notifyDataSetChanged()
+            et_bookmark_search.text
+            adapter.search(et_bookmark_search.text.toString(), viewModel.categoryFilter.value!!, viewModel.typeFilter.value!!)
+//            adapter.notifyDataSetChanged()
         })
 
         // Add Category Chips on Filter

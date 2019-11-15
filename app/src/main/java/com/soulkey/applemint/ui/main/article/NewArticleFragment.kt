@@ -49,7 +49,8 @@ class NewArticleFragment : Fragment() {
         articleViewModel.getNewArticles().observe(this, Observer {articles->
             articleAdapter.articles = articles
             articleAdapter.items = articles.toMutableList()
-            articleAdapter.notifyDataSetChanged()
+            articleViewModel.typeFilter.value = getFilters(chip_group_filter_article)
+            //articleAdapter.notifyDataSetChanged()
         })
         mainViewModel.isFilterOpen.value = false
         mainViewModel.isFilterOpen.observe(this, Observer {

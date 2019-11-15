@@ -48,7 +48,8 @@ class ReadLaterFragment : Fragment() {
         articleViewModel.getReadLaters().observe(this, Observer {
             articleAdapter.articles = it
             articleAdapter.items = it.toMutableList()
-            articleAdapter.notifyDataSetChanged()
+            articleViewModel.typeFilter.value = getFilters(chip_group_filter_article)
+//            articleAdapter.notifyDataSetChanged()
         })
         mainViewModel.isFilterOpen.value = false
         mainViewModel.isFilterOpen.observe(this, Observer {

@@ -9,6 +9,7 @@ import android.view.View
 import android.view.inputmethod.InputMethodManager
 import androidx.appcompat.widget.DialogTitle
 import androidx.core.view.GravityCompat
+import androidx.drawerlayout.widget.DrawerLayout
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import com.google.android.material.navigation.NavigationView
@@ -25,6 +26,7 @@ import timber.log.Timber
 
 class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelectedListener {
     private val mainViewModel: MainViewModel by viewModel()
+    lateinit var currentFragment: Fragment
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.main_activity)
@@ -46,21 +48,30 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         mainViewModel.isFilterApply.observe(this, Observer {
             iv_filter_notification_dot.visibility = if (it) View.VISIBLE else View.INVISIBLE
         })
-
+        currentFragment = DashboardFragment()
         supportFragmentManager.beginTransaction().apply {
-            replace(R.id.container_main_body,
-                DashboardFragment()
-            )
+            replace(R.id.container_main_body, currentFragment)
         }.commit()
+
+        drawer_main.addDrawerListener(object: DrawerLayout.DrawerListener{
+            override fun onDrawerStateChanged(newState: Int) {}
+            override fun onDrawerOpened(drawerView: View) {}
+            override fun onDrawerSlide(drawerView: View, slideOffset: Float) {}
+            override fun onDrawerClosed(drawerView: View) {
+                currentFragment.let {
+                    supportFragmentManager.beginTransaction().apply {
+                        replace(R.id.container_main_body, currentFragment)
+                    }.commit()
+                }
+            }
+        })
     }
 
-    private fun replaceFragment(fragment: Fragment, titleText: String = "Applemint", setFilterVisible:Boolean = false){
+    private fun replaceFragment(fragment: Fragment, titleText: String = "Applemint", setFilterVisible:Boolean = false) {
         tv_main_title.text = titleText
         iv_filter_notification_dot.visibility = View.INVISIBLE
         iv_article_filter.visibility = if (setFilterVisible) View.VISIBLE else View.INVISIBLE
-        supportFragmentManager.beginTransaction().apply {
-            replace(R.id.container_main_body, fragment)
-        }.commit()
+        currentFragment = fragment
     }
 
     override fun onNavigationItemSelected(item: MenuItem): Boolean {
