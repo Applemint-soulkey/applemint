@@ -33,6 +33,12 @@ class ReadLaterFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+        articleViewModel.typeFilter.value = listOf()
+        articleViewModel.typeFilter.observe(this, Observer {
+            mainViewModel.isFilterApply.value = !it.isNullOrEmpty()
+            articleAdapter.filter(it)
+        })
         articleAdapter = ArticleAdapter(listOf(), articleViewModel).also {
             recycler_article.apply { adapter = it }.setOnTouchListener { _, _ ->
                 mainViewModel.isFilterOpen.value = false
