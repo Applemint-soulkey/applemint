@@ -16,6 +16,8 @@
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintBottom_toBottomOf="parent"/>
 
+    <include layout="@layout/view_empty"/>
+
     <net.cachapa.expandablelayout.ExpandableLayout
         android:id="@+id/container_el_chip_filter"
         android:layout_width="match_parent"
@@ -28,8 +30,5 @@
         <include layout="@layout/view_chip_group_type"/>
 
     </net.cachapa.expandablelayout.ExpandableLayout>
-
-
-
 
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -18,9 +18,11 @@ import com.google.android.material.snackbar.Snackbar
 import com.soulkey.applemint.R
 import com.soulkey.applemint.config.getFilters
 import com.soulkey.applemint.ui.main.MainViewModel
+import kotlinx.android.synthetic.main.fragment_articles.*
 import kotlinx.android.synthetic.main.fragment_bookmark.*
 import kotlinx.android.synthetic.main.item_bookmark_foreground.view.*
 import kotlinx.android.synthetic.main.view_chip_group_type.*
+import kotlinx.android.synthetic.main.view_empty.*
 import org.koin.androidx.viewmodel.ext.android.sharedViewModel
 
 class BookmarkFragment : Fragment() {
@@ -44,8 +46,15 @@ class BookmarkFragment : Fragment() {
 
         adapter = BookmarkAdapter(viewModel)
         viewModel.filterBookmarks.observe(this, Observer {
+            layout_view_empty.visibility = if (it.isEmpty()) View.VISIBLE else View.INVISIBLE
             adapter.submitList(it)
         })
+        adapter.registerAdapterDataObserver(object : RecyclerView.AdapterDataObserver(){
+            override fun onItemRangeInserted(positionStart: Int, itemCount: Int) {
+                if (itemCount > 1) recycler_bookmark.scrollToPosition(0)
+            }
+        })
+
         recycler_bookmark.adapter = adapter
         recycler_bookmark.setOnTouchListener { _, _ ->
             mainViewModel.isFilterOpen.value = false

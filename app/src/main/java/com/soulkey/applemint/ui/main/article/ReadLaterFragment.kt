@@ -16,6 +16,7 @@ import com.soulkey.applemint.ui.main.MainViewModel
 import kotlinx.android.synthetic.main.fragment_articles.*
 import kotlinx.android.synthetic.main.item_article_foreground.view.*
 import kotlinx.android.synthetic.main.view_chip_group_type.*
+import kotlinx.android.synthetic.main.view_empty.*
 import org.koin.androidx.viewmodel.ext.android.sharedViewModel
 
 class ReadLaterFragment : Fragment() {
@@ -36,27 +37,12 @@ class ReadLaterFragment : Fragment() {
 
         articleAdapter = ArticleAdapter(articleViewModel)
         articleViewModel.readLaters.observe(this, Observer {
+            layout_view_empty.visibility = if (it.isEmpty()) View.VISIBLE else View.INVISIBLE
             articleAdapter.submitList(it)
-            recycler_article.smoothScrollToPosition(0)
         })
         articleAdapter.registerAdapterDataObserver(object : RecyclerView.AdapterDataObserver(){
-            override fun onChanged() {
-                recycler_article.scrollToPosition(0)
-            }
-            override fun onItemRangeRemoved(positionStart: Int, itemCount: Int) {
-                recycler_article.scrollToPosition(0)
-            }
-            override fun onItemRangeMoved(fromPosition: Int, toPosition: Int, itemCount: Int) {
-                recycler_article.scrollToPosition(0)
-            }
             override fun onItemRangeInserted(positionStart: Int, itemCount: Int) {
-                recycler_article.scrollToPosition(0)
-            }
-            override fun onItemRangeChanged(positionStart: Int, itemCount: Int) {
-                recycler_article.scrollToPosition(0)
-            }
-            override fun onItemRangeChanged(positionStart: Int, itemCount: Int, payload: Any?) {
-                recycler_article.scrollToPosition(0)
+                if (itemCount > 1) recycler_article.scrollToPosition(0)
             }
         })
         recycler_article.adapter = articleAdapter
