@@ -4,7 +4,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.google.firebase.firestore.FirebaseFirestore
 
-class MainViewModel() : ViewModel() {
+class MainViewModel : ViewModel() {
     val db = FirebaseFirestore.getInstance()
     val isFilterOpen: MutableLiveData<Boolean> by lazy {
         MutableLiveData<Boolean>()

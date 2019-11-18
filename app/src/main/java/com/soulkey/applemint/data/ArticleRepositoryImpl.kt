@@ -14,16 +14,12 @@ import com.soulkey.applemint.model.Bookmark
 import timber.log.Timber
 
 class ArticleRepositoryImpl(private val db: FirebaseFirestore, private val articleDao: ArticleDao, private val context: Context) : ArticleRepository {
-    override fun getNewArticles(): LiveData<List<Article>> {
-        return articleDao.getNewArticles()
+    override fun loadArticles(): LiveData<List<Article>> {
+        return articleDao.loadAllArticles()
     }
 
     override fun deleteAll() {
         articleDao.deleteAllArticles()
-    }
-
-    override fun getReadLater(): LiveData<List<Article>> {
-        return articleDao.getReadLaters()
     }
 
     override fun removeArticle(id: String) {

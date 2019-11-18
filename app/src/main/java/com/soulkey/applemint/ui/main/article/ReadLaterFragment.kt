@@ -34,23 +34,20 @@ class ReadLaterFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        articleAdapter = ArticleAdapter(articleViewModel)
+        articleViewModel.readLaters.observe(this, Observer {
+            articleAdapter.submitList(it)
+        })
+        recycler_article.adapter = articleAdapter
+
         articleViewModel.typeFilter.value = listOf()
-        articleViewModel.typeFilter.observe(this, Observer {
-            mainViewModel.isFilterApply.value = !it.isNullOrEmpty()
-            articleAdapter.filter(it)
+        articleViewModel.typeFilter.observe(this, Observer {filter->
+            mainViewModel.isFilterApply.value = !filter.isNullOrEmpty()
         })
-        articleAdapter = ArticleAdapter(listOf(), articleViewModel).also {
-            recycler_article.apply { adapter = it }.setOnTouchListener { _, _ ->
-                mainViewModel.isFilterOpen.value = false
-                false
-            }
+        recycler_article.setOnTouchListener { _, _ ->
+            mainViewModel.isFilterOpen.value = false
+            false
         }
-        articleViewModel.getReadLaters().observe(this, Observer {
-            articleAdapter.articles = it
-            articleAdapter.items = it.toMutableList()
-            articleViewModel.typeFilter.value = getFilters(chip_group_filter_article)
-//            articleAdapter.notifyDataSetChanged()
-        })
         mainViewModel.isFilterOpen.value = false
         mainViewModel.isFilterOpen.observe(this, Observer {
             if (it) container_el_chip_filter.expand()
@@ -59,23 +56,16 @@ class ReadLaterFragment : Fragment() {
         for (chip in chip_group_filter_article.children){
             chip.setOnClickListener {
                 articleViewModel.typeFilter.value = getFilters(chip_group_filter_article)
-                articleAdapter.filter(articleViewModel.typeFilter.value!!)
             }
         }
 
         val leftSwipeCallback = ArticleItemTouchHelper(0, ItemTouchHelper.LEFT,
             object : ArticleItemTouchHelper.ArticleItemTouchHelperListener {
                 override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int, position: Int) {
-                    articleAdapter.items.removeAt(position)
-                    articleAdapter.notifyItemRemoved(position)
                     val removeItem = (viewHolder as ArticleAdapter.ArticleViewHolder).itemData
                     val removeItemTitle = viewHolder.itemView.tv_article_title.text
-                    Snackbar.make(layout_fragment_article, "$removeItemTitle is Deleted", Snackbar.LENGTH_LONG).also {
-                        it.setAction("UNDO") {
-                            articleViewModel.restoreArticle(removeItem)
-                            articleAdapter.items.add(position, removeItem)
-                            articleAdapter.notifyItemInserted(position)
-                        }
+                    Snackbar.make(layout_fragment_article, "$removeItemTitle is Deleted", Snackbar.LENGTH_LONG).apply {
+                        setAction("UNDO") {articleViewModel.restoreArticle(removeItem) }
                     }.show()
                     articleViewModel.removeArticle(removeItem.fb_id)
                 }
