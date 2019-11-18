@@ -34,23 +34,41 @@ class ReadLaterFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        articleViewModel.typeFilter.value = listOf()
-        articleViewModel.typeFilter.observe(this, Observer {
-            mainViewModel.isFilterApply.value = !it.isNullOrEmpty()
-            articleAdapter.filter(it)
+        articleAdapter = ArticleAdapter(articleViewModel)
+        articleViewModel.readLaters.observe(this, Observer {
+            articleAdapter.submitList(it)
+            recycler_article.smoothScrollToPosition(0)
         })
-        articleAdapter = ArticleAdapter(listOf(), articleViewModel).also {
-            recycler_article.apply { adapter = it }.setOnTouchListener { _, _ ->
-                mainViewModel.isFilterOpen.value = false
-                false
+        articleAdapter.registerAdapterDataObserver(object : RecyclerView.AdapterDataObserver(){
+            override fun onChanged() {
+                recycler_article.scrollToPosition(0)
             }
-        }
-        articleViewModel.getReadLaters().observe(this, Observer {
-            articleAdapter.articles = it
-            articleAdapter.items = it.toMutableList()
-            articleViewModel.typeFilter.value = getFilters(chip_group_filter_article)
-//            articleAdapter.notifyDataSetChanged()
+            override fun onItemRangeRemoved(positionStart: Int, itemCount: Int) {
+                recycler_article.scrollToPosition(0)
+            }
+            override fun onItemRangeMoved(fromPosition: Int, toPosition: Int, itemCount: Int) {
+                recycler_article.scrollToPosition(0)
+            }
+            override fun onItemRangeInserted(positionStart: Int, itemCount: Int) {
+                recycler_article.scrollToPosition(0)
+            }
+            override fun onItemRangeChanged(positionStart: Int, itemCount: Int) {
+                recycler_article.scrollToPosition(0)
+            }
+            override fun onItemRangeChanged(positionStart: Int, itemCount: Int, payload: Any?) {
+                recycler_article.scrollToPosition(0)
+            }
         })
+        recycler_article.adapter = articleAdapter
+
+        articleViewModel.typeFilter.value = listOf()
+        articleViewModel.typeFilter.observe(this, Observer {filter->
+            mainViewModel.isFilterApply.value = !filter.isNullOrEmpty()
+        })
+        recycler_article.setOnTouchListener { _, _ ->
+            mainViewModel.isFilterOpen.value = false
+            false
+        }
         mainViewModel.isFilterOpen.value = false
         mainViewModel.isFilterOpen.observe(this, Observer {
             if (it) container_el_chip_filter.expand()
@@ -59,23 +77,16 @@ class ReadLaterFragment : Fragment() {
         for (chip in chip_group_filter_article.children){
             chip.setOnClickListener {
                 articleViewModel.typeFilter.value = getFilters(chip_group_filter_article)
-                articleAdapter.filter(articleViewModel.typeFilter.value!!)
             }
         }
 
         val leftSwipeCallback = ArticleItemTouchHelper(0, ItemTouchHelper.LEFT,
             object : ArticleItemTouchHelper.ArticleItemTouchHelperListener {
                 override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int, position: Int) {
-                    articleAdapter.items.removeAt(position)
-                    articleAdapter.notifyItemRemoved(position)
                     val removeItem = (viewHolder as ArticleAdapter.ArticleViewHolder).itemData
                     val removeItemTitle = viewHolder.itemView.tv_article_title.text
-                    Snackbar.make(layout_fragment_article, "$removeItemTitle is Deleted", Snackbar.LENGTH_LONG).also {
-                        it.setAction("UNDO") {
-                            articleViewModel.restoreArticle(removeItem)
-                            articleAdapter.items.add(position, removeItem)
-                            articleAdapter.notifyItemInserted(position)
-                        }
+                    Snackbar.make(layout_fragment_article, "$removeItemTitle is Deleted", Snackbar.LENGTH_LONG).apply {
+                        setAction("UNDO") {articleViewModel.restoreArticle(removeItem) }
                     }.show()
                     articleViewModel.removeArticle(removeItem.fb_id)
                 }

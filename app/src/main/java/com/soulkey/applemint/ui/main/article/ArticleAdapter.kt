@@ -12,7 +12,9 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.RadioButton
 import androidx.core.content.ContextCompat
+import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ItemTouchHelper
+import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.afollestad.materialdialogs.MaterialDialog
 import com.afollestad.materialdialogs.WhichButton
@@ -20,10 +22,8 @@ import com.afollestad.materialdialogs.actions.setActionButtonEnabled
 import com.afollestad.materialdialogs.bottomsheets.BottomSheet
 import com.afollestad.materialdialogs.customview.customView
 import com.afollestad.materialdialogs.customview.getCustomView
-import com.google.android.material.chip.ChipGroup
 import com.google.android.material.radiobutton.MaterialRadioButton
 import com.soulkey.applemint.R
-import com.soulkey.applemint.config.getFilters
 import com.soulkey.applemint.config.typeTagMapper
 import com.soulkey.applemint.model.Article
 import com.soulkey.applemint.ui.viewer.ViewerActivity
@@ -31,21 +31,22 @@ import kotlinx.android.synthetic.main.item_article_background.view.*
 import kotlinx.android.synthetic.main.item_article_foreground.view.*
 import kotlinx.android.synthetic.main.view_bottomsheet_bookmark.view.*
 
-class ArticleAdapter(list: List<Article>, val viewModel: ArticleViewModel) : RecyclerView.Adapter<ArticleAdapter.ArticleViewHolder>() {
-    var articles = list
-    var items = list.toMutableList()
-
-    fun filter(typeFilter : List<String>) {
-        items = articles
-            .filter { typeFilter.contains(it.type) || typeFilter.isEmpty() }
-            .toMutableList()
-        notifyDataSetChanged()
+class ArticleAdapter(val viewModel: ArticleViewModel): ListAdapter<Article, ArticleAdapter.ArticleViewHolder>(object :
+    DiffUtil.ItemCallback<Article>(){
+    override fun areItemsTheSame(oldItem: Article, newItem: Article): Boolean {
+        return (oldItem.fb_id == newItem.fb_id)
     }
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int) = ArticleViewHolder(LayoutInflater.from(parent.context).inflate(R.layout.item_article, parent, false))
-    override fun getItemCount() = items.size
+    override fun areContentsTheSame(oldItem: Article, newItem: Article): Boolean {
+        return oldItem == newItem
+    }
+}) {
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ArticleViewHolder {
+        return ArticleViewHolder(LayoutInflater.from(parent.context).inflate(R.layout.item_article, parent, false))
+    }
+
     override fun onBindViewHolder(holder: ArticleViewHolder, position: Int) {
-        holder.bind(items[position])
+        holder.bind(getItem(position))
     }
 
     inner class ArticleViewHolder(itemView: View): RecyclerView.ViewHolder(itemView) {
@@ -72,7 +73,7 @@ class ArticleAdapter(list: List<Article>, val viewModel: ArticleViewModel) : Rec
             }
 
             itemView.btn_card_article_bookmark.setOnClickListener {
-                openBookmarkDialog(it.context, adapterPosition)
+                openBookmarkDialog(it.context)
             }
             itemView.setOnClickListener {
                 Handler().postDelayed( {
@@ -83,7 +84,7 @@ class ArticleAdapter(list: List<Article>, val viewModel: ArticleViewModel) : Rec
             }
         }
 
-        private fun openBookmarkDialog(context: Context, position: Int) {
+        private fun openBookmarkDialog(context: Context) {
             var selectedCategory = ""
             val dialog = MaterialDialog(context, BottomSheet()).customView(R.layout.view_bottomsheet_bookmark, scrollable = true)
             val view = dialog.getCustomView()
@@ -111,7 +112,7 @@ class ArticleAdapter(list: List<Article>, val viewModel: ArticleViewModel) : Rec
                 view.btn_add_bookmark_category.visibility = View.INVISIBLE
                 view.et_add_bookmark_category.visibility = View.VISIBLE
             }
-            view.et_add_bookmark_category.addTextChangedListener(object : TextWatcher{
+            view.et_add_bookmark_category.addTextChangedListener(object : TextWatcher {
                 override fun afterTextChanged(s: Editable?) {
                     selectedCategory = s.toString()
                     dialog.setActionButtonEnabled(WhichButton.POSITIVE, selectedCategory.isNotEmpty())
@@ -124,13 +125,12 @@ class ArticleAdapter(list: List<Article>, val viewModel: ArticleViewModel) : Rec
                 cornerRadius(16f)
                 positiveButton(text = "Save") {
                     viewModel.bookmarkArticle(selectedCategory, itemData)
-                    items.removeAt(position)
-                    notifyItemRemoved(position)
                 }
             }
         }
     }
 }
+
 
 class ArticleItemTouchHelper(dragDirs: Int, swipeDirs: Int, private val listener: ArticleItemTouchHelperListener) : ItemTouchHelper.SimpleCallback(dragDirs, swipeDirs) {
     override fun onMove(
