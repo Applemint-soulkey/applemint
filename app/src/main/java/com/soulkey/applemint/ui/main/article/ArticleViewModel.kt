@@ -1,7 +1,6 @@
 package com.soulkey.applemint.ui.main.article
 
 import androidx.lifecycle.*
-import com.soulkey.applemint.config.typeMapper
 import com.soulkey.applemint.data.ArticleRepository
 import com.soulkey.applemint.data.BookmarkRepository
 import com.soulkey.applemint.model.Article
@@ -10,7 +9,6 @@ import com.soulkey.applemint.model.Bookmark
 class ArticleViewModel(private val articleRepo: ArticleRepository, private val bookmarkRepo:BookmarkRepository): ViewModel(){
     var typeFilter: MutableLiveData<List<String>> = MutableLiveData()
     var articles: LiveData<List<Article>>
-    var filterArticle: MediatorLiveData<List<Article>> = MediatorLiveData()
     var newArticles: MediatorLiveData<List<Article>> = MediatorLiveData()
     var readLaters: MediatorLiveData<List<Article>> = MediatorLiveData()
 
@@ -18,41 +16,19 @@ class ArticleViewModel(private val articleRepo: ArticleRepository, private val b
         typeFilter.value = listOf()
         articles = articleRepo.loadArticles()
 
-        newArticles.addSource(typeFilter){
-            articles.value?.let {
-                newArticles.value = it
-                    .filter { article-> article.state == "new" }
-                    .filter { article->
+        newArticles.addSource(typeFilter){ filterArticle(newArticles,"new") }
+        newArticles.addSource(articles) { filterArticle(newArticles, "new") }
+        readLaters.addSource(typeFilter){ filterArticle(readLaters, "keep") }
+        readLaters.addSource(articles) { filterArticle(readLaters, "keep") }
+    }
+
+    private fun filterArticle(target: MediatorLiveData<List<Article>>, state: String){
+        articles.value?.let {
+            target.value = it
+                .filter { article-> article.state == state }
+                .filter { article->
                     typeFilter.value!!.contains(article.type) || typeFilter.value!!.isEmpty()
                 }
-            }
-        }
-        newArticles.addSource(articles) {
-            articles.value?.let {
-                newArticles.value = it
-                    .filter { article-> article.state == "new" }
-                    .filter { article->
-                    typeFilter.value!!.contains(article.type) || typeFilter.value!!.isEmpty()
-                }
-            }
-        }
-        readLaters.addSource(typeFilter){
-            articles.value?.let {
-                readLaters.value = it
-                    .filter { article-> article.state == "keep" }
-                    .filter { article->
-                    typeFilter.value!!.contains(article.type) || typeFilter.value!!.isEmpty()
-                }
-            }
-        }
-        readLaters.addSource(articles) {
-            articles.value?.let {
-                readLaters.value = it
-                    .filter { article-> article.state == "keep" }
-                    .filter { article->
-                    typeFilter.value!!.contains(article.type) || typeFilter.value!!.isEmpty()
-                }
-            }
         }
     }
 

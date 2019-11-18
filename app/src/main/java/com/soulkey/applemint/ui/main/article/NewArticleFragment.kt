@@ -38,6 +38,26 @@ class NewArticleFragment : Fragment() {
         articleViewModel.newArticles.observe(this, Observer {
             articleAdapter.submitList(it)
         })
+        articleAdapter.registerAdapterDataObserver(object : RecyclerView.AdapterDataObserver(){
+            override fun onChanged() {
+                recycler_article.scrollToPosition(0)
+            }
+            override fun onItemRangeRemoved(positionStart: Int, itemCount: Int) {
+                recycler_article.scrollToPosition(0)
+            }
+            override fun onItemRangeMoved(fromPosition: Int, toPosition: Int, itemCount: Int) {
+                recycler_article.scrollToPosition(0)
+            }
+            override fun onItemRangeInserted(positionStart: Int, itemCount: Int) {
+                recycler_article.scrollToPosition(0)
+            }
+            override fun onItemRangeChanged(positionStart: Int, itemCount: Int) {
+                recycler_article.scrollToPosition(0)
+            }
+            override fun onItemRangeChanged(positionStart: Int, itemCount: Int, payload: Any?) {
+                recycler_article.scrollToPosition(0)
+            }
+        })
         recycler_article.adapter = articleAdapter
 
         articleViewModel.typeFilter.value = listOf()

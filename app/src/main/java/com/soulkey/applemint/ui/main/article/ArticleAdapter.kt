@@ -73,7 +73,7 @@ class ArticleAdapter(val viewModel: ArticleViewModel): ListAdapter<Article, Arti
             }
 
             itemView.btn_card_article_bookmark.setOnClickListener {
-                openBookmarkDialog(it.context, adapterPosition)
+                openBookmarkDialog(it.context)
             }
             itemView.setOnClickListener {
                 Handler().postDelayed( {
@@ -84,7 +84,7 @@ class ArticleAdapter(val viewModel: ArticleViewModel): ListAdapter<Article, Arti
             }
         }
 
-        private fun openBookmarkDialog(context: Context, position: Int) {
+        private fun openBookmarkDialog(context: Context) {
             var selectedCategory = ""
             val dialog = MaterialDialog(context, BottomSheet()).customView(R.layout.view_bottomsheet_bookmark, scrollable = true)
             val view = dialog.getCustomView()

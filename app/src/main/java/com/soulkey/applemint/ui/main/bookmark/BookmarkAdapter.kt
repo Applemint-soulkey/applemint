@@ -8,7 +8,9 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.core.content.ContextCompat
+import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ItemTouchHelper
+import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.afollestad.materialdialogs.MaterialDialog
 import com.afollestad.materialdialogs.WhichButton
@@ -22,23 +24,24 @@ import com.soulkey.applemint.model.Bookmark
 import com.soulkey.applemint.ui.viewer.ViewerActivity
 import kotlinx.android.synthetic.main.item_article_background.view.*
 import kotlinx.android.synthetic.main.item_bookmark_foreground.view.*
-import kotlinx.android.synthetic.main.item_bookmark_foreground.view.container_card_article_foreground
 import kotlinx.android.synthetic.main.view_dialog_edit_bookmark_form.view.*
 
-class BookmarkAdapter(var bookmarks: List<Bookmark>, val viewModel: BookmarkViewModel): RecyclerView.Adapter<BookmarkAdapter.BookmarkViewHolder>() {
-    var items = bookmarks.toMutableList()
+class BookmarkAdapter(val viewModel: BookmarkViewModel) : ListAdapter<Bookmark, BookmarkAdapter.BookmarkViewHolder>(object:
+    DiffUtil.ItemCallback<Bookmark>() {
+    override fun areItemsTheSame(oldItem: Bookmark, newItem: Bookmark): Boolean {
+        return (oldItem.fb_id == newItem.fb_id)
+    }
+
+    override fun areContentsTheSame(oldItem: Bookmark, newItem: Bookmark): Boolean {
+        return oldItem == newItem
+    }
+}) {
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): BookmarkViewHolder {
         return BookmarkViewHolder(LayoutInflater.from(parent.context).inflate(R.layout.item_bookmark, parent, false))
     }
-    override fun getItemCount(): Int = items.size
-    override fun onBindViewHolder(holder: BookmarkViewHolder, position: Int) = holder.bind(items[position])
-    fun search(keyword: String, categoryFilter: List<String>, typeFilter: List<String>) {
-        items = bookmarks
-            .filter {it.content.contains(keyword) || keyword.isEmpty() }
-            .filter {categoryFilter.contains(it.category) || categoryFilter.isEmpty() }
-            .filter {typeFilter.contains(it.type) || typeFilter.isEmpty() }
-            .toMutableList()
-        notifyDataSetChanged()
+
+    override fun onBindViewHolder(holder: BookmarkViewHolder, position: Int) {
+        holder.bind(getItem(position))
     }
 
     inner class BookmarkViewHolder(itemView: View): RecyclerView.ViewHolder(itemView){

@@ -22,7 +22,6 @@ import kotlinx.android.synthetic.main.fragment_bookmark.*
 import kotlinx.android.synthetic.main.item_bookmark_foreground.view.*
 import kotlinx.android.synthetic.main.view_chip_group_type.*
 import org.koin.androidx.viewmodel.ext.android.sharedViewModel
-import timber.log.Timber
 
 class BookmarkFragment : Fragment() {
     private val mainViewModel by sharedViewModel<MainViewModel> ()
@@ -43,28 +42,21 @@ class BookmarkFragment : Fragment() {
         viewModel.categoryFilter.value = listOf()
         viewModel.typeFilter.value = listOf()
 
-        // Initialize Bookmark List
-        adapter = BookmarkAdapter(listOf(), viewModel).also {
-            recycler_bookmark.apply { adapter = it }
-                .setOnTouchListener { _, _ ->
-                    (activity?.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager).also {imm->
-                        imm.hideSoftInputFromWindow(view.windowToken, 0)
-                    }
-                    mainViewModel.isFilterOpen.value = false
-                    false
-                }
+        adapter = BookmarkAdapter(viewModel)
+        viewModel.filterBookmarks.observe(this, Observer {
+            adapter.submitList(it)
+        })
+        recycler_bookmark.adapter = adapter
+        recycler_bookmark.setOnTouchListener { _, _ ->
+            mainViewModel.isFilterOpen.value = false
+            (activity?.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager).also {imm->
+                imm.hideSoftInputFromWindow(view.windowToken, 0)
+            }
+            false
         }
 
         viewModel.isFilterApply.observe(this, Observer {
-//            Timber.v("diver:/ current filter status= $it")
             mainViewModel.isFilterApply.value = it
-        })
-
-        viewModel.getBookmarks().observe(this, Observer {
-            adapter.bookmarks = it
-            adapter.items = it.toMutableList()
-            et_bookmark_search.text
-            adapter.search(et_bookmark_search.text.toString(), viewModel.categoryFilter.value!!, viewModel.typeFilter.value!!)
         })
 
         // Add Category Chips on Filter
@@ -104,10 +96,7 @@ class BookmarkFragment : Fragment() {
             override fun afterTextChanged(s: Editable?) {
                 s?.let {
                     iv_clear_bookmark_search.visibility = if (s.isEmpty()) View.INVISIBLE else View.VISIBLE
-                    adapter.search(
-                        keyword = s.toString(),
-                        categoryFilter = viewModel.categoryFilter.value!!,
-                        typeFilter = viewModel.typeFilter.value!!)
+                    viewModel.searchKeyword.value = s.toString()
                 }
             }
             override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int){}
@@ -118,10 +107,6 @@ class BookmarkFragment : Fragment() {
         for (chip in chip_group_bookmark_filter_category.children) {
             chip.setOnClickListener {
                 viewModel.categoryFilter.value = getFilters(chip_group_bookmark_filter_category)
-                adapter.search(
-                    keyword = et_bookmark_search.text.toString(),
-                    categoryFilter = viewModel.categoryFilter.value!!,
-                    typeFilter = viewModel.typeFilter.value!!)
             }
         }
 
@@ -129,10 +114,6 @@ class BookmarkFragment : Fragment() {
         for (chip in chip_group_filter_article.children){
             chip.setOnClickListener {
                 viewModel.typeFilter.value = getFilters(chip_group_filter_article)
-                adapter.search(
-                    keyword = et_bookmark_search.text.toString(),
-                    categoryFilter = viewModel.categoryFilter.value!!,
-                    typeFilter = viewModel.typeFilter.value!!)
             }
         }
 
@@ -140,21 +121,14 @@ class BookmarkFragment : Fragment() {
         val leftSwipeCallback = BookmarkItemTouchHelper(0, ItemTouchHelper.LEFT,
             object : BookmarkItemTouchHelper.BookmarkItemTouchHelperListener{
                 override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int, position: Int) {
-                    adapter.items.removeAt(position)
-                    adapter.notifyItemRemoved(position)
                     val removeItem = (viewHolder as BookmarkAdapter.BookmarkViewHolder).itemData
                     val removeItemTitle = viewHolder.itemView.tv_bookmark_title.text
-                    Snackbar.make(layout_fragment_bookmark, "$removeItemTitle is Deleted", Snackbar.LENGTH_LONG).also {
-                        it.setAction("UNDO") {
-                            viewModel.restoreBookmark(removeItem)
-                            adapter.items.add(position, removeItem)
-                            adapter.notifyItemInserted(position)
-                        }
+                    Snackbar.make(layout_fragment_bookmark, "$removeItemTitle is Deleted", Snackbar.LENGTH_LONG).apply {
+                        setAction("UNDO") { viewModel.restoreBookmark(removeItem) }
                     }.show()
                     viewModel.removeBookmark(removeItem.fb_id)
                 }
             })
         ItemTouchHelper(leftSwipeCallback).attachToRecyclerView(recycler_bookmark)
     }
-
 }
