@@ -75,7 +75,7 @@ class BookmarkAdapter(val viewModel: BookmarkViewModel) : ListAdapter<Bookmark, 
         }
 
         private fun editBookmark(item: Bookmark){
-            val dialog = MaterialDialog(itemView.context).customView(R.layout.view_dialog_edit_bookmark_form)
+            val dialog = MaterialDialog(itemView.context).customView(R.layout.view_dialog_edit_bookmark_form, scrollable = true)
             val view = dialog.getCustomView()
             view.et_edit_bookmark_content.setText(item.content)
             view.et_edit_bookmark_url.setText(item.url)

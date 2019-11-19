@@ -12,6 +12,7 @@ import androidx.core.view.GravityCompat
 import androidx.drawerlayout.widget.DrawerLayout
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
+import com.afollestad.materialdialogs.MaterialDialog
 import com.google.android.material.navigation.NavigationView
 import com.google.firebase.auth.FirebaseAuth
 import com.soulkey.applemint.R
@@ -63,6 +64,15 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
                 }.commit()
             }
         })
+    }
+
+    override fun onBackPressed() {
+        MaterialDialog(this).show {
+            title(text = "Want to close Applemint?")
+            positiveButton { super.onBackPressed() }
+            negativeButton {  }
+            cornerRadius(16f)
+        }
     }
 
     private fun replaceFragment(fragment: Fragment, titleText: String = "Applemint", setFilterVisible:Boolean = false) {

@@ -61,6 +61,12 @@ class ReadLaterFragment : Fragment() {
                 mainViewModel.isFilterOpen.value = false
                 false
             }
+            addOnScrollListener(object: RecyclerView.OnScrollListener(){
+                override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
+                    super.onScrolled(recyclerView, dx, dy)
+                    layout_swipe_article.isEnabled = !recycler_article.canScrollVertically(-1)
+                }
+            })
         }
 
         //Filter 초기화
