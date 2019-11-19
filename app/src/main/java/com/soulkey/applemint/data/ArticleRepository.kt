@@ -1,6 +1,7 @@
 package com.soulkey.applemint.data
 
 import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
 import com.google.android.gms.tasks.Task
 import com.google.firebase.firestore.QuerySnapshot
 import com.soulkey.applemint.model.Article
@@ -12,4 +13,5 @@ interface ArticleRepository {
     fun insert(article: Article)
     fun keepArticle(id: String)
     fun loadArticles(): LiveData<List<Article>>
+    fun syncWithServer(flag: MutableLiveData<Boolean>)
 }

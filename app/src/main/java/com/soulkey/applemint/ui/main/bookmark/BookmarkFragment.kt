@@ -41,12 +41,19 @@ class BookmarkFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+        viewModel.isBookmarkUpdated.observe(this, Observer {
+            layout_swipe_bookmark.isRefreshing = !it
+        })
+        layout_swipe_bookmark.setOnRefreshListener { viewModel.triggerUpdate() }
+        layout_view_empty.visibility = View.GONE
+
         viewModel.categoryFilter.value = listOf()
         viewModel.typeFilter.value = listOf()
 
         adapter = BookmarkAdapter(viewModel)
         viewModel.filterBookmarks.observe(this, Observer {
-            layout_view_empty.visibility = if (it.isEmpty()) View.VISIBLE else View.INVISIBLE
+            layout_view_empty.visibility = if (it.isEmpty()) View.VISIBLE else View.GONE
             adapter.submitList(it)
         })
         adapter.registerAdapterDataObserver(object : RecyclerView.AdapterDataObserver(){
