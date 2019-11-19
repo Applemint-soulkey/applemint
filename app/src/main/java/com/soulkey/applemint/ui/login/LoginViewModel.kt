@@ -1,62 +1,35 @@
 package com.soulkey.applemint.ui.login
 
 import android.content.Context
-import android.widget.Toast
+import androidx.lifecycle.MediatorLiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.google.firebase.firestore.FirebaseFirestore
 import com.soulkey.applemint.data.ArticleRepository
 import com.soulkey.applemint.data.BookmarkRepository
-import com.soulkey.applemint.model.Article
-import com.soulkey.applemint.model.Bookmark
 
 class LoginViewModel(private val db: FirebaseFirestore, private val articleRepository: ArticleRepository, private val bookmarkRepository: BookmarkRepository, private val context: Context) : ViewModel() {
-    private var isArticleUpdated = false
-    private var isBookmarkUpdated = false
+    private val isArticleUpdated : MutableLiveData<Boolean> = MutableLiveData(false)
+    private val isBookmarkUpdated : MutableLiveData<Boolean> = MutableLiveData(false)
+    val isUpdateComplete : MediatorLiveData<Boolean> = MediatorLiveData()
+    val updateProcess: MutableLiveData<String> = MutableLiveData("Connect to Server..")
 
-
-
-    val isUpdated: MutableLiveData<Boolean> by lazy {
-        MutableLiveData<Boolean>()
-    }
-
-    val updateProcess: MutableLiveData<String> by lazy {
-        MutableLiveData<String>()
+    init {
+        isUpdateComplete.addSource(isArticleUpdated) {
+            isUpdateComplete.value = isArticleUpdated.value!! && isBookmarkUpdated.value!!
+        }
+        isUpdateComplete.addSource(isBookmarkUpdated) {
+            isUpdateComplete.value = isArticleUpdated.value!! && isBookmarkUpdated.value!!
+        }
     }
 
     fun updateBookmarks() {
-        isBookmarkUpdated = false
-        db.collection("bookmark").get().addOnSuccessListener {snapshot->
-            val bookmarkList = snapshot.map { Bookmark(it.id, it.data) }
-            val fbIds = bookmarkRepository.getFbIds()
-            val cloudFbIds = bookmarkList.map { it.fb_id }
-
-            updateProcess.value = "Remove deleted bookmarks.."
-            bookmarkRepository.deleteByFbIds(fbIds.filter { !cloudFbIds.contains(it) })
-
-            updateProcess.value = "Load new Bookmarks from Server.."
-            bookmarkRepository.insertAll(bookmarkList.filter { !fbIds.contains(it.fb_id) })
-
-            isBookmarkUpdated = true
-            isUpdated.value = isArticleUpdated && isBookmarkUpdated
-        }.addOnFailureListener {
-            isArticleUpdated = false
-            Toast.makeText(context, "Failed To Update Bookmarks..", Toast.LENGTH_SHORT).show()
-        }
+        isBookmarkUpdated.value = false
+        bookmarkRepository.syncWithServer(isBookmarkUpdated)
     }
 
     fun updateArticles(){
-        isArticleUpdated = false
-        db.collection("article").get().addOnSuccessListener {snapshot->
-            val articleList = snapshot.map {Article(it.id, it.data)}
-            articleRepository.deleteAll()
-            updateProcess.value = "Load new items from Server.."
-            articleRepository.insertAll(articleList)
-            isArticleUpdated = true
-            isUpdated.value = isArticleUpdated && isBookmarkUpdated
-        }.addOnFailureListener {
-            isArticleUpdated = false
-            Toast.makeText(context, "Failed To Update Articles..", Toast.LENGTH_SHORT).show()
-        }
+        isArticleUpdated.value = false
+        articleRepository.syncWithServer(isArticleUpdated)
     }
 }

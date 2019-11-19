@@ -32,7 +32,7 @@ class LoginActivity : AppCompatActivity() {
             tv_login_update_msg.text = it
         })
 
-        loginViewModel.isUpdated.observe(this, Observer {
+        loginViewModel.isUpdateComplete.observe(this, Observer {
             if (it) {
                 Handler().postDelayed({
                     startActivity(Intent(applicationContext, MainActivity::class.java))
@@ -45,10 +45,11 @@ class LoginActivity : AppCompatActivity() {
             val inputEmail = et_email.text.toString()
             val inputPassword = et_password.text.toString()
             if(inputEmail.isNotEmpty() and inputPassword.isNotEmpty()){
+                TransitionManager.beginDelayedTransition(activity_login)
+                constraintSet.applyTo(activity_login)
                 auth.signInWithEmailAndPassword(inputEmail, inputPassword).addOnCompleteListener {
                     if (it.isSuccessful){
-                        TransitionManager.beginDelayedTransition(activity_login)
-                        constraintSet.applyTo(activity_login)
+                        loginViewModel.updateProcess.value = "Wait for Update.."
                         loginViewModel.updateArticles()
                         loginViewModel.updateBookmarks()
                     } else {

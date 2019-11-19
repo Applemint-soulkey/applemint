@@ -18,9 +18,7 @@ class ArticleRepositoryImpl(private val db: FirebaseFirestore, private val artic
     override fun syncWithServer(flag: MutableLiveData<Boolean>) {
         db.collection("article").get().addOnSuccessListener { snapshot ->
             deleteAll()
-            snapshot.map { Article(it.id, it.data) }.also {
-                insertAll(it)
-            }
+            snapshot.map { Article(it.id, it.data) }.also {insertAll(it)}
             flag.value = true
         }
     }
