@@ -35,11 +35,6 @@ class ReadLaterFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        //Swipe to Refresh
-        articleViewModel.isArticleUpdated.observe(this, Observer {
-            layout_swipe_article.isRefreshing = !it
-        })
-        layout_swipe_article.setOnRefreshListener {articleViewModel.triggerUpdate()}
         layout_view_empty.visibility = View.GONE
 
         // Article Adapter 설정
@@ -61,12 +56,6 @@ class ReadLaterFragment : Fragment() {
                 mainViewModel.isFilterOpen.value = false
                 false
             }
-            addOnScrollListener(object: RecyclerView.OnScrollListener(){
-                override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
-                    super.onScrolled(recyclerView, dx, dy)
-                    layout_swipe_article.isEnabled = !recycler_article.canScrollVertically(-1)
-                }
-            })
         }
 
         //Filter 초기화
@@ -97,12 +86,18 @@ class ReadLaterFragment : Fragment() {
                 override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int, position: Int) {
                     val removeItem = (viewHolder as ArticleAdapter.ArticleViewHolder).itemData
                     val removeItemTitle = viewHolder.itemView.tv_article_title.text
+                    val removeIndex = articleViewModel.articles.value!!.indexOf(removeItem)
                     Snackbar.make(layout_fragment_article, "$removeItemTitle is Deleted", Snackbar.LENGTH_LONG).apply {
-                        setAction("UNDO") {articleViewModel.restoreArticle(removeItem) }
+                        setAction("UNDO") {articleViewModel.restoreArticle(removeItem, removeIndex) }
                     }.show()
                     articleViewModel.removeArticle(removeItem.fb_id)
                 }
             })
         ItemTouchHelper(leftSwipeCallback).attachToRecyclerView(recycler_article)
+    }
+
+    override fun onResume() {
+        super.onResume()
+        articleViewModel.fetchArticles()
     }
 }

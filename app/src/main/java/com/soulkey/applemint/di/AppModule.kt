@@ -15,20 +15,19 @@ import org.koin.android.ext.koin.androidContext
 import org.koin.androidx.viewmodel.dsl.viewModel
 import org.koin.dsl.module
 
-val ArticleModule = module {
+val AppModule = module {
     single { Room.databaseBuilder(get(), AppDatabase::class.java, "app_database")
         .fallbackToDestructiveMigration()
         .allowMainThreadQueries()
         .build()
     }
     single { FirebaseFirestore.getInstance() }
-    single { get<AppDatabase>().articleDao() }
     single { get<AppDatabase>().bookmarkDao() }
-    single<ArticleRepository> { ArticleRepositoryImpl(get(), get(), androidContext()) }
+    single<ArticleRepository> { ArticleRepositoryImpl(get()) }
     single<BookmarkRepository> { BookmarkRepositoryImpl(get(), get()) }
 
     viewModel { MainViewModel() }
-    viewModel { ArticleViewModel(get(), get()) }
+    viewModel { ArticleViewModel(get(), get(), get()) }
     viewModel { BookmarkViewModel(get()) }
     viewModel { LoginViewModel(get(), get(), get(), androidContext()) }
 }
