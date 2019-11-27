@@ -1,6 +1,7 @@
 package com.soulkey.applemint.data
 
 import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
 import com.soulkey.applemint.model.Bookmark
 
 interface BookmarkRepository{
@@ -12,4 +13,5 @@ interface BookmarkRepository{
     fun insert(bookmark: Bookmark)
     fun removeBookmark(id: String)
     fun updateBookmark(bookmark: Bookmark)
+    fun syncWithServer(flag : MutableLiveData<Boolean>)
 }

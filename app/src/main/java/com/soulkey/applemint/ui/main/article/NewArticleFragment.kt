@@ -17,6 +17,7 @@ import com.soulkey.applemint.config.getFilters
 import com.soulkey.applemint.ui.main.*
 import kotlinx.android.synthetic.main.item_article_foreground.view.*
 import kotlinx.android.synthetic.main.view_chip_group_type.*
+import kotlinx.android.synthetic.main.view_empty.*
 
 class NewArticleFragment : Fragment() {
     internal val articleViewModel by sharedViewModel<ArticleViewModel>()
@@ -34,46 +35,56 @@ class NewArticleFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        //Swipe to Refresh
+        articleViewModel.isArticleUpdated.observe(this, Observer {
+            layout_swipe_article.isRefreshing = !it
+        })
+        layout_swipe_article.setOnRefreshListener {articleViewModel.triggerUpdate()}
+        layout_view_empty.visibility = View.GONE
+
+        // Article Adapter 설정
         articleAdapter = ArticleAdapter(articleViewModel)
         articleViewModel.newArticles.observe(this, Observer {
+            layout_view_empty.visibility = if (it.isEmpty()) View.VISIBLE else View.GONE
             articleAdapter.submitList(it)
         })
+        // Filter 적용시 자동으로 Top Scroll
         articleAdapter.registerAdapterDataObserver(object : RecyclerView.AdapterDataObserver(){
-            override fun onChanged() {
-                recycler_article.scrollToPosition(0)
-            }
-            override fun onItemRangeRemoved(positionStart: Int, itemCount: Int) {
-                recycler_article.scrollToPosition(0)
-            }
-            override fun onItemRangeMoved(fromPosition: Int, toPosition: Int, itemCount: Int) {
-                recycler_article.scrollToPosition(0)
-            }
             override fun onItemRangeInserted(positionStart: Int, itemCount: Int) {
-                recycler_article.scrollToPosition(0)
-            }
-            override fun onItemRangeChanged(positionStart: Int, itemCount: Int) {
-                recycler_article.scrollToPosition(0)
-            }
-            override fun onItemRangeChanged(positionStart: Int, itemCount: Int, payload: Any?) {
-                recycler_article.scrollToPosition(0)
+                if (itemCount > 1) recycler_article.scrollToPosition(0)
             }
         })
-        recycler_article.adapter = articleAdapter
+        // Adapter 적용
+        recycler_article.apply {
+            adapter = articleAdapter
+            setOnTouchListener { _, _ ->
+                mainViewModel.isFilterOpen.value = false
+                false
+            }
+            addOnScrollListener(object: RecyclerView.OnScrollListener(){
+                override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
+                    super.onScrolled(recyclerView, dx, dy)
+                    layout_swipe_article.isEnabled = !recycler_article.canScrollVertically(-1)
+                }
+            })
+        }
 
+        //Filter 초기화
         articleViewModel.typeFilter.value = listOf()
+
+        //Filter 적용 여부 표시 설정
         articleViewModel.typeFilter.observe(this, Observer {filter->
             mainViewModel.isFilterApply.value = !filter.isNullOrEmpty()
         })
-        recycler_article.setOnTouchListener { _, _ ->
-            mainViewModel.isFilterOpen.value = false
-            false
-        }
 
+        //Filter 창 확장여부 적용
         mainViewModel.isFilterOpen.value = false
         mainViewModel.isFilterOpen.observe(this, Observer {
             if (it) container_el_chip_filter.expand()
             else container_el_chip_filter.collapse()
         })
+
+        //Filter 변경 리스너 설정
         for (chip in chip_group_filter_article.children){
             chip.setOnClickListener {
                 articleViewModel.typeFilter.value = getFilters(chip_group_filter_article)

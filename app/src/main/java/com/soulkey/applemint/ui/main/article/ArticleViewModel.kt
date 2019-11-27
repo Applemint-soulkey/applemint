@@ -7,19 +7,21 @@ import com.soulkey.applemint.model.Article
 import com.soulkey.applemint.model.Bookmark
 
 class ArticleViewModel(private val articleRepo: ArticleRepository, private val bookmarkRepo:BookmarkRepository): ViewModel(){
-    var typeFilter: MutableLiveData<List<String>> = MutableLiveData()
-    var articles: LiveData<List<Article>>
+    var typeFilter: MutableLiveData<List<String>> = MutableLiveData(listOf())
+    var isArticleUpdated: MutableLiveData<Boolean> = MutableLiveData()
+    private var articles: LiveData<List<Article>> = articleRepo.loadArticles()
     var newArticles: MediatorLiveData<List<Article>> = MediatorLiveData()
     var readLaters: MediatorLiveData<List<Article>> = MediatorLiveData()
 
     init {
-        typeFilter.value = listOf()
-        articles = articleRepo.loadArticles()
-
         newArticles.addSource(typeFilter){ filterArticle(newArticles,"new") }
         newArticles.addSource(articles) { filterArticle(newArticles, "new") }
         readLaters.addSource(typeFilter){ filterArticle(readLaters, "keep") }
         readLaters.addSource(articles) { filterArticle(readLaters, "keep") }
+    }
+
+    fun triggerUpdate() {
+        articleRepo.syncWithServer(isArticleUpdated)
     }
 
     private fun filterArticle(target: MediatorLiveData<List<Article>>, state: String){

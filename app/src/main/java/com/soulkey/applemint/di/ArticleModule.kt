@@ -25,7 +25,7 @@ val ArticleModule = module {
     single { get<AppDatabase>().articleDao() }
     single { get<AppDatabase>().bookmarkDao() }
     single<ArticleRepository> { ArticleRepositoryImpl(get(), get(), androidContext()) }
-    single<BookmarkRepository> {BookmarkRepositoryImpl(get(), get())}
+    single<BookmarkRepository> { BookmarkRepositoryImpl(get(), get()) }
 
     viewModel { MainViewModel() }
     viewModel { ArticleViewModel(get(), get()) }

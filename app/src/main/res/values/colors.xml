@@ -18,6 +18,8 @@
     <color name="color_direct">#1d1d1d</color>
     <color name="color_etc">#606c76</color>
     <color name="color_twitch">#6441a5</color>
-
+    <color name="color_twitter">#00acee</color>
+    <color name="color_dcinside">#4A56A8</color>
+    <color name="color_ruliweb">#1A70DC</color>
 
 </resources>

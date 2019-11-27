@@ -1,6 +1,7 @@
 package com.soulkey.applemint.data
 
 import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
 import com.google.firebase.Timestamp
 import com.google.firebase.firestore.FirebaseFirestore
 import com.soulkey.applemint.db.BookmarkDao
@@ -8,6 +9,18 @@ import com.soulkey.applemint.model.Bookmark
 import timber.log.Timber
 
 class BookmarkRepositoryImpl(val db : FirebaseFirestore, private val bookmarkDao: BookmarkDao)  : BookmarkRepository {
+    override fun syncWithServer(flag : MutableLiveData<Boolean>) {
+        db.collection("bookmark").get().addOnSuccessListener { snapshot->
+            val serverItems = snapshot.map { Bookmark(it.id, it.data) }
+            val serverFbIds = serverItems.map { it.fb_id }
+            val localFbIds = getFbIds()
+
+            deleteByFbIds(localFbIds.filter { !serverFbIds.contains(it) })
+            insertAll(serverItems.filter { !localFbIds.contains(it.fb_id) })
+            flag.value = true
+        }
+    }
+
     override fun updateBookmark(bookmark: Bookmark) {
         val bookmarkArticle = hashMapOf(
             "content" to bookmark.content,

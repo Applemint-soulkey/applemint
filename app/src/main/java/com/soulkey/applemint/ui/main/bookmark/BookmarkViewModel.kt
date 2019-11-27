@@ -8,20 +8,16 @@ import com.soulkey.applemint.data.BookmarkRepository
 import com.soulkey.applemint.model.Bookmark
 
 class BookmarkViewModel(private val bookmarkRepo: BookmarkRepository) : ViewModel(){
-    val categoryFilter: MutableLiveData<List<String>> = MutableLiveData()
-    val typeFilter: MutableLiveData<List<String>> = MutableLiveData()
-    val searchKeyword: MutableLiveData<String> = MutableLiveData()
+    val categoryFilter: MutableLiveData<List<String>> = MutableLiveData(listOf())
+    val typeFilter: MutableLiveData<List<String>> = MutableLiveData(listOf())
+    val searchKeyword: MutableLiveData<String> = MutableLiveData("")
+    val isBookmarkUpdated: MutableLiveData<Boolean> = MutableLiveData()
 
-    private var bookmarks: LiveData<List<Bookmark>>
+    private val bookmarks: LiveData<List<Bookmark>> = bookmarkRepo.getBookmarks()
     var isFilterApply: MediatorLiveData<Boolean> = MediatorLiveData()
     var filterBookmarks: MediatorLiveData<List<Bookmark>> = MediatorLiveData()
 
     init {
-        categoryFilter.value = listOf()
-        typeFilter.value = listOf()
-        searchKeyword.value = ""
-        bookmarks = bookmarkRepo.getBookmarks()
-
         isFilterApply.addSource(categoryFilter) { checkFilterApply() }
         isFilterApply.addSource(typeFilter) { checkFilterApply() }
 
@@ -29,6 +25,10 @@ class BookmarkViewModel(private val bookmarkRepo: BookmarkRepository) : ViewMode
         filterBookmarks.addSource(searchKeyword) { filterItem() }
         filterBookmarks.addSource(typeFilter) { filterItem() }
         filterBookmarks.addSource(categoryFilter) { filterItem() }
+    }
+
+    fun triggerUpdate() {
+        bookmarkRepo.syncWithServer(isBookmarkUpdated)
     }
 
     private fun checkFilterApply() {

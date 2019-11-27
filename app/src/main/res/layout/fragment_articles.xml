@@ -6,15 +6,29 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/recycler_article"
+    <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+        android:id="@+id/layout_swipe_article"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:background="@color/color_background"
-        android:clipToPadding="false"
-        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintBottom_toBottomOf="parent"/>
+        app:layout_constraintBottom_toBottomOf="parent">
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/recycler_article"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:background="@color/color_background"
+                android:clipToPadding="false"
+                app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintBottom_toBottomOf="parent"/>
+            <include layout="@layout/view_empty"/>
+        </androidx.constraintlayout.widget.ConstraintLayout>
+    </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
+
 
     <net.cachapa.expandablelayout.ExpandableLayout
         android:id="@+id/container_el_chip_filter"
@@ -28,8 +42,5 @@
         <include layout="@layout/view_chip_group_type"/>
 
     </net.cachapa.expandablelayout.ExpandableLayout>
-
-
-
 
 </androidx.constraintlayout.widget.ConstraintLayout>

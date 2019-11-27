@@ -97,4 +97,40 @@
         app:closeIconVisible="false"
         app:checkedIcon="@drawable/ic_check_circle_24px"
         app:chipBackgroundColor="@color/color_etc"/>
+
+    <com.google.android.material.chip.Chip
+        android:id="@+id/chip_filter_twitter"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="twitter"
+        android:textColor="@color/white"
+        android:checkable="true"
+        app:chipIconVisible="false"
+        app:closeIconVisible="false"
+        app:checkedIcon="@drawable/ic_check_circle_24px"
+        app:chipBackgroundColor="@color/color_twitter"/>
+
+    <com.google.android.material.chip.Chip
+        android:id="@+id/chip_filter_dcinside"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="dcinside"
+        android:textColor="@color/white"
+        android:checkable="true"
+        app:chipIconVisible="false"
+        app:closeIconVisible="false"
+        app:checkedIcon="@drawable/ic_check_circle_24px"
+        app:chipBackgroundColor="@color/color_dcinside"/>
+
+    <com.google.android.material.chip.Chip
+        android:id="@+id/chip_filter_ruliweb"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="ruliweb"
+        android:textColor="@color/white"
+        android:checkable="true"
+        app:chipIconVisible="false"
+        app:closeIconVisible="false"
+        app:checkedIcon="@drawable/ic_check_circle_24px"
+        app:chipBackgroundColor="@color/color_ruliweb"/>
 </com.google.android.material.chip.ChipGroup>
