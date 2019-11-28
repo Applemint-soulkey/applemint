@@ -1,5 +1,7 @@
 package com.soulkey.applemint.ui.main.article
 
+import android.content.Context
+import android.widget.Toast
 import androidx.lifecycle.*
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.Query
@@ -9,7 +11,7 @@ import com.soulkey.applemint.model.Article
 import com.soulkey.applemint.model.Bookmark
 import timber.log.Timber
 
-class ArticleViewModel(private val db: FirebaseFirestore, private val articleRepo: ArticleRepository, private val bookmarkRepo:BookmarkRepository): ViewModel(){
+class ArticleViewModel(private val db: FirebaseFirestore, private val context: Context, private val articleRepo: ArticleRepository, private val bookmarkRepo:BookmarkRepository): ViewModel(){
     var articles: MutableLiveData<List<Article>> = MutableLiveData(listOf())
     var typeFilter: MutableLiveData<List<String>> = MutableLiveData(listOf())
     var newArticles: MediatorLiveData<List<Article>> = MediatorLiveData()
@@ -30,6 +32,8 @@ class ArticleViewModel(private val db: FirebaseFirestore, private val articleRep
             .addOnSuccessListener { snapshot ->
                 articles.value = snapshot.map { Article(it.id, it.data) }
                 isDataLoading.value = false
+            }.addOnFailureListener {
+                Toast.makeText(context, "Can't fetch Articles From Server..", Toast.LENGTH_SHORT).show()
             }
     }
 
@@ -49,8 +53,10 @@ class ArticleViewModel(private val db: FirebaseFirestore, private val articleRep
             articles.value?.let {list->
                 articles.value = list.filter { it.fb_id != item.fb_id }
             }
+            bookmarkRepo.insert(Bookmark(item, category))
+        }.addOnFailureListener {
+            Toast.makeText(context, "Error occurred during Bookmark.. :-<", Toast.LENGTH_SHORT).show()
         }
-        bookmarkRepo.insert(Bookmark(item, category))
     }
 
     fun getCategories(): List<String> {
@@ -63,6 +69,8 @@ class ArticleViewModel(private val db: FirebaseFirestore, private val articleRep
             articles.value?.let {list->
                 articles.value = list.filter { it.fb_id != fb_id }
             }
+        }.addOnFailureListener {
+            Toast.makeText(context, "Error occurred during Remove article.. :-<", Toast.LENGTH_SHORT).show()
         }
     }
 
@@ -75,6 +83,8 @@ class ArticleViewModel(private val db: FirebaseFirestore, private val articleRep
                     articles.value = it
                 }
             }
+        }.addOnFailureListener {
+            Toast.makeText(context, "Error occurred during Restore article.. :-<", Toast.LENGTH_SHORT).show()
         }
     }
 
@@ -86,6 +96,8 @@ class ArticleViewModel(private val db: FirebaseFirestore, private val articleRep
                     articles.value = list
                 }
             }
+        }.addOnFailureListener {
+            Toast.makeText(context, "Error occurred during Keep article.. :-<", Toast.LENGTH_SHORT).show()
         }
     }
 }

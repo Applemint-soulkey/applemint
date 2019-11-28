@@ -27,7 +27,7 @@ val AppModule = module {
     single<BookmarkRepository> { BookmarkRepositoryImpl(get(), get()) }
 
     viewModel { MainViewModel() }
-    viewModel { ArticleViewModel(get(), get(), get()) }
+    viewModel { ArticleViewModel(get(), androidContext(), get(), get()) }
     viewModel { BookmarkViewModel(get()) }
     viewModel { LoginViewModel(get(), get(), get(), androidContext()) }
 }

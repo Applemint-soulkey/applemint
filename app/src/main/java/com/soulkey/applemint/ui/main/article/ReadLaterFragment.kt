@@ -99,9 +99,4 @@ class ReadLaterFragment : Fragment() {
             })
         ItemTouchHelper(leftSwipeCallback).attachToRecyclerView(recycler_article)
     }
-
-    override fun onResume() {
-        super.onResume()
-        articleViewModel.fetchArticles()
-    }
 }

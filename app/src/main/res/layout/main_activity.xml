@@ -44,6 +44,19 @@
                 app:layout_constraintLeft_toLeftOf="parent"/>
 
             <androidx.appcompat.widget.AppCompatImageButton
+                android:id="@+id/iv_article_refresh"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="@dimen/inline_margin"
+                android:background="@color/color_1d1d1d"
+                android:src="@drawable/ic_refresh_24px"
+                android:visibility="invisible"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintRight_toLeftOf="@id/iv_article_filter"
+                />
+
+            <androidx.appcompat.widget.AppCompatImageButton
                 android:id="@+id/iv_article_filter"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"

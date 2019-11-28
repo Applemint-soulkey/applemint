@@ -37,6 +37,7 @@ class NewArticleFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         layout_view_empty.visibility = View.INVISIBLE
 
+        // Loading View 설정
         articleViewModel.isDataLoading.observe(this, Observer {
             layout_view_loading.visibility = if(it) View.VISIBLE else View.INVISIBLE
         })
@@ -107,11 +108,6 @@ class NewArticleFragment : Fragment() {
             })
         ItemTouchHelper(leftSwipeCallback).attachToRecyclerView(recycler_article)
         ItemTouchHelper(rightSwipeCallback).attachToRecyclerView(recycler_article)
-    }
-
-    override fun onResume() {
-        super.onResume()
-        articleViewModel.fetchArticles()
     }
 }
 
