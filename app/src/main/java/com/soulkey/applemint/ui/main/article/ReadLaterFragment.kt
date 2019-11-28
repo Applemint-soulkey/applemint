@@ -17,6 +17,7 @@ import kotlinx.android.synthetic.main.fragment_articles.*
 import kotlinx.android.synthetic.main.item_article_foreground.view.*
 import kotlinx.android.synthetic.main.view_chip_group_type.*
 import kotlinx.android.synthetic.main.view_empty.*
+import kotlinx.android.synthetic.main.view_loading.*
 import org.koin.androidx.viewmodel.ext.android.sharedViewModel
 
 class ReadLaterFragment : Fragment() {
@@ -35,8 +36,11 @@ class ReadLaterFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        layout_view_empty.visibility = View.GONE
+        articleViewModel.isDataLoading.observe(this, Observer {
+            layout_view_loading.visibility = if(it) View.VISIBLE else View.INVISIBLE
+        })
 
+        layout_view_empty.visibility = View.VISIBLE
         // Article Adapter 설정
         articleAdapter = ArticleAdapter(articleViewModel)
         articleViewModel.readLaters.observe(this, Observer {

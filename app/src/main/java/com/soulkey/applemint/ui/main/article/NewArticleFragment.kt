@@ -18,6 +18,7 @@ import com.soulkey.applemint.ui.main.*
 import kotlinx.android.synthetic.main.item_article_foreground.view.*
 import kotlinx.android.synthetic.main.view_chip_group_type.*
 import kotlinx.android.synthetic.main.view_empty.*
+import kotlinx.android.synthetic.main.view_loading.*
 
 class NewArticleFragment : Fragment() {
     internal val articleViewModel by sharedViewModel<ArticleViewModel>()
@@ -34,14 +35,19 @@ class NewArticleFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        layout_view_empty.visibility = View.GONE
+        layout_view_empty.visibility = View.INVISIBLE
+
+        articleViewModel.isDataLoading.observe(this, Observer {
+            layout_view_loading.visibility = if(it) View.VISIBLE else View.INVISIBLE
+        })
 
         // Article Adapter 설정
         articleAdapter = ArticleAdapter(articleViewModel)
         articleViewModel.newArticles.observe(this, Observer {
-            layout_view_empty.visibility = if (it.isEmpty()) View.VISIBLE else View.GONE
+            layout_view_empty.visibility = if (it.isEmpty()) View.VISIBLE else View.INVISIBLE
             articleAdapter.submitList(it)
         })
+
         // Filter 적용시 자동으로 Top Scroll
         articleAdapter.registerAdapterDataObserver(object : RecyclerView.AdapterDataObserver(){
             override fun onItemRangeInserted(positionStart: Int, itemCount: Int) {

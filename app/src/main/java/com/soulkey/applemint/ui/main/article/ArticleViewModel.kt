@@ -14,6 +14,7 @@ class ArticleViewModel(private val db: FirebaseFirestore, private val articleRep
     var typeFilter: MutableLiveData<List<String>> = MutableLiveData(listOf())
     var newArticles: MediatorLiveData<List<Article>> = MediatorLiveData()
     var readLaters: MediatorLiveData<List<Article>> = MediatorLiveData()
+    val isDataLoading: MutableLiveData<Boolean> = MutableLiveData(true)
 
     init {
         fetchArticles()
@@ -23,10 +24,13 @@ class ArticleViewModel(private val db: FirebaseFirestore, private val articleRep
         readLaters.addSource(articles) { filterArticle(readLaters, "keep") }
     }
 
-    fun fetchArticles(){
-        db.collection("article").orderBy("timestamp", Query.Direction.DESCENDING).get().addOnSuccessListener { snapshot ->
-            articles.value = snapshot.map { Article(it.id, it.data) }
-        }
+    fun fetchArticles() {
+        isDataLoading.value = true
+        db.collection("article").orderBy("timestamp", Query.Direction.DESCENDING).get()
+            .addOnSuccessListener { snapshot ->
+                articles.value = snapshot.map { Article(it.id, it.data) }
+                isDataLoading.value = false
+            }
     }
 
     private fun filterArticle(target: MediatorLiveData<List<Article>>, state: String){
