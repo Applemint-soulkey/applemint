@@ -9,7 +9,7 @@ import com.soulkey.applemint.data.ArticleRepository
 import com.soulkey.applemint.data.BookmarkRepository
 
 class LoginViewModel(private val db: FirebaseFirestore, private val articleRepository: ArticleRepository, private val bookmarkRepository: BookmarkRepository, private val context: Context) : ViewModel() {
-    private val isArticleUpdated : MutableLiveData<Boolean> = MutableLiveData(false)
+    private val isArticleUpdated : MutableLiveData<Boolean> = MutableLiveData(true)
     private val isBookmarkUpdated : MutableLiveData<Boolean> = MutableLiveData(false)
     val isUpdateComplete : MediatorLiveData<Boolean> = MediatorLiveData()
     val updateProcess: MutableLiveData<String> = MutableLiveData("Connect to Server..")
@@ -26,10 +26,5 @@ class LoginViewModel(private val db: FirebaseFirestore, private val articleRepos
     fun updateBookmarks() {
         isBookmarkUpdated.value = false
         bookmarkRepository.syncWithServer(isBookmarkUpdated)
-    }
-
-    fun updateArticles(){
-        isArticleUpdated.value = false
-        articleRepository.syncWithServer(isArticleUpdated)
     }
 }

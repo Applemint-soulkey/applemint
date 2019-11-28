@@ -18,6 +18,7 @@ import com.soulkey.applemint.ui.main.*
 import kotlinx.android.synthetic.main.item_article_foreground.view.*
 import kotlinx.android.synthetic.main.view_chip_group_type.*
 import kotlinx.android.synthetic.main.view_empty.*
+import kotlinx.android.synthetic.main.view_loading.*
 
 class NewArticleFragment : Fragment() {
     internal val articleViewModel by sharedViewModel<ArticleViewModel>()
@@ -34,20 +35,20 @@ class NewArticleFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        layout_view_empty.visibility = View.INVISIBLE
 
-        //Swipe to Refresh
-        articleViewModel.isArticleUpdated.observe(this, Observer {
-            layout_swipe_article.isRefreshing = !it
+        // Loading View 설정
+        articleViewModel.isDataLoading.observe(this, Observer {
+            layout_view_loading.visibility = if(it) View.VISIBLE else View.INVISIBLE
         })
-        layout_swipe_article.setOnRefreshListener {articleViewModel.triggerUpdate()}
-        layout_view_empty.visibility = View.GONE
 
         // Article Adapter 설정
         articleAdapter = ArticleAdapter(articleViewModel)
         articleViewModel.newArticles.observe(this, Observer {
-            layout_view_empty.visibility = if (it.isEmpty()) View.VISIBLE else View.GONE
+            layout_view_empty.visibility = if (it.isEmpty()) View.VISIBLE else View.INVISIBLE
             articleAdapter.submitList(it)
         })
+
         // Filter 적용시 자동으로 Top Scroll
         articleAdapter.registerAdapterDataObserver(object : RecyclerView.AdapterDataObserver(){
             override fun onItemRangeInserted(positionStart: Int, itemCount: Int) {
@@ -61,12 +62,6 @@ class NewArticleFragment : Fragment() {
                 mainViewModel.isFilterOpen.value = false
                 false
             }
-            addOnScrollListener(object: RecyclerView.OnScrollListener(){
-                override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
-                    super.onScrolled(recyclerView, dx, dy)
-                    layout_swipe_article.isEnabled = !recycler_article.canScrollVertically(-1)
-                }
-            })
         }
 
         //Filter 초기화
@@ -97,8 +92,9 @@ class NewArticleFragment : Fragment() {
                 override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int, position: Int) {
                     val removeItem = (viewHolder as ArticleAdapter.ArticleViewHolder).itemData
                     val removeItemTitle = viewHolder.itemView.tv_article_title.text
+                    val removeIndex = articleViewModel.articles.value!!.indexOf(removeItem)
                     Snackbar.make(layout_fragment_article, "'$removeItemTitle' is Deleted", Snackbar.LENGTH_LONG).apply {
-                        setAction("UNDO") {articleViewModel.restoreArticle(removeItem)}
+                        setAction("UNDO") {articleViewModel.restoreArticle(removeItem, removeIndex)}
                     }.show()
                     articleViewModel.removeArticle(removeItem.fb_id)
                 }

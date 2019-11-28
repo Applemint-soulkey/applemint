@@ -17,6 +17,7 @@ import kotlinx.android.synthetic.main.fragment_articles.*
 import kotlinx.android.synthetic.main.item_article_foreground.view.*
 import kotlinx.android.synthetic.main.view_chip_group_type.*
 import kotlinx.android.synthetic.main.view_empty.*
+import kotlinx.android.synthetic.main.view_loading.*
 import org.koin.androidx.viewmodel.ext.android.sharedViewModel
 
 class ReadLaterFragment : Fragment() {
@@ -35,13 +36,11 @@ class ReadLaterFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        //Swipe to Refresh
-        articleViewModel.isArticleUpdated.observe(this, Observer {
-            layout_swipe_article.isRefreshing = !it
+        articleViewModel.isDataLoading.observe(this, Observer {
+            layout_view_loading.visibility = if(it) View.VISIBLE else View.INVISIBLE
         })
-        layout_swipe_article.setOnRefreshListener {articleViewModel.triggerUpdate()}
-        layout_view_empty.visibility = View.GONE
 
+        layout_view_empty.visibility = View.VISIBLE
         // Article Adapter 설정
         articleAdapter = ArticleAdapter(articleViewModel)
         articleViewModel.readLaters.observe(this, Observer {
@@ -61,12 +60,6 @@ class ReadLaterFragment : Fragment() {
                 mainViewModel.isFilterOpen.value = false
                 false
             }
-            addOnScrollListener(object: RecyclerView.OnScrollListener(){
-                override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
-                    super.onScrolled(recyclerView, dx, dy)
-                    layout_swipe_article.isEnabled = !recycler_article.canScrollVertically(-1)
-                }
-            })
         }
 
         //Filter 초기화
@@ -97,8 +90,9 @@ class ReadLaterFragment : Fragment() {
                 override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int, position: Int) {
                     val removeItem = (viewHolder as ArticleAdapter.ArticleViewHolder).itemData
                     val removeItemTitle = viewHolder.itemView.tv_article_title.text
+                    val removeIndex = articleViewModel.articles.value!!.indexOf(removeItem)
                     Snackbar.make(layout_fragment_article, "$removeItemTitle is Deleted", Snackbar.LENGTH_LONG).apply {
-                        setAction("UNDO") {articleViewModel.restoreArticle(removeItem) }
+                        setAction("UNDO") {articleViewModel.restoreArticle(removeItem, removeIndex) }
                     }.show()
                     articleViewModel.removeArticle(removeItem.fb_id)
                 }

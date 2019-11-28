@@ -8,10 +8,9 @@ import com.soulkey.applemint.model.Article
 import com.soulkey.applemint.model.Bookmark
 import java.util.Date
 
-@Database(entities = [Article::class, Bookmark::class], version = 1, exportSchema = false)
+@Database(entities = [Bookmark::class], version = 1, exportSchema = false)
 @TypeConverters(DateConverter::class)
 abstract class AppDatabase: RoomDatabase() {
-    abstract fun articleDao(): ArticleDao
     abstract fun bookmarkDao(): BookmarkDao
 }
 

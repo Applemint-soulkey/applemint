@@ -23,6 +23,7 @@ import kotlinx.android.synthetic.main.fragment_bookmark.*
 import kotlinx.android.synthetic.main.item_bookmark_foreground.view.*
 import kotlinx.android.synthetic.main.view_chip_group_type.*
 import kotlinx.android.synthetic.main.view_empty.*
+import kotlinx.android.synthetic.main.view_loading.*
 import org.koin.androidx.viewmodel.ext.android.sharedViewModel
 
 class BookmarkFragment : Fragment() {
@@ -42,18 +43,18 @@ class BookmarkFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        viewModel.isBookmarkUpdated.observe(this, Observer {
-            layout_swipe_bookmark.isRefreshing = !it
-        })
-        layout_swipe_bookmark.setOnRefreshListener { viewModel.triggerUpdate() }
-        layout_view_empty.visibility = View.GONE
-
+        layout_view_empty.visibility = View.INVISIBLE
+        layout_view_loading.visibility = View.INVISIBLE
         viewModel.categoryFilter.value = listOf()
         viewModel.typeFilter.value = listOf()
 
+        viewModel.isBookmarkUpdated.observe(this, Observer {
+            layout_view_loading.visibility = if (it) View.INVISIBLE else View.VISIBLE
+        })
+
         adapter = BookmarkAdapter(viewModel)
         viewModel.filterBookmarks.observe(this, Observer {
-            layout_view_empty.visibility = if (it.isEmpty()) View.VISIBLE else View.GONE
+            layout_view_empty.visibility = if (it.isEmpty()) View.VISIBLE else View.INVISIBLE
             adapter.submitList(it)
         })
         adapter.registerAdapterDataObserver(object : RecyclerView.AdapterDataObserver(){
