@@ -59,6 +59,4 @@ class BookmarkViewModel(private val bookmarkRepo: BookmarkRepository) : ViewMode
     fun updateBookmark(bookmark: Bookmark){
         bookmarkRepo.updateBookmark(bookmark)
     }
-
-
 }

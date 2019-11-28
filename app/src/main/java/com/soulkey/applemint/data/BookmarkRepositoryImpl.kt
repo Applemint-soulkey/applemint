@@ -10,6 +10,7 @@ import timber.log.Timber
 
 class BookmarkRepositoryImpl(val db : FirebaseFirestore, private val bookmarkDao: BookmarkDao)  : BookmarkRepository {
     override fun syncWithServer(flag : MutableLiveData<Boolean>) {
+        flag.value = false
         db.collection("bookmark").get().addOnSuccessListener { snapshot->
             val serverItems = snapshot.map { Bookmark(it.id, it.data) }
             val serverFbIds = serverItems.map { it.fb_id }
