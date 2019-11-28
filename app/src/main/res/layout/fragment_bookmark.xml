@@ -1,0 +1,148 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.coordinatorlayout.widget.CoordinatorLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/layout_fragment_bookmark"
+    android:layout_height="match_parent"
+    android:layout_width="match_parent"
+    android:background="@color/color_background">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        app:layout_behavior="com.google.android.material.appbar.AppBarLayout$ScrollingViewBehavior">
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/recycler_bookmark"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:paddingTop="@dimen/tiny_margin"
+            android:clipToPadding="false"
+            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"/>
+        <include layout="@layout/view_empty"/>
+        <include layout="@layout/view_loading"/>
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <com.google.android.material.appbar.AppBarLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/background_filter_default"
+        app:elevation="0dp">
+
+        <com.google.android.material.appbar.MaterialToolbar
+            android:id="@+id/toolbar_bookmark"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:contentInsetStart="0dp"
+            app:layout_scrollFlags="scroll|enterAlways">
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:paddingTop="@dimen/outline_margin"
+                android:paddingLeft="@dimen/outline_margin"
+                android:paddingRight="@dimen/outline_margin"
+                android:paddingBottom="@dimen/tiny_margin"
+                android:padding="@dimen/outline_margin"
+                android:layout_marginBottom="@dimen/inline_margin">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/et_bookmark_search"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:paddingStart="64dp"
+                    android:paddingEnd="12dp"
+                    android:paddingTop="12dp"
+                    android:paddingBottom="@dimen/outline_margin"
+                    android:background="@drawable/background_bookmark_edittext"
+                    android:hint="Input Keyword.."
+                    android:fontFamily="@font/opensans_bold"
+                    android:textColor="@color/color_1d1d1d"
+                    android:singleLine="true"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintRight_toRightOf="parent"/>
+
+                <androidx.appcompat.widget.AppCompatImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="@dimen/outline_margin"
+                    android:src="@drawable/ic_search_24px"
+                    app:layout_constraintLeft_toLeftOf="@id/et_bookmark_search"
+                    app:layout_constraintBottom_toBottomOf="@id/et_bookmark_search"
+                    app:layout_constraintTop_toTopOf="@id/et_bookmark_search"/>
+
+                <androidx.appcompat.widget.AppCompatImageView
+                    android:id="@+id/iv_clear_bookmark_search"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginEnd="@dimen/outline_margin"
+                    android:src="@drawable/ic_close_24px"
+                    android:visibility="invisible"
+                    app:layout_constraintBottom_toBottomOf="@id/et_bookmark_search"
+                    app:layout_constraintTop_toTopOf="@id/et_bookmark_search"
+                    app:layout_constraintRight_toRightOf="@id/et_bookmark_search"
+                    />
+
+                <net.cachapa.expandablelayout.ExpandableLayout
+                    android:id="@+id/container_bookmark_filter"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:clickable="true"
+                    app:layout_constraintTop_toBottomOf="@id/et_bookmark_search">
+
+                    <androidx.constraintlayout.widget.ConstraintLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:background="@drawable/background_filter_default"
+                        android:padding="@dimen/inline_margin">
+
+                        <com.google.android.material.textview.MaterialTextView
+                            android:id="@+id/tv_bookmark_filter_category_title"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="@dimen/outline_margin"
+                            android:text="Category"
+                            android:textSize="18sp"
+                            android:textColor="@color/white"
+                            android:fontFamily="@font/opensans_bold"
+                            app:layout_constraintTop_toTopOf="parent"
+                            app:layout_constraintStart_toStartOf="parent"/>
+
+                        <com.google.android.material.chip.ChipGroup
+                            android:id="@+id/chip_group_bookmark_filter_category"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="@dimen/inline_margin"
+                            android:paddingStart="8dp"
+                            android:paddingEnd="8dp"
+                            android:paddingTop="8dp"
+                            android:paddingBottom="16dp"
+                            app:chipSpacingVertical="@dimen/outline_margin"
+                            app:layout_constraintTop_toBottomOf="@id/tv_bookmark_filter_category_title"/>
+
+                        <com.google.android.material.textview.MaterialTextView
+                            android:id="@+id/tv_bookmark_filter_type_title"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="@dimen/inline_margin"
+                            android:text="Type"
+                            android:textSize="18sp"
+                            android:textColor="@color/white"
+                            android:fontFamily="@font/opensans_bold"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toBottomOf="@id/chip_group_bookmark_filter_category" />
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="@dimen/inline_margin"
+                            app:layout_constraintTop_toBottomOf="@id/tv_bookmark_filter_type_title">
+                            <include layout="@layout/view_chip_group_type"/>
+                        </LinearLayout>
+                    </androidx.constraintlayout.widget.ConstraintLayout>
+                </net.cachapa.expandablelayout.ExpandableLayout>
+            </androidx.constraintlayout.widget.ConstraintLayout>
+        </com.google.android.material.appbar.MaterialToolbar>
+    </com.google.android.material.appbar.AppBarLayout>
+
+</androidx.coordinatorlayout.widget.CoordinatorLayout>
+

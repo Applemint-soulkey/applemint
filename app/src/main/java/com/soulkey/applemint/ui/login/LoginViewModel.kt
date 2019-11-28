@@ -1,39 +1,30 @@
 package com.soulkey.applemint.ui.login
 
 import android.content.Context
-import android.widget.Toast
+import androidx.lifecycle.MediatorLiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.google.firebase.firestore.FirebaseFirestore
 import com.soulkey.applemint.data.ArticleRepository
-import com.soulkey.applemint.model.Article
+import com.soulkey.applemint.data.BookmarkRepository
 
-class LoginViewModel(private val articleRepository: ArticleRepository, private val context: Context) : ViewModel() {
-    val isArticleUpdated: MutableLiveData<Boolean> by lazy {
-        MutableLiveData<Boolean>()
-    }
-    val updateProcess: MutableLiveData<String> by lazy {
-        MutableLiveData<String>()
-    }
+class LoginViewModel(private val db: FirebaseFirestore, private val articleRepository: ArticleRepository, private val bookmarkRepository: BookmarkRepository, private val context: Context) : ViewModel() {
+    private val isArticleUpdated : MutableLiveData<Boolean> = MutableLiveData(true)
+    private val isBookmarkUpdated : MutableLiveData<Boolean> = MutableLiveData(false)
+    val isUpdateComplete : MediatorLiveData<Boolean> = MediatorLiveData()
+    val updateProcess: MutableLiveData<String> = MutableLiveData("Connect to Server..")
 
-    fun updateArticles(){
-        val db = FirebaseFirestore.getInstance()
-        isArticleUpdated.value = false
-        db.collection("article").get().addOnSuccessListener {snapshot->
-            val articleList = snapshot.map {Article(it.id, it.data)}
-            val fbIds = articleRepository.getFbIds()
-            val cloudFbIds = articleList.map { it.fb_id }
-
-            updateProcess.value = "Remove already read items.."
-            articleRepository.deleteByIds(fbIds.filter { !cloudFbIds.contains(it) })
-
-            updateProcess.value = "Load new items from Server.."
-            articleRepository.insertAll(articleList.filter {!fbIds.contains(it.fb_id)})
-
-            isArticleUpdated.value = true
-        }.addOnFailureListener {
-            isArticleUpdated.value = false
-            Toast.makeText(context, "Failed To Update Articles..", Toast.LENGTH_SHORT).show()
+    init {
+        isUpdateComplete.addSource(isArticleUpdated) {
+            isUpdateComplete.value = isArticleUpdated.value!! && isBookmarkUpdated.value!!
         }
+        isUpdateComplete.addSource(isBookmarkUpdated) {
+            isUpdateComplete.value = isArticleUpdated.value!! && isBookmarkUpdated.value!!
+        }
+    }
+
+    fun updateBookmarks() {
+        isBookmarkUpdated.value = false
+        bookmarkRepository.syncWithServer(isBookmarkUpdated)
     }
 }

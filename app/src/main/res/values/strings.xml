@@ -4,4 +4,6 @@
     <string name="articles">New Articles</string>
     <string name="home">Home</string>
     <string name="read_later">Read Later</string>
+    <string name="item_bookmark">Bookmark</string>
+    <string name="no_item_msg">No Item currently, See you Later!</string>
 </resources>

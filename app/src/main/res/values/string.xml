@@ -2,4 +2,7 @@
 <resources>
     <string name="temp_login_email">397love@gmail.com</string>
     <string name="temp_login_password">rlatmfrl24</string>
+    <string name="default_article_title">article_title</string>
+    <string name="default_article_url">article_url</string>
+    <string name="default_article_type">article_type</string>
 </resources>

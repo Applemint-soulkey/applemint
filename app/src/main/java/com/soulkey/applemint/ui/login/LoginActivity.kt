@@ -18,7 +18,6 @@ import kotlinx.android.synthetic.main.login_acitivity.et_password
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class LoginActivity : AppCompatActivity() {
-
     private val loginViewModel: LoginViewModel by viewModel()
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -33,7 +32,7 @@ class LoginActivity : AppCompatActivity() {
             tv_login_update_msg.text = it
         })
 
-        loginViewModel.isArticleUpdated.observe(this, Observer {
+        loginViewModel.isUpdateComplete.observe(this, Observer {
             if (it) {
                 Handler().postDelayed({
                     startActivity(Intent(applicationContext, MainActivity::class.java))
@@ -46,11 +45,12 @@ class LoginActivity : AppCompatActivity() {
             val inputEmail = et_email.text.toString()
             val inputPassword = et_password.text.toString()
             if(inputEmail.isNotEmpty() and inputPassword.isNotEmpty()){
+                TransitionManager.beginDelayedTransition(activity_login)
+                constraintSet.applyTo(activity_login)
                 auth.signInWithEmailAndPassword(inputEmail, inputPassword).addOnCompleteListener {
                     if (it.isSuccessful){
-                        TransitionManager.beginDelayedTransition(activity_login)
-                        constraintSet.applyTo(activity_login)
-                        loginViewModel.updateArticles()
+                        loginViewModel.updateProcess.value = "Wait for Update.."
+                        loginViewModel.updateBookmarks()
                     } else {
                         Toast.makeText(applicationContext, "Login Failed!", Toast.LENGTH_SHORT).show()
                     }
