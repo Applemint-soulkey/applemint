@@ -6,12 +6,10 @@ import androidx.lifecycle.*
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.Query
 import com.soulkey.applemint.data.ArticleRepository
-import com.soulkey.applemint.data.BookmarkRepository
 import com.soulkey.applemint.model.Article
-import com.soulkey.applemint.model.Bookmark
 import timber.log.Timber
 
-class ArticleViewModel(private val db: FirebaseFirestore, private val context: Context, private val articleRepo: ArticleRepository, private val bookmarkRepo:BookmarkRepository): ViewModel(){
+class ArticleViewModel(private val db: FirebaseFirestore, private val context: Context, private val articleRepo: ArticleRepository): ViewModel(){
     var articles: MutableLiveData<List<Article>> = MutableLiveData(listOf())
     var typeFilter: MutableLiveData<List<String>> = MutableLiveData(listOf())
     var newArticles: MediatorLiveData<List<Article>> = MediatorLiveData()
@@ -33,6 +31,7 @@ class ArticleViewModel(private val db: FirebaseFirestore, private val context: C
                 articles.value = snapshot.map { Article(it.id, it.data) }
                 isDataLoading.value = false
             }.addOnFailureListener {
+                Timber.v(it)
                 Toast.makeText(context, "Can't fetch Articles From Server..", Toast.LENGTH_SHORT).show()
             }
     }
@@ -45,22 +44,6 @@ class ArticleViewModel(private val db: FirebaseFirestore, private val context: C
                     typeFilter.value!!.contains(article.type) || typeFilter.value!!.isEmpty()
                 }
         }
-    }
-
-    fun bookmarkArticle(category: String, item: Article){
-        articleRepo.removeArticle(item.fb_id).addOnSuccessListener {
-            Timber.v("diver:/ ${item.fb_id} delete success")
-            articles.value?.let {list->
-                articles.value = list.filter { it.fb_id != item.fb_id }
-            }
-            bookmarkRepo.insert(Bookmark(item, category))
-        }.addOnFailureListener {
-            Toast.makeText(context, "Error occurred during Bookmark.. :-<", Toast.LENGTH_SHORT).show()
-        }
-    }
-
-    fun getCategories(): List<String> {
-        return bookmarkRepo.getCategories()
     }
 
     fun removeArticle(fb_id: String) {

@@ -36,8 +36,7 @@
         android:textColor="@color/color_1d1d1d"
         android:fontFamily="@font/opensans_bold"
         app:layout_constraintTop_toBottomOf="@id/tv_article_type"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toLeftOf="@id/btn_expand_card"/>
+        app:layout_constraintLeft_toLeftOf="parent"/>
 
     <TextView
         android:id="@+id/tv_article_url"
@@ -53,45 +52,8 @@
         android:singleLine="true"
         android:ellipsize="marquee"
         app:layout_constraintTop_toBottomOf="@id/tv_article_title"
-        app:layout_constraintBottom_toTopOf="@id/container_card_article_detail"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toLeftOf="@id/btn_expand_card"/>
-
-    <ImageButton
-        android:id="@+id/btn_expand_card"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginRight="@dimen/inline_margin"
-        android:background="@drawable/ic_keyboard_arrow_down_36px"
-        app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toTopOf="@id/tv_article_type"
-        app:layout_constraintBottom_toBottomOf="@id/tv_article_url"/>
-
-    <net.cachapa.expandablelayout.ExpandableLayout
-        android:id="@+id/container_card_article_detail"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:padding="@dimen/tiny_margin"
-        app:el_expanded="true"
-        app:layout_constraintBottom_toBottomOf="parent">
-
-        <com.google.android.material.button.MaterialButton
-            android:id="@+id/btn_card_article_bookmark"
-            style="@style/Widget.MaterialComponents.Button.TextButton"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="@dimen/inline_margin"
-            android:layout_marginRight="@dimen/inline_margin"
-            android:background="@color/white"
-            android:fontFamily="@font/opensans_bold"
-            android:gravity="start|center_vertical"
-            android:includeFontPadding="false"
-            android:text="Bookmark"
-            android:textColor="@color/color_etc"
-            android:textSize="14sp"
-            app:icon="@drawable/ic_bookmarks_14px"
-            app:iconPadding="@dimen/tiny_margin" />
-
-    </net.cachapa.expandablelayout.ExpandableLayout>
+        app:layout_constraintRight_toRightOf="parent"/>
 
 </androidx.constraintlayout.widget.ConstraintLayout>
