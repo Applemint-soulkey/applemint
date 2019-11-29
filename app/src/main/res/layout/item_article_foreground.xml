@@ -36,7 +36,8 @@
         android:textColor="@color/color_1d1d1d"
         android:fontFamily="@font/opensans_bold"
         app:layout_constraintTop_toBottomOf="@id/tv_article_type"
-        app:layout_constraintLeft_toLeftOf="parent"/>
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"/>
 
     <TextView
         android:id="@+id/tv_article_url"
