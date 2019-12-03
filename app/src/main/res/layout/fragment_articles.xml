@@ -76,7 +76,6 @@
                     android:paddingBottom="@dimen/inline_margin"
                     android:background="@drawable/background_filter_default"
                     android:clickable="true"
-                    app:el_expanded="true"
                     app:layout_constraintTop_toBottomOf="@id/tv_article_remain_indicate">
 
                     <androidx.constraintlayout.widget.ConstraintLayout
@@ -98,7 +97,6 @@
                             app:layout_constraintTop_toBottomOf="@id/tv_article_filter_type">
                             <include layout="@layout/view_chip_group_type"/>
                         </LinearLayout>
-
                     </androidx.constraintlayout.widget.ConstraintLayout>
                 </net.cachapa.expandablelayout.ExpandableLayout>
             </androidx.constraintlayout.widget.ConstraintLayout>
