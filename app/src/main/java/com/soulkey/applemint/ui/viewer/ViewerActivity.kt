@@ -15,6 +15,9 @@ class ViewerActivity : AppCompatActivity() {
         webview.webViewClient = WebViewClient()
         webview.settings.javaScriptEnabled = true
         webview.settings.useWideViewPort = true
+        webview.settings.setSupportZoom(true)
+        webview.settings.builtInZoomControls = true
+        webview.settings.displayZoomControls = true
         webview.settings.setSupportMultipleWindows(false)
         webview.loadUrl(articleUrl)
     }

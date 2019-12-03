@@ -7,7 +7,6 @@ import android.os.Bundle
 import android.view.MenuItem
 import android.view.View
 import android.view.inputmethod.InputMethodManager
-import androidx.appcompat.widget.DialogTitle
 import androidx.core.view.GravityCompat
 import androidx.drawerlayout.widget.DrawerLayout
 import androidx.fragment.app.Fragment
@@ -18,20 +17,15 @@ import com.google.firebase.auth.FirebaseAuth
 import com.soulkey.applemint.R
 import com.soulkey.applemint.ui.login.LoginActivity
 import com.soulkey.applemint.ui.main.article.ArticleViewModel
-import com.soulkey.applemint.ui.main.bookmark.BookmarkFragment
 import com.soulkey.applemint.ui.main.article.NewArticleFragment
 import com.soulkey.applemint.ui.main.article.ReadLaterFragment
-import com.soulkey.applemint.ui.main.bookmark.BookmarkViewModel
 import com.soulkey.applemint.ui.main.dashboard.DashboardFragment
 import kotlinx.android.synthetic.main.main_activity.*
-import org.koin.androidx.viewmodel.ext.android.sharedViewModel
 import org.koin.androidx.viewmodel.ext.android.viewModel
-import timber.log.Timber
 
 class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelectedListener {
     private val mainViewModel: MainViewModel by viewModel()
     private val articleViewModel:  ArticleViewModel by viewModel()
-    private val bookmarkViewModel: BookmarkViewModel by viewModel()
     lateinit var currentFragment: Fragment
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -48,7 +42,6 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
 
         iv_article_refresh.setOnClickListener {
             when(tv_main_title.text.toString()){
-                getString(R.string.item_bookmark)->bookmarkViewModel.triggerUpdate()
                 getString(R.string.articles)->articleViewModel.fetchArticles()
                 getString(R.string.read_later)->articleViewModel.fetchArticles()
             }
@@ -101,8 +94,6 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
                 replaceFragment(NewArticleFragment(), titleText = getString(R.string.articles), setFilterVisible = true, setRefreshVisible = true)
             R.id.item_read_later->
                 replaceFragment(ReadLaterFragment(), titleText = getString(R.string.read_later), setFilterVisible = true, setRefreshVisible = true)
-            R.id.item_bookmark->
-                replaceFragment(BookmarkFragment(), titleText = getString(R.string.item_bookmark), setFilterVisible = true, setRefreshVisible = true)
             R.id.item_logout ->{
                 FirebaseAuth.getInstance().signOut()
                 startActivity(Intent(applicationContext, LoginActivity::class.java))

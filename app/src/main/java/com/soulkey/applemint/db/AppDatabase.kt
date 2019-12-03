@@ -5,13 +5,12 @@ import androidx.room.RoomDatabase
 import androidx.room.TypeConverter
 import androidx.room.TypeConverters
 import com.soulkey.applemint.model.Article
-import com.soulkey.applemint.model.Bookmark
 import java.util.Date
 
-@Database(entities = [Bookmark::class], version = 1, exportSchema = false)
+@Database(entities = [Article::class], version = 1, exportSchema = false)
 @TypeConverters(DateConverter::class)
 abstract class AppDatabase: RoomDatabase() {
-    abstract fun bookmarkDao(): BookmarkDao
+    abstract fun articleDao(): ArticleDao
 }
 
 class DateConverter {

@@ -43,10 +43,11 @@ class NewArticleFragment : Fragment() {
         })
 
         // Article Adapter 설정
-        articleAdapter = ArticleAdapter(articleViewModel)
+        articleAdapter = ArticleAdapter()
         articleViewModel.newArticles.observe(this, Observer {
             layout_view_empty.visibility = if (it.isEmpty()) View.VISIBLE else View.INVISIBLE
             articleAdapter.submitList(it)
+            tv_article_remain_count.text = it.size.toString()
         })
 
         // Filter 적용시 자동으로 Top Scroll
