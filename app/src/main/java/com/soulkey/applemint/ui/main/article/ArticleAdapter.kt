@@ -3,6 +3,7 @@ package com.soulkey.applemint.ui.main.article
 import android.content.Intent
 import android.graphics.Canvas
 import android.graphics.Color
+import android.net.Uri
 import android.os.Handler
 import android.view.LayoutInflater
 import android.view.View
@@ -48,7 +49,11 @@ class ArticleAdapter: ListAdapter<Article, ArticleAdapter.ArticleViewHolder>(obj
 
             itemView.setOnClickListener {
                 Handler().postDelayed( {
-                    val intent = Intent(itemView.context, ViewerActivity::class.java).apply { putExtra("url", itemData.url) }
+                    val intent: Intent = if (itemData.type == "youtube" || itemData.type == "twitch"){
+                        Intent(Intent.ACTION_VIEW).setData(Uri.parse(itemData.url))
+                    }else{
+                        Intent(itemView.context, ViewerActivity::class.java).apply { putExtra("url", itemData.url) }
+                    }
                     ContextCompat.startActivity(itemView.context, intent, null)
                 }, 300)
                 //ContextCompat.startActivity(itemView.context, Intent(Intent.ACTION_VIEW, Uri.parse(data.url)), null)
