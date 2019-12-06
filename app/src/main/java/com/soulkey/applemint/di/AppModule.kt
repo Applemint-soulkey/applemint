@@ -6,6 +6,7 @@ import com.soulkey.applemint.data.ArticleRepository
 import com.soulkey.applemint.data.ArticleRepositoryImpl
 import com.soulkey.applemint.db.AppDatabase
 import com.soulkey.applemint.db.ArticleDao
+import com.soulkey.applemint.ui.analyze.AnalyzeViewModel
 import com.soulkey.applemint.ui.login.LoginViewModel
 import com.soulkey.applemint.ui.main.MainViewModel
 import com.soulkey.applemint.ui.main.article.ArticleViewModel
@@ -26,4 +27,5 @@ val AppModule = module {
     viewModel { MainViewModel() }
     viewModel { ArticleViewModel(get(), androidContext(), get()) }
     viewModel { LoginViewModel() }
+    viewModel { AnalyzeViewModel() }
 }

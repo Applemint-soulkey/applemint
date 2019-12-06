@@ -13,9 +13,13 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
+import com.afollestad.materialdialogs.MaterialDialog
+import com.google.firebase.functions.ktx.functions
+import com.google.firebase.ktx.Firebase
 import com.soulkey.applemint.R
 import com.soulkey.applemint.config.typeTagMapper
 import com.soulkey.applemint.model.Article
+import com.soulkey.applemint.ui.analyze.AnalyzeActivity
 import com.soulkey.applemint.ui.viewer.ViewerActivity
 import kotlinx.android.synthetic.main.item_article_background.view.*
 import kotlinx.android.synthetic.main.item_article_foreground.view.*
@@ -57,6 +61,24 @@ class ArticleAdapter: ListAdapter<Article, ArticleAdapter.ArticleViewHolder>(obj
                     ContextCompat.startActivity(itemView.context, intent, null)
                 }, 300)
                 //ContextCompat.startActivity(itemView.context, Intent(Intent.ACTION_VIEW, Uri.parse(data.url)), null)
+            }
+
+            itemView.setOnLongClickListener {view->
+                MaterialDialog(view.context).show {
+                    title(text="Analyze this Article?")
+                    cornerRadius(16f)
+                    positiveButton(text = "ANALYZE") {
+                        Intent(
+                            view.context,
+                            AnalyzeActivity::class.java
+                        ).also {
+                            it.putExtra("id", itemData.fb_id)
+                            ContextCompat.startActivity(view.context, it, null)
+                        }
+                    }
+                    negativeButton(text = "CANCEL")
+                }
+                true
             }
         }
     }
