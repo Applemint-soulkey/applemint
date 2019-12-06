@@ -1,165 +1,171 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout
+<androidx.core.widget.NestedScrollView
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_height="match_parent"
     android:layout_width="match_parent">
-
     <androidx.constraintlayout.widget.ConstraintLayout
-        android:id="@+id/container_analyze_header"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="@color/black"
-        app:layout_constraintTop_toTopOf="parent">
 
-        <TextView
-            android:id="@+id/tv_main_title"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="10dp"
-            android:layout_marginBottom="10dp"
-            android:gravity="center"
-            android:fontFamily="@font/opensans_bold"
-            android:text="Analyze Result"
-            android:textSize="20dp"
-            android:textColor="@color/white"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintLeft_toLeftOf="parent"
-            app:layout_constraintRight_toRightOf="parent"/>
+        android:layout_height="match_parent"
+        android:layout_width="match_parent">
 
-    </androidx.constraintlayout.widget.ConstraintLayout>
 
-    <androidx.constraintlayout.widget.ConstraintLayout
-        android:id="@+id/container_analyze_title"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        app:layout_constraintTop_toBottomOf="@id/container_analyze_header">
-
-        <com.google.android.material.textview.MaterialTextView
-            android:id="@+id/tv_header_analyzed_title"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_margin="@dimen/outline_margin"
-            android:text="Analyzed Title"
-            android:textSize="12sp"
-            android:fontFamily="@font/montserrat_alternates_semibold"
-            app:layout_constraintTop_toTopOf="@id/btn_edit_title"
-            app:layout_constraintBottom_toBottomOf="@id/btn_edit_title"
-            app:layout_constraintLeft_toLeftOf="parent"/>
-
-        <com.google.android.material.button.MaterialButton
-            android:id="@+id/btn_edit_title"
-            style="@style/Widget.MaterialComponents.Button.TextButton"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_margin="@dimen/outline_margin"
-            android:text="EDIT"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintRight_toRightOf="parent"
-            />
-
-        <com.google.android.material.textview.MaterialTextView
-            android:id="@+id/tv_content_analyzed_title"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="@dimen/outline_margin"
-            android:layout_marginEnd="@dimen/outline_margin"
-            android:text="ANALYZED_TITLE_OF_ARTICLE"
-            android:textSize="24sp"
-            android:fontFamily="@font/opensans_extrabold"
-            app:layout_constraintTop_toBottomOf="@id/btn_edit_title"
-            app:layout_constraintLeft_toLeftOf="parent"
-            app:layout_constraintRight_toRightOf="parent"
-            />
-
-        <View
-            android:id="@+id/divider_analyze_title"
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/container_analyze_header"
             android:layout_width="match_parent"
-            android:layout_height="1dp"
-            android:background="@color/color_1d1d1d"
-            android:layout_marginTop="@dimen/outline_margin"
-            android:layout_marginStart="@dimen/outline_margin"
-            android:layout_marginEnd="@dimen/outline_margin"
-            app:layout_constraintTop_toBottomOf="@id/tv_content_analyzed_title"/>
-
-    </androidx.constraintlayout.widget.ConstraintLayout>
-
-    <androidx.constraintlayout.widget.ConstraintLayout
-        android:id="@+id/container_analyze_media"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        app:layout_constraintTop_toBottomOf="@id/container_analyze_title">
-        <com.google.android.material.textview.MaterialTextView
-            android:id="@+id/tv_header_analyzed_media"
-            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_margin="@dimen/outline_margin"
-            android:text="Media Contents"
-            android:textSize="12sp"
-            android:fontFamily="@font/montserrat_alternates_semibold"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintLeft_toLeftOf="parent"/>
+            android:background="@color/black"
+            app:layout_constraintTop_toTopOf="parent">
 
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/recycler_analyzed_media"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_margin="@dimen/outline_margin"
-            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
-            app:layout_constraintTop_toBottomOf="@id/tv_header_analyzed_media"
-            app:layout_constraintLeft_toLeftOf="parent"
-            app:layout_constraintRight_toRightOf="parent"
-            />
+            <TextView
+                android:id="@+id/tv_main_title"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:layout_marginBottom="10dp"
+                android:gravity="center"
+                android:fontFamily="@font/opensans_bold"
+                android:text="Analyze Result"
+                android:textSize="20dp"
+                android:textColor="@color/white"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintRight_toRightOf="parent"/>
 
-        <View
-            android:id="@+id/divider_analyze_media"
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/container_analyze_title"
             android:layout_width="match_parent"
-            android:layout_height="1dp"
-            android:background="@color/color_1d1d1d"
-            android:layout_marginTop="@dimen/outline_margin"
-            android:layout_marginStart="@dimen/outline_margin"
-            android:layout_marginEnd="@dimen/outline_margin"
-            app:layout_constraintTop_toBottomOf="@id/recycler_analyzed_media"/>
-
-    </androidx.constraintlayout.widget.ConstraintLayout>
-
-    <androidx.constraintlayout.widget.ConstraintLayout
-        android:id="@+id/container_analyze_external"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        app:layout_constraintTop_toBottomOf="@id/container_analyze_media">
-        <com.google.android.material.textview.MaterialTextView
-            android:id="@+id/tv_header_analyzed_external"
-            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_margin="@dimen/outline_margin"
-            android:text="External Contents"
-            android:textSize="12sp"
-            android:fontFamily="@font/montserrat_alternates_semibold"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintLeft_toLeftOf="parent"/>
+            app:layout_constraintTop_toBottomOf="@id/container_analyze_header">
 
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/recycler_analyzed_external"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_margin="@dimen/outline_margin"
-            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
-            app:layout_constraintTop_toBottomOf="@id/tv_header_analyzed_external"
-            app:layout_constraintLeft_toLeftOf="parent"
-            app:layout_constraintRight_toRightOf="parent"
-            />
+            <com.google.android.material.textview.MaterialTextView
+                android:id="@+id/tv_header_analyzed_title"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_margin="@dimen/outline_margin"
+                android:text="Analyzed Title"
+                android:textSize="12sp"
+                android:fontFamily="@font/montserrat_alternates_semibold"
+                app:layout_constraintTop_toTopOf="@id/btn_edit_title"
+                app:layout_constraintBottom_toBottomOf="@id/btn_edit_title"
+                app:layout_constraintLeft_toLeftOf="parent"/>
 
-        <View
-            android:id="@+id/divider_analyze_external"
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btn_edit_title"
+                style="@style/Widget.MaterialComponents.Button.TextButton"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_margin="@dimen/outline_margin"
+                android:text="EDIT"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintRight_toRightOf="parent"
+                />
+
+            <com.google.android.material.textview.MaterialTextView
+                android:id="@+id/tv_content_analyzed_title"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/outline_margin"
+                android:layout_marginEnd="@dimen/outline_margin"
+                android:text="ANALYZED_TITLE_OF_ARTICLE"
+                android:textSize="24sp"
+                android:fontFamily="@font/opensans_extrabold"
+                app:layout_constraintTop_toBottomOf="@id/btn_edit_title"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintRight_toRightOf="parent"
+                />
+
+            <View
+                android:id="@+id/divider_analyze_title"
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="@color/color_1d1d1d"
+                android:layout_marginTop="@dimen/outline_margin"
+                android:layout_marginStart="@dimen/outline_margin"
+                android:layout_marginEnd="@dimen/outline_margin"
+                app:layout_constraintTop_toBottomOf="@id/tv_content_analyzed_title"/>
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/container_analyze_media"
             android:layout_width="match_parent"
-            android:layout_height="1dp"
-            android:background="@color/color_1d1d1d"
-            android:layout_marginTop="@dimen/outline_margin"
-            android:layout_marginStart="@dimen/outline_margin"
-            android:layout_marginEnd="@dimen/outline_margin"
-            app:layout_constraintTop_toBottomOf="@id/recycler_analyzed_external"/>
+            android:layout_height="wrap_content"
+            app:layout_constraintTop_toBottomOf="@id/container_analyze_title">
+            <com.google.android.material.textview.MaterialTextView
+                android:id="@+id/tv_header_analyzed_media"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_margin="@dimen/outline_margin"
+                android:text="Media Contents"
+                android:textSize="12sp"
+                android:fontFamily="@font/montserrat_alternates_semibold"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintLeft_toLeftOf="parent"/>
 
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/recycler_analyzed_media"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="@dimen/outline_margin"
+                app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+                app:layout_constraintTop_toBottomOf="@id/tv_header_analyzed_media"
+                />
+
+            <View
+                android:id="@+id/divider_analyze_media"
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="@color/color_1d1d1d"
+                android:layout_marginTop="@dimen/outline_margin"
+                android:layout_marginStart="@dimen/outline_margin"
+                android:layout_marginEnd="@dimen/outline_margin"
+                app:layout_constraintTop_toBottomOf="@id/recycler_analyzed_media"/>
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/container_analyze_external"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:layout_constraintTop_toBottomOf="@id/container_analyze_media">
+            <com.google.android.material.textview.MaterialTextView
+                android:id="@+id/tv_header_analyzed_external"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_margin="@dimen/outline_margin"
+                android:text="External Contents"
+                android:textSize="12sp"
+                android:fontFamily="@font/montserrat_alternates_semibold"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintLeft_toLeftOf="parent"/>
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/recycler_analyzed_external"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_margin="@dimen/outline_margin"
+                app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+                app:layout_constraintTop_toBottomOf="@id/tv_header_analyzed_external"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintRight_toRightOf="parent"
+                />
+
+            <View
+                android:id="@+id/divider_analyze_external"
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="@color/color_1d1d1d"
+                android:layout_marginTop="@dimen/outline_margin"
+                android:layout_marginStart="@dimen/outline_margin"
+                android:layout_marginEnd="@dimen/outline_margin"
+                app:layout_constraintTop_toBottomOf="@id/recycler_analyzed_external"/>
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
     </androidx.constraintlayout.widget.ConstraintLayout>
-</androidx.constraintlayout.widget.ConstraintLayout>
+
+</androidx.core.widget.NestedScrollView>
+

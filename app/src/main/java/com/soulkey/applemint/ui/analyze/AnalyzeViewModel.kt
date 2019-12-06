@@ -21,7 +21,6 @@ class AnalyzeViewModel : ViewModel() {
                         targetTitle.value = result["title"] as String?
                         mediaContents.value = result["midiContents"] as List<String>?
                         externalLinks.value = result["externalContents"] as List<String>?
-                        Timber.v("diver:/ ${mediaContents.value}")
                         Timber.v("diver:/ ${externalLinks.value}")
                     }
                 } else {
