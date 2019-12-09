@@ -2,10 +2,9 @@ package com.soulkey.applemint.data
 
 import com.google.android.gms.tasks.Task
 import com.google.firebase.firestore.FirebaseFirestore
-import com.soulkey.applemint.db.ArticleDao
 import com.soulkey.applemint.model.Article
 
-class ArticleRepositoryImpl(private val db: FirebaseFirestore, private val articleDao: ArticleDao) : ArticleRepository {
+class ArticleRepositoryImpl(private val db: FirebaseFirestore) : ArticleRepository {
 
     override fun restoreArticle(item: Article): Task<Void> {
         val articleData = hashMapOf(

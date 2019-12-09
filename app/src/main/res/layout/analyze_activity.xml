@@ -5,7 +5,6 @@
     android:layout_height="match_parent"
     android:layout_width="match_parent">
     <androidx.constraintlayout.widget.ConstraintLayout
-
         android:layout_height="match_parent"
         android:layout_width="match_parent">
 
@@ -70,7 +69,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginStart="@dimen/outline_margin"
                 android:layout_marginEnd="@dimen/outline_margin"
-                android:text="ANALYZED_TITLE_OF_ARTICLE"
+                android:text="WAIT FOR ANALYZE.."
                 android:textSize="24sp"
                 android:fontFamily="@font/opensans_extrabold"
                 app:layout_constraintTop_toBottomOf="@id/btn_edit_title"
@@ -105,6 +104,27 @@
                 android:fontFamily="@font/montserrat_alternates_semibold"
                 app:layout_constraintTop_toTopOf="parent"
                 app:layout_constraintLeft_toLeftOf="parent"/>
+            <TextView
+                android:id="@+id/tv_count_analyzed_media"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/tiny_margin"
+                android:text="(0)"
+                android:textSize="12sp"
+                android:fontFamily="@font/montserrat_alternates_semibold"
+                app:layout_constraintTop_toTopOf="@id/tv_header_analyzed_media"
+                app:layout_constraintLeft_toRightOf="@id/tv_header_analyzed_media"/>
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btn_save_analyzed_media"
+                style="@style/Widget.MaterialComponents.Button.TextButton"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_margin="@dimen/outline_margin"
+                android:text="SAVE"
+                app:layout_constraintTop_toTopOf="@id/tv_header_analyzed_media"
+                app:layout_constraintBottom_toBottomOf="@id/tv_header_analyzed_media"
+                app:layout_constraintRight_toRightOf="parent"
+                />
 
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/recycler_analyzed_media"
@@ -142,6 +162,16 @@
                 android:fontFamily="@font/montserrat_alternates_semibold"
                 app:layout_constraintTop_toTopOf="parent"
                 app:layout_constraintLeft_toLeftOf="parent"/>
+            <TextView
+                android:id="@+id/tv_count_analyzed_external"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/tiny_margin"
+                android:text="(0)"
+                android:textSize="12sp"
+                android:fontFamily="@font/montserrat_alternates_semibold"
+                app:layout_constraintTop_toTopOf="@id/tv_header_analyzed_external"
+                app:layout_constraintLeft_toRightOf="@id/tv_header_analyzed_external"/>
 
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/recycler_analyzed_external"
