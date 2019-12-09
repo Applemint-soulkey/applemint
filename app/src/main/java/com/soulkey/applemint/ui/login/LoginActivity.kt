@@ -50,7 +50,7 @@ class LoginActivity : AppCompatActivity() {
                 auth.signInWithEmailAndPassword(inputEmail, inputPassword).addOnCompleteListener {
                     if (it.isSuccessful){
                         loginViewModel.updateProcess.value = "Wait for Update.."
-                        loginViewModel.isUpdateComplete.value = true
+                        loginViewModel.loginProcess(inputEmail)
                     } else {
                         Toast.makeText(applicationContext, "Login Failed!", Toast.LENGTH_SHORT).show()
                     }

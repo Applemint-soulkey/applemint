@@ -7,4 +7,5 @@ interface ArticleRepository {
     fun removeArticle(id: String): Task<Void>
     fun keepArticle(id: String): Task<Void>
     fun restoreArticle(item: Article): Task<Void>
+    fun updateArticleTitle(id: String, title: String): Task<Void>
 }
