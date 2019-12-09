@@ -32,6 +32,7 @@ class AnalyzeActivity : AppCompatActivity(){
             tv_content_analyzed_title.text = text
         })
         recycler_analyzed_media.adapter = mediaAdapter
+        recycler_analyzed_external.adapter = externalAdapter
         viewModel.mediaContents.observe(this, Observer { urlList->
             urlList?.let {
                 mediaAdapter.urls = urlList
@@ -43,7 +44,7 @@ class AnalyzeActivity : AppCompatActivity(){
             urlList?.let {
                 externalAdapter.urls = urlList
                 externalAdapter.notifyDataSetChanged()
-                tv_count_analyzed_media.text = "(${urlList.size})"
+                tv_count_analyzed_external.text = "(${urlList.size})"
             }
         })
 
@@ -58,9 +59,26 @@ class AnalyzeActivity : AppCompatActivity(){
             }
         }
 
+        btn_update_title.setOnClickListener {view->
+            MaterialDialog(this).show {
+                title(text = "Would you like to update it as follows?")
+                message(text = viewModel.targetTitle.value)
+                positiveButton {
+                    viewModel.updateTitle().addOnSuccessListener {
+                        Toast.makeText(view.context, "Article title is Updated! Please Refresh :)", Toast.LENGTH_SHORT).show()
+                    }
+                }
+                negativeButton()
+            }
+        }
+
         btn_save_analyzed_media.setOnClickListener {
-            viewModel.dapinaTest()
+            viewModel.dapina()
             Toast.makeText(it.context, "Dapina is Requested! Check your Dropbox!", Toast.LENGTH_SHORT).show()
+        }
+
+        iv_back_to_main.setOnClickListener {
+            onBackPressed()
         }
     }
 
@@ -92,10 +110,10 @@ class AnalyzeActivity : AppCompatActivity(){
 
     inner class ExternalAdapter(var urls: List<String>) : RecyclerView.Adapter<ExternalAdapter.ExternalViewHolder>(){
         inner class ExternalViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView){
-            fun bind(position: Int){
-                itemView.tv_analyze_external_link.text = urls[position]
+            fun bind(url: String){
+                itemView.tv_analyze_external_link.text = url
                 itemView.setOnClickListener {
-                    startActivity(Intent(Intent.ACTION_VIEW, Uri.parse(urls[position])))
+                    startActivity(Intent(Intent.ACTION_VIEW, Uri.parse(url)))
                 }
             }
         }
@@ -109,7 +127,7 @@ class AnalyzeActivity : AppCompatActivity(){
         }
 
         override fun onBindViewHolder(holder: ExternalViewHolder, position: Int) {
-            holder.bind(position)
+            holder.bind(urls[position])
         }
     }
 }

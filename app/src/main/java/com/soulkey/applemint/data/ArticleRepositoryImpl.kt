@@ -18,6 +18,10 @@ class ArticleRepositoryImpl(private val db: FirebaseFirestore) : ArticleReposito
         return db.collection("article").document(item.fb_id).set(articleData)
     }
 
+    override fun updateArticleTitle(id: String, title: String): Task<Void> {
+        return db.collection("article").document(id).update("textContent", title)
+    }
+
     override fun removeArticle(id: String) : Task<Void> {
         return db.collection("article").document(id).delete()
     }

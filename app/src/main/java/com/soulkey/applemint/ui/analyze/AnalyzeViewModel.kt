@@ -1,18 +1,20 @@
 package com.soulkey.applemint.ui.analyze
 
 import android.os.AsyncTask
-import android.widget.Toast
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.dropbox.core.v2.DbxClientV2
+import com.google.android.gms.tasks.Task
 import com.google.firebase.functions.ktx.functions
 import com.google.firebase.ktx.Firebase
+import com.soulkey.applemint.data.ArticleRepository
 import timber.log.Timber
 
-class AnalyzeViewModel(private val dapinaClient: DbxClientV2) : ViewModel() {
-    val savePrefixPath = "/test/"
-    val validFileRegex = Regex("[\\\\/:*?\"\"<>|]")
+class AnalyzeViewModel(private val dapinaClient: DbxClientV2, private val articleRepository: ArticleRepository) : ViewModel() {
+    private val savePrefixPath = "/test/"
+    private val validFileRegex = Regex("[\\\\/:*?\"\"<>|]")
     val targetTitle: MutableLiveData<String> by lazy {MutableLiveData<String>()}
+    val targetFbId: MutableLiveData<String> by lazy { MutableLiveData<String>() }
     val mediaContents: MutableLiveData<List<String>> = MutableLiveData(listOf())
     val externalLinks: MutableLiveData<List<String>> = MutableLiveData(listOf())
 
@@ -23,8 +25,9 @@ class AnalyzeViewModel(private val dapinaClient: DbxClientV2) : ViewModel() {
                     task.result?.let {analyzeResult->
                         val result = analyzeResult.data as HashMap<*, *>
                         targetTitle.value = result["title"] as String?
+                        targetFbId.value = result["targetFbId"] as String?
                         mediaContents.value = result["midiContents"] as List<String>?
-                        externalLinks.value = result["externalContents"] as List<String>?
+                        externalLinks.value = result["extContents"] as List<String>?
                     }
                 } else {
                     Timber.v("diver:/ Analyze Call is Failed..")
@@ -32,7 +35,11 @@ class AnalyzeViewModel(private val dapinaClient: DbxClientV2) : ViewModel() {
             }
     }
 
-    fun replaceFileName(path: String, targetName: String): String{
+    fun updateTitle(): Task<Void>{
+        return articleRepository.updateArticleTitle(targetFbId.value!!, targetTitle.value!!)
+    }
+
+    private fun replaceFileName(path: String, targetName: String): String{
         path.replace("\\", "/").split("/").also { pathBlocks->
             val fileName = pathBlocks[pathBlocks.size-1]
             val extension = fileName.substring(fileName.indexOfLast {it == '.'})
@@ -41,8 +48,7 @@ class AnalyzeViewModel(private val dapinaClient: DbxClientV2) : ViewModel() {
         }
     }
 
-
-    fun dapinaTest(){
+    fun dapina(){
         mediaContents.value?.let {mediaUrls->
             if (mediaUrls.size == 1){
                 //single media

@@ -11,6 +11,7 @@
         android:layout_height="wrap_content"
         android:text="external_item_url"
         android:textSize="20sp"
+        android:singleLine="true"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintLeft_toLeftOf="parent"/>
 

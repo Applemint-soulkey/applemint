@@ -33,5 +33,5 @@ val AppModule = module {
     viewModel { MainViewModel() }
     viewModel { ArticleViewModel(get(), androidContext(), get()) }
     viewModel { LoginViewModel(get(), get(), get()) }
-    viewModel { AnalyzeViewModel(get()) }
+    viewModel { AnalyzeViewModel(get(), get()) }
 }
