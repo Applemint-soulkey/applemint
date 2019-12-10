@@ -4,6 +4,7 @@ import androidx.room.Room
 import com.dropbox.core.v2.DbxClientV2
 import com.google.firebase.firestore.FirebaseFirestore
 import com.soulkey.applemint.common.Dapina
+import com.soulkey.applemint.common.MessagingService
 import com.soulkey.applemint.data.ArticleRepository
 import com.soulkey.applemint.data.ArticleRepositoryImpl
 import com.soulkey.applemint.data.UserRepository
@@ -26,12 +27,13 @@ val AppModule = module {
     single { FirebaseFirestore.getInstance() }
     single { get<AppDatabase>().userDao() }
     single<ArticleRepository> { ArticleRepositoryImpl(get()) }
-    single<UserRepository> { UserRepositoryImpl(get()) }
-    single { Dapina(get()) }
+    single<UserRepository> { UserRepositoryImpl(get(), get(), get(), androidContext()) }
+    single { Dapina() }
     single { get<Dapina>().getDapinaClient() }
+    single { MessagingService(androidContext(), get()) }
 
     viewModel { MainViewModel() }
     viewModel { ArticleViewModel(get(), androidContext(), get()) }
-    viewModel { LoginViewModel(get(), get(), get()) }
+    viewModel { LoginViewModel(get(), get()) }
     viewModel { AnalyzeViewModel(get(), get()) }
 }

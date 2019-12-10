@@ -2,13 +2,12 @@ package com.soulkey.applemint.common
 
 import com.dropbox.core.DbxRequestConfig
 import com.dropbox.core.v2.DbxClientV2
-import com.soulkey.applemint.data.UserRepository
 
-class Dapina (val userRepository: UserRepository){
+class Dapina {
     private lateinit var dapinaKey: String
 
-    fun setDapinaKey(email: String){
-        dapinaKey = userRepository.getDapinaKey(email)
+    fun setDapinaKey(key: String){
+        dapinaKey = key
     }
 
     fun getDapinaClient(): DbxClientV2{

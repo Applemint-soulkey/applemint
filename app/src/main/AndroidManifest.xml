@@ -30,6 +30,8 @@
         <activity
             android:name=".ui.analyze.AnalyzeActivity"
             android:theme="@style/MaterialNoActionBar" />
+
+        <service android:name=".common.MessagingService" />
     </application>
 
 </manifest>
