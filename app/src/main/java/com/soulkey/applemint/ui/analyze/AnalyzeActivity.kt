@@ -10,7 +10,9 @@ import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.view.menu.MenuView
 import androidx.lifecycle.Observer
+import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import androidx.recyclerview.widget.StaggeredGridLayoutManager
 import com.afollestad.materialdialogs.MaterialDialog
 import com.afollestad.materialdialogs.input.input
 import com.bumptech.glide.Glide
@@ -32,6 +34,7 @@ class AnalyzeActivity : AppCompatActivity(){
             tv_content_analyzed_title.text = text
         })
         recycler_analyzed_media.adapter = mediaAdapter
+        recycler_analyzed_media.layoutManager = GridLayoutManager(this, 3)
         recycler_analyzed_external.adapter = externalAdapter
         viewModel.mediaContents.observe(this, Observer { urlList->
             urlList?.let {
@@ -91,6 +94,8 @@ class AnalyzeActivity : AppCompatActivity(){
                 Glide
                     .with(itemView.context)
                     .load(url)
+                    .placeholder(R.drawable.ic_launcher_foreground)
+                    .thumbnail(0.25f)
                     .into(itemView.iv_analyzed_media)
             }
         }
