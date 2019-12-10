@@ -4,13 +4,11 @@ import androidx.lifecycle.MediatorLiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.google.firebase.firestore.FirebaseFirestore
-import com.soulkey.applemint.common.Dapina
 import com.soulkey.applemint.data.UserRepository
 
 class LoginViewModel(
     private val db: FirebaseFirestore,
-    private val userRepository: UserRepository,
-    private val dapina: Dapina
+    private val userRepository: UserRepository
 ) : ViewModel() {
     private val isUserUpdated : MutableLiveData<Boolean> = MutableLiveData(false)
     val isUpdateComplete : MediatorLiveData<Boolean> = MediatorLiveData()
@@ -22,11 +20,11 @@ class LoginViewModel(
         }
     }
 
+
     fun loginProcess(email:String){
         db.collection("user").document(email).get().addOnSuccessListener { userDoc->
             userDoc.data?.let { data->
-                userRepository.insert(email, data["dapina"].toString())
-                dapina.setDapinaKey(email)
+                userRepository.setCurrentUser(email, data["dapina"].toString())
                 isUserUpdated.value = true
             }
         }

@@ -9,6 +9,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.constraintlayout.widget.ConstraintSet
 import androidx.lifecycle.Observer
 import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.iid.FirebaseInstanceId
 import com.soulkey.applemint.R
 import com.soulkey.applemint.ui.main.MainActivity
 import kotlinx.android.synthetic.main.login_acitivity.*
@@ -41,7 +42,7 @@ class LoginActivity : AppCompatActivity() {
             }
         })
 
-        btn_login.setOnClickListener {
+        btn_login.setOnClickListener {view->
             val inputEmail = et_email.text.toString()
             val inputPassword = et_password.text.toString()
             if(inputEmail.isNotEmpty() and inputPassword.isNotEmpty()){
@@ -50,6 +51,7 @@ class LoginActivity : AppCompatActivity() {
                 auth.signInWithEmailAndPassword(inputEmail, inputPassword).addOnCompleteListener {
                     if (it.isSuccessful){
                         loginViewModel.updateProcess.value = "Wait for Update.."
+
                         loginViewModel.loginProcess(inputEmail)
                     } else {
                         Toast.makeText(applicationContext, "Login Failed!", Toast.LENGTH_SHORT).show()

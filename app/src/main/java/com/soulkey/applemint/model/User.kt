@@ -8,5 +8,6 @@ import androidx.room.PrimaryKey
 data class User(
     @PrimaryKey
     var email: String,
-    var dapina_key: String
+    var dapina_key: String,
+    var message_token: String
 )
