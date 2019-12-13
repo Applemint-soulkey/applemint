@@ -26,7 +26,6 @@ import org.koin.androidx.viewmodel.ext.android.viewModel
 class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelectedListener {
     private val mainViewModel: MainViewModel by viewModel()
     private val articleViewModel:  ArticleViewModel by viewModel()
-    lateinit var currentFragment: Fragment
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.main_activity)
@@ -52,9 +51,9 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         mainViewModel.isFilterApply.observe(this, Observer {
             iv_filter_notification_dot.visibility = if (it) View.VISIBLE else View.INVISIBLE
         })
-        currentFragment = DashboardFragment()
+        mainViewModel.currentFragment = NewArticleFragment()
         supportFragmentManager.beginTransaction().apply {
-            replace(R.id.container_main_body, currentFragment)
+            replace(R.id.container_main_body, mainViewModel.currentFragment)
         }.commit()
 
         drawer_main.addDrawerListener(object: DrawerLayout.DrawerListener{
@@ -63,7 +62,7 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
             override fun onDrawerSlide(drawerView: View, slideOffset: Float) {}
             override fun onDrawerClosed(drawerView: View) {
                 supportFragmentManager.beginTransaction().apply {
-                    replace(R.id.container_main_body, currentFragment)
+                    replace(R.id.container_main_body, mainViewModel.currentFragment)
                 }.commit()
             }
         })
@@ -83,7 +82,7 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         iv_filter_notification_dot.visibility = View.INVISIBLE
         iv_article_filter.visibility = if (setFilterVisible) View.VISIBLE else View.INVISIBLE
         iv_article_refresh.visibility = if (setRefreshVisible) View.VISIBLE else View.INVISIBLE
-        currentFragment = fragment
+        mainViewModel.currentFragment = fragment
     }
 
     override fun onNavigationItemSelected(item: MenuItem): Boolean {

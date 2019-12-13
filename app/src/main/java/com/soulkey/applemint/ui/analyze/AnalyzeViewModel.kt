@@ -13,8 +13,8 @@ import timber.log.Timber
 class AnalyzeViewModel(private val dapinaClient: DbxClientV2, private val articleRepository: ArticleRepository) : ViewModel() {
     private val savePrefixPath = "/test/"
     private val validFileRegex = Regex("[\\\\/:*?\"\"<>|]")
+    private val targetFbId: MutableLiveData<String> by lazy { MutableLiveData<String>() }
     val targetTitle: MutableLiveData<String> by lazy {MutableLiveData<String>()}
-    val targetFbId: MutableLiveData<String> by lazy { MutableLiveData<String>() }
     val mediaContents: MutableLiveData<List<String>> = MutableLiveData(listOf())
     val externalLinks: MutableLiveData<List<String>> = MutableLiveData(listOf())
 
