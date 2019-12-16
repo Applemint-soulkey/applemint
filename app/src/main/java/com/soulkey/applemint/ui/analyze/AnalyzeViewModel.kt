@@ -23,11 +23,14 @@ class AnalyzeViewModel(private val dapinaClient: DbxClientV2, private val articl
             .addOnCompleteListener {task->
                 if (task.isSuccessful){
                     task.result?.let {analyzeResult->
-                        val result = analyzeResult.data as HashMap<*, *>
-                        targetTitle.value = result["title"] as String?
-                        targetFbId.value = result["targetFbId"] as String?
-                        mediaContents.value = result["midiContents"] as List<String>?
-                        externalLinks.value = result["extContents"] as List<String>?
+                        analyzeResult.data?.let { data->
+                            val result = data as HashMap<*, *>
+                            targetTitle.value = result["title"] as String?
+                            targetFbId.value = result["targetFbId"] as String?
+                            mediaContents.value = result["midiContents"] as List<String>
+                            externalLinks.value = result["extContents"] as List<String>
+                        }
+
                     }
                 } else {
                     Timber.v("diver:/ Analyze Call is Failed..")

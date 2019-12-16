@@ -25,7 +25,7 @@ import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelectedListener {
     private val mainViewModel: MainViewModel by viewModel()
-    private val articleViewModel:  ArticleViewModel by viewModel()
+    private val articleViewModel: ArticleViewModel by viewModel()
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.main_activity)
@@ -34,15 +34,15 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
 
         iv_btn_menu.setOnClickListener {
             drawer_main.openDrawer(GravityCompat.START)
-            (getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager).also { imm->
-                currentFocus?.let {imm.hideSoftInputFromWindow(it.windowToken, 0)}
+            (getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager).also { imm ->
+                currentFocus?.let { imm.hideSoftInputFromWindow(it.windowToken, 0) }
             }
         }
 
         iv_article_refresh.setOnClickListener {
-            when(tv_main_title.text.toString()){
-                getString(R.string.articles)->articleViewModel.fetchArticles()
-                getString(R.string.read_later)->articleViewModel.fetchArticles()
+            when (tv_main_title.text.toString()) {
+                getString(R.string.articles) -> articleViewModel.fetchArticles()
+                getString(R.string.read_later) -> articleViewModel.fetchArticles()
             }
         }
         iv_article_filter.setOnClickListener {
@@ -51,12 +51,17 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         mainViewModel.isFilterApply.observe(this, Observer {
             iv_filter_notification_dot.visibility = if (it) View.VISIBLE else View.INVISIBLE
         })
-        mainViewModel.currentFragment = NewArticleFragment()
+        replaceFragment(
+            NewArticleFragment(),
+            titleText = getString(R.string.articles),
+            setFilterVisible = true,
+            setRefreshVisible = true
+        )
         supportFragmentManager.beginTransaction().apply {
             replace(R.id.container_main_body, mainViewModel.currentFragment)
         }.commit()
 
-        drawer_main.addDrawerListener(object: DrawerLayout.DrawerListener{
+        drawer_main.addDrawerListener(object : DrawerLayout.DrawerListener {
             override fun onDrawerStateChanged(newState: Int) {}
             override fun onDrawerOpened(drawerView: View) {}
             override fun onDrawerSlide(drawerView: View, slideOffset: Float) {}
@@ -72,12 +77,17 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         MaterialDialog(this).show {
             title(text = "Want to close Applemint?")
             positiveButton { super.onBackPressed() }
-            negativeButton {  }
+            negativeButton { }
             cornerRadius(16f)
         }
     }
 
-    private fun replaceFragment(fragment: Fragment, titleText: String = "Applemint", setFilterVisible:Boolean = false, setRefreshVisible:Boolean = false) {
+    private fun replaceFragment(
+        fragment: Fragment,
+        titleText: String = "Applemint",
+        setFilterVisible: Boolean = false,
+        setRefreshVisible: Boolean = false
+    ) {
         tv_main_title.text = titleText
         iv_filter_notification_dot.visibility = View.INVISIBLE
         iv_article_filter.visibility = if (setFilterVisible) View.VISIBLE else View.INVISIBLE
@@ -86,14 +96,24 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
     }
 
     override fun onNavigationItemSelected(item: MenuItem): Boolean {
-        when (item.itemId){
-            R.id.item_home->
+        when (item.itemId) {
+            R.id.item_home ->
                 replaceFragment(DashboardFragment())
-            R.id.item_new_article->
-                replaceFragment(NewArticleFragment(), titleText = getString(R.string.articles), setFilterVisible = true, setRefreshVisible = true)
-            R.id.item_read_later->
-                replaceFragment(ReadLaterFragment(), titleText = getString(R.string.read_later), setFilterVisible = true, setRefreshVisible = true)
-            R.id.item_logout ->{
+            R.id.item_new_article ->
+                replaceFragment(
+                    NewArticleFragment(),
+                    titleText = getString(R.string.articles),
+                    setFilterVisible = true,
+                    setRefreshVisible = true
+                )
+            R.id.item_read_later ->
+                replaceFragment(
+                    ReadLaterFragment(),
+                    titleText = getString(R.string.read_later),
+                    setFilterVisible = true,
+                    setRefreshVisible = true
+                )
+            R.id.item_logout -> {
                 FirebaseAuth.getInstance().signOut()
                 startActivity(Intent(applicationContext, LoginActivity::class.java))
                 finish()
