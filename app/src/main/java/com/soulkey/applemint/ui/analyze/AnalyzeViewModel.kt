@@ -30,7 +30,6 @@ class AnalyzeViewModel(private val dapinaClient: DbxClientV2, private val articl
                             mediaContents.value = result["midiContents"] as List<String>
                             externalLinks.value = result["extContents"] as List<String>
                         }
-
                     }
                 } else {
                     Timber.v("diver:/ Analyze Call is Failed..")
