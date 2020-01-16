@@ -15,20 +15,22 @@ class AnalyzeViewModel(private val dapinaClient: DbxClientV2, private val articl
     private val validFileRegex = Regex("[\\\\/:*?\"\"<>|]")
     private val targetFbId: MutableLiveData<String> by lazy { MutableLiveData<String>() }
     val targetTitle: MutableLiveData<String> by lazy {MutableLiveData<String>()}
-    val mediaContents: MutableLiveData<List<String>> = MutableLiveData(listOf())
-    val externalLinks: MutableLiveData<List<String>> = MutableLiveData(listOf())
+    val mediaContents: MutableLiveData<List<String>> by lazy { MutableLiveData<List<String>>()}
+    val externalLinks: MutableLiveData<List<String>> by lazy { MutableLiveData<List<String>>()}
 
     fun callAnalyze(fb_id: String) {
         Firebase.functions.getHttpsCallable("analyze").call(hashMapOf("id" to fb_id))
             .addOnCompleteListener {task->
                 if (task.isSuccessful){
                     task.result?.let {analyzeResult->
-                        analyzeResult.data?.let { data->
-                            val result = data as HashMap<*, *>
+                        if (analyzeResult.data != null) {
+                            val result = analyzeResult.data as HashMap<*, *>
                             targetTitle.value = result["title"] as String?
                             targetFbId.value = result["targetFbId"] as String?
                             mediaContents.value = result["midiContents"] as List<String>
                             externalLinks.value = result["extContents"] as List<String>
+                        } else {
+                            targetTitle.value = "Analyzation is Fail.."
                         }
                     }
                 } else {

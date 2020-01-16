@@ -70,6 +70,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/outline_margin"
                 android:text="EDIT"
+                android:enabled="false"
                 app:layout_constraintTop_toTopOf="parent"
                 app:layout_constraintRight_toLeftOf="@id/btn_update_title"
                 />
@@ -82,6 +83,7 @@
                 android:layout_height="wrap_content"
                 android:layout_margin="@dimen/outline_margin"
                 android:text="Update"
+                android:enabled="false"
                 app:layout_constraintTop_toTopOf="parent"
                 app:layout_constraintRight_toRightOf="parent"/>
 
@@ -143,6 +145,7 @@
                 android:layout_height="wrap_content"
                 android:layout_margin="@dimen/outline_margin"
                 android:text="SAVE"
+                android:enabled="false"
                 app:layout_constraintTop_toTopOf="@id/tv_header_analyzed_media"
                 app:layout_constraintBottom_toBottomOf="@id/tv_header_analyzed_media"
                 app:layout_constraintRight_toRightOf="parent"
