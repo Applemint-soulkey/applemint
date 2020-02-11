@@ -131,6 +131,8 @@ class ArticleItemTouchHelper(dragDirs: Int, swipeDirs: Int, private val listener
     ) {
         val foregroundView = viewHolder.itemView.container_card_article_foreground
         val backgroundView = viewHolder.itemView.container_card_article_background
+        backgroundView.isClickable = false
+        //backgroundView.isEnabled = false
         if (dX > 0) {
             //Right Swipe
             backgroundView.setBackgroundColor(Color.parseColor("#1d1d1d"))

@@ -80,6 +80,7 @@ class AnalyzeActivity : AppCompatActivity(){
 
         btn_save_analyzed_media.setOnClickListener {
             viewModel.dapina()
+            it.isEnabled = false
             Toast.makeText(it.context, "Dapina is Requested! Check your Dropbox!", Toast.LENGTH_SHORT).show()
         }
 
