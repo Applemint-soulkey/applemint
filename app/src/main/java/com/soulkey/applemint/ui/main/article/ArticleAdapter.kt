@@ -40,6 +40,9 @@ class ArticleAdapter: ListAdapter<Article, ArticleAdapter.ArticleViewHolder>(obj
         return oldItem == newItem
     }
 }) {
+    val analyzableType = listOf("battlepage", "dogdrip", "imgur", "youtube", "twitch", "direct")
+    lateinit var availableAction: List<String>
+
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ArticleViewHolder {
         return ArticleViewHolder(LayoutInflater.from(parent.context).inflate(R.layout.item_article, parent, false))
     }
@@ -73,16 +76,23 @@ class ArticleAdapter: ListAdapter<Article, ArticleAdapter.ArticleViewHolder>(obj
                 MaterialDialog(view.context).show {
                     title(text="Select an Article Action")
                     cornerRadius(16f)
-                    listItems(R.array.articleActions) {dialog, index, text ->
+
+                    availableAction = if (itemData.type in analyzableType){
+                        listOf("Analyze", "Share", "Copy URL")
+                    } else {
+                        listOf("Share", "Copy URL")
+                    }
+
+                    listItems(items = availableAction) {_, _, text ->
                         Timber.v("diver:/ Select $text")
-                        when(index) {
-                            0-> {
+                        when(text) {
+                            "Analyze"-> {
                                 Intent(view.context, AnalyzeActivity::class.java).also {
                                     it.putExtra("id", itemData.fb_id)
                                     ContextCompat.startActivity(view.context, it, null)
                                 }
                             }
-                            1-> {
+                            "Share"-> {
                                 Intent().apply {
                                     action= Intent.ACTION_SEND
                                     putExtra(Intent.EXTRA_TEXT, itemData.url)
@@ -91,7 +101,7 @@ class ArticleAdapter: ListAdapter<Article, ArticleAdapter.ArticleViewHolder>(obj
                                     ContextCompat.startActivity(view.context, Intent.createChooser(it, null), null)
                                 }
                             }
-                            2-> {
+                            "Copy URL"-> {
                                 (view.context.getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager).also {
                                     it.primaryClip = ClipData.newPlainText("auto_copy_text", itemData.url)
                                     Toast.makeText(view.context, "URL is copied to Clipboard!", Toast.LENGTH_SHORT).show()
