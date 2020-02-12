@@ -32,6 +32,8 @@ class AnalyzeActivity : AppCompatActivity(){
         viewModel.callAnalyze(intent.getStringExtra("id"))
         viewModel.targetTitle.observe(this, Observer {text->
             tv_content_analyzed_title.text = text
+            btn_edit_title.isEnabled = true
+            btn_update_title.isEnabled = true
         })
         recycler_analyzed_media.adapter = mediaAdapter
         recycler_analyzed_media.layoutManager = GridLayoutManager(this, 3)
@@ -41,6 +43,7 @@ class AnalyzeActivity : AppCompatActivity(){
                 mediaAdapter.urls = urlList
                 mediaAdapter.notifyDataSetChanged()
                 tv_count_analyzed_media.text = "(${urlList.size})"
+                btn_save_analyzed_media.isEnabled = true
             }
         })
         viewModel.externalLinks.observe(this, Observer { urlList->
@@ -77,6 +80,7 @@ class AnalyzeActivity : AppCompatActivity(){
 
         btn_save_analyzed_media.setOnClickListener {
             viewModel.dapina()
+            it.isEnabled = false
             Toast.makeText(it.context, "Dapina is Requested! Check your Dropbox!", Toast.LENGTH_SHORT).show()
         }
 
