@@ -1,5 +1,8 @@
 package com.soulkey.applemint.ui.main.article
 
+import android.content.ClipData
+import android.content.ClipboardManager
+import android.content.Context
 import android.content.Intent
 import android.graphics.Canvas
 import android.graphics.Color
@@ -8,12 +11,14 @@ import android.os.Handler
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.afollestad.materialdialogs.MaterialDialog
+import com.afollestad.materialdialogs.list.listItems
 import com.google.firebase.functions.ktx.functions
 import com.google.firebase.ktx.Firebase
 import com.soulkey.applemint.R
@@ -23,6 +28,7 @@ import com.soulkey.applemint.ui.analyze.AnalyzeActivity
 import com.soulkey.applemint.ui.viewer.ViewerActivity
 import kotlinx.android.synthetic.main.item_article_background.view.*
 import kotlinx.android.synthetic.main.item_article_foreground.view.*
+import timber.log.Timber
 
 class ArticleAdapter: ListAdapter<Article, ArticleAdapter.ArticleViewHolder>(object :
     DiffUtil.ItemCallback<Article>(){
@@ -65,18 +71,34 @@ class ArticleAdapter: ListAdapter<Article, ArticleAdapter.ArticleViewHolder>(obj
 
             itemView.setOnLongClickListener {view->
                 MaterialDialog(view.context).show {
-                    title(text="Analyze this Article?")
+                    title(text="Select an Article Action")
                     cornerRadius(16f)
-                    positiveButton(text = "ANALYZE") {
-                        Intent(
-                            view.context,
-                            AnalyzeActivity::class.java
-                        ).also {
-                            it.putExtra("id", itemData.fb_id)
-                            ContextCompat.startActivity(view.context, it, null)
+                    listItems(R.array.articleActions) {dialog, index, text ->
+                        Timber.v("diver:/ Select $text")
+                        when(index) {
+                            0-> {
+                                Intent(view.context, AnalyzeActivity::class.java).also {
+                                    it.putExtra("id", itemData.fb_id)
+                                    ContextCompat.startActivity(view.context, it, null)
+                                }
+                            }
+                            1-> {
+                                Intent().apply {
+                                    action= Intent.ACTION_SEND
+                                    putExtra(Intent.EXTRA_TEXT, itemData.url)
+                                    type = "text/plain"
+                                }.also {
+                                    ContextCompat.startActivity(view.context, Intent.createChooser(it, null), null)
+                                }
+                            }
+                            2-> {
+                                (view.context.getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager).also {
+                                    it.primaryClip = ClipData.newPlainText("auto_copy_text", itemData.url)
+                                    Toast.makeText(view.context, "URL is copied to Clipboard!", Toast.LENGTH_SHORT).show()
+                                }
+                            }
                         }
                     }
-                    negativeButton(text = "CANCEL")
                 }
                 true
             }
