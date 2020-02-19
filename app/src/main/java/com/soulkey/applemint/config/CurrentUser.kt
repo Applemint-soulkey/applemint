@@ -7,4 +7,7 @@ data class CurrentUser(var user: User? = null){
     fun getRaindropToken(): String? {
         return user?.raindrop_token
     }
+    fun getDapinaKey(): String? {
+        return user?.dapina_key
+    }
 }

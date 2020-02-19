@@ -4,13 +4,11 @@ import android.os.AsyncTask
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.dropbox.core.v2.DbxClientV2
-import com.google.android.gms.tasks.Task
 import com.google.firebase.functions.ktx.functions
 import com.google.firebase.ktx.Firebase
-import com.soulkey.applemint.data.ArticleRepository
 import timber.log.Timber
 
-class AnalyzeViewModel(private val dapinaClient: DbxClientV2, private val articleRepository: ArticleRepository) : ViewModel() {
+class AnalyzeViewModel(private val dapinaClient: DbxClientV2) : ViewModel() {
     private val savePrefixPath = "/test/"
     private val validFileRegex = Regex("[\\\\/:*?\"\"<>|]")
     private val targetFbId: MutableLiveData<String> by lazy { MutableLiveData<String>() }
