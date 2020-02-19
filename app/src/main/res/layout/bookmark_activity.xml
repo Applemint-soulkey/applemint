@@ -1,0 +1,178 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<androidx.core.widget.NestedScrollView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:fillViewport="true"
+    tools:context=".ui.bookmark.BookmarkActivity">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/container_bookmark_header"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/black"
+            android:focusable="true"
+            android:focusableInTouchMode="true"
+            app:layout_constraintTop_toTopOf="parent">
+
+            <ImageView
+                android:id="@+id/iv_back_to_main"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_margin="@dimen/inline_margin"
+                android:src="@drawable/ic_arrow_back_32px"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintLeft_toLeftOf="parent"
+                />
+
+            <TextView
+                android:id="@+id/tv_main_title"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:layout_marginBottom="10dp"
+                android:gravity="center"
+                android:fontFamily="@font/opensans_bold"
+                android:text="Bookmark"
+                android:textSize="20dp"
+                android:textColor="@color/white"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintRight_toRightOf="parent"/>
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/container_bookmark_body"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:layout_constraintVertical_chainStyle="spread_inside"
+            app:layout_constraintTop_toBottomOf="@id/container_bookmark_header"
+            app:layout_constraintBottom_toTopOf="@id/btn_save_bookmark">
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/til_bookmark_title"
+                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_margin="@dimen/outline_margin"
+                android:hint="Bookmark Title"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent">
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/et_bookmark_title"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content" />
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/til_bookmark_url"
+                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:hint="URL"
+                android:layout_margin="@dimen/outline_margin"
+                app:layout_constraintTop_toBottomOf="@id/til_bookmark_title"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent">
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/et_bookmark_url"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content" />
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/container_spinner"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="20dp"
+                android:layout_marginBottom="@dimen/outline_margin"
+                android:layout_marginLeft="@dimen/outline_margin"
+                android:layout_marginRight="@dimen/outline_margin"
+                android:background="@drawable/background_spinner"
+                app:layout_constraintTop_toBottomOf="@id/til_bookmark_url"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent">
+                <androidx.appcompat.widget.AppCompatSpinner
+                    android:id="@+id/spinner_collection"
+                    style="@style/Widget.AppCompat.DropDownItem.Spinner"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    app:layout_constraintTop_toTopOf="parent"/>
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Collections"
+                android:background="@color/white"
+                android:layout_marginStart="@dimen/inline_margin"
+                android:paddingLeft="@dimen/tiny_margin"
+                android:paddingRight="@dimen/tiny_margin"
+                app:layout_constraintTop_toTopOf="@id/container_spinner"
+                app:layout_constraintBottom_toTopOf="@id/container_spinner"
+                app:layout_constraintStart_toStartOf="@id/container_spinner"
+                />
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/til_bookmark_add_tag"
+                style="@style/Widget.MaterialComponents.TextInputLayout.FilledBox"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/outline_margin"
+                android:layout_marginLeft="20dp"
+                android:layout_marginRight="20dp"
+                app:boxBackgroundColor="@color/white"
+                android:hint="Add Bookmark Tags"
+                app:layout_constraintTop_toBottomOf="@id/container_spinner"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintRight_toRightOf="parent">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/et_bookmark_add_tag"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:singleLine="true"/>
+
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <com.google.android.material.chip.ChipGroup
+                android:id="@+id/chip_group_bookmark_tags"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="@dimen/outline_margin"
+                android:layout_marginRight="@dimen/outline_margin"
+                app:layout_constraintTop_toBottomOf="@id/til_bookmark_add_tag"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintRight_toRightOf="parent">
+            </com.google.android.material.chip.ChipGroup>
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btn_save_bookmark"
+            style="@style/Widget.MaterialComponents.Button.UnelevatedButton"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:text="Save"
+            android:layout_marginLeft="@dimen/tiny_margin"
+            android:layout_marginRight="@dimen/tiny_margin"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/container_bookmark_body"
+            app:layout_constraintBottom_toBottomOf="parent"/>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</androidx.core.widget.NestedScrollView>
+

@@ -25,6 +25,7 @@ import com.soulkey.applemint.R
 import com.soulkey.applemint.config.typeTagMapper
 import com.soulkey.applemint.model.Article
 import com.soulkey.applemint.ui.analyze.AnalyzeActivity
+import com.soulkey.applemint.ui.bookmark.BookmarkActivity
 import com.soulkey.applemint.ui.viewer.ViewerActivity
 import kotlinx.android.synthetic.main.item_article_background.view.*
 import kotlinx.android.synthetic.main.item_article_foreground.view.*
@@ -87,7 +88,13 @@ class ArticleAdapter(private val viewModel: ArticleViewModel): ListAdapter<Artic
                         Timber.v("diver:/ Select $text")
                         when(text) {
                             "Bookmark to Raindrop" -> {
-                                viewModel.testRainDrop()
+                                Intent(view.context, BookmarkActivity::class.java).also {
+                                    it.putExtra("title", itemData.content)
+                                    it.putExtra("url", itemData.url)
+                                    it.putExtra("collection", itemData.type)
+                                    ContextCompat.startActivity(view.context, it, null)
+                                }
+//                                viewModel.testRainDrop()
                             }
                             "Analyze this Article"-> {
                                 Intent(view.context, AnalyzeActivity::class.java).also {
