@@ -14,6 +14,7 @@ import com.soulkey.applemint.config.CurrentUser
 import com.soulkey.applemint.data.*
 import com.soulkey.applemint.db.AppDatabase
 import com.soulkey.applemint.ui.analyze.AnalyzeViewModel
+import com.soulkey.applemint.ui.bookmark.BookmarkViewModel
 import com.soulkey.applemint.ui.login.LoginViewModel
 import com.soulkey.applemint.ui.main.MainViewModel
 import com.soulkey.applemint.ui.main.article.ArticleViewModel
@@ -82,5 +83,6 @@ val AppModule = module {
     viewModel { MainViewModel(get()) }
     viewModel { ArticleViewModel(androidContext(), get(), get(), get(), get()) }
     viewModel { LoginViewModel(androidContext(), get(), get(), get(), get()) }
-    viewModel { AnalyzeViewModel(get(), get()) }
+    viewModel { AnalyzeViewModel(get()) }
+    viewModel { BookmarkViewModel(get()) }
 }
