@@ -84,5 +84,5 @@ val AppModule = module {
     viewModel { ArticleViewModel(androidContext(), get(), get(), get(), get()) }
     viewModel { LoginViewModel(androidContext(), get(), get(), get(), get()) }
     viewModel { AnalyzeViewModel(get()) }
-    viewModel { BookmarkViewModel(get()) }
+    viewModel { BookmarkViewModel(get(), get()) }
 }

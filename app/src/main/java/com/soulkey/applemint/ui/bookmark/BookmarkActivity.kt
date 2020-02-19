@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.view.View
 import android.widget.*
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.view.children
 import androidx.lifecycle.Observer
 import com.google.android.material.chip.Chip
 import com.google.android.material.chip.ChipGroup
@@ -17,15 +18,6 @@ import timber.log.Timber
 class BookmarkActivity : AppCompatActivity() {
     private val viewModel: BookmarkViewModel by viewModel()
 
-    private fun addChip(text: String, chipGroup: ChipGroup){
-        Chip(this).apply {
-            this.text = "# "+ text
-            this.isCloseIconVisible = true
-            this.setOnCloseIconClickListener { chipGroup.removeView(this as View) }
-            chipGroup.addView(this)
-        }
-    }
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.bookmark_activity)
@@ -33,9 +25,8 @@ class BookmarkActivity : AppCompatActivity() {
         et_bookmark_title.setText(intent.getStringExtra("title"))
         et_bookmark_url.setText(intent.getStringExtra("url"))
 
-        et_bookmark_add_tag.setOnEditorActionListener { textView, actionId, event ->
+        et_bookmark_add_tag.setOnEditorActionListener { textView, _, _ ->
             textView?.let {
-                Timber.v("diver:/ ${it.text}")
                 if (it.text.isNotEmpty()) addChip(it.text.toString(), chip_group_bookmark_tags)
                 it.text = ""
             }
@@ -53,8 +44,40 @@ class BookmarkActivity : AppCompatActivity() {
             }
         })
 
+        btn_save_bookmark.setOnClickListener {
+            val title = et_bookmark_title.text.toString()
+            val url = et_bookmark_url.text.toString()
+            val type = spinner_collection.selectedItem.toString()
+            val tags = mutableListOf<String>()
+            for (idx in 0 until chip_group_bookmark_tags.childCount){
+                chip_group_bookmark_tags.getChildAt(idx).also {
+                    val text = (it as Chip).text.toString()
+                    tags.add(text.replace("# ", ""))
+                }
+            }
+            viewModel.sendToRaindrop(title, url, type, tags).subscribe({ response ->
+                if (response.isSuccessful){
+                    Toast.makeText(this, response.body().toString(), Toast.LENGTH_SHORT).show()
+                    finish()
+                } else {
+                    Toast.makeText(this, "Request Error:: 401", Toast.LENGTH_SHORT).show()
+                }
+            },{
+                Timber.v("onError:: ${it.localizedMessage}")
+            })
+        }
+
         iv_back_to_main.setOnClickListener {
             onBackPressed()
+        }
+    }
+
+    private fun addChip(text: String, chipGroup: ChipGroup){
+        Chip(this).apply {
+            this.text = "# "+ text
+            this.isCloseIconVisible = true
+            this.setOnCloseIconClickListener { chipGroup.removeView(this as View) }
+            chipGroup.addView(this)
         }
     }
 }
