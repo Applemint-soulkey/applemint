@@ -1,25 +1,32 @@
 package com.soulkey.applemint.data
 
 import android.content.Context
+import androidx.lifecycle.LiveData
 import com.google.firebase.iid.FirebaseInstanceId
-import com.soulkey.applemint.common.Dapina
 import com.soulkey.applemint.common.MessagingService
+import com.soulkey.applemint.common.raindrop.RaindropClient
+import com.soulkey.applemint.config.CurrentUser
 import com.soulkey.applemint.db.UserDao
 import com.soulkey.applemint.model.User
+import io.reactivex.Observable
+import io.reactivex.Scheduler
+import io.reactivex.Single
+import io.reactivex.android.schedulers.AndroidSchedulers
+import io.reactivex.disposables.Disposable
+import io.reactivex.schedulers.Schedulers
+import timber.log.Timber
 
-class UserRepositoryImpl(private val userDao: UserDao, private val dapina: Dapina, private val messageService: MessagingService, private val context: Context) : UserRepository{
-    override fun insert(email: String, dapina: String, message_token: String) {
-        userDao.insert(User(email = email, dapina_key = dapina, message_token = message_token))
-    }
+class UserRepositoryImpl(
+    private val userDao: UserDao,
+    private val messageService: MessagingService,
+    private val currentUser: CurrentUser
+) : UserRepository {
 
-    override fun setCurrentUser(email: String, dapinaKey: String) {
-        context.getSharedPreferences("currentUser", Context.MODE_PRIVATE).also {
-            it.edit().putString("email", email).apply()
-        }
-        dapina.setDapinaKey(dapinaKey)
-        FirebaseInstanceId.getInstance().instanceId.addOnSuccessListener {
-            messageService.sendToServer(it.token)
-            insert(email, dapinaKey, it.token)
+    override fun setCurrentUser(email: String, dapina: String, message_token: String, raindrop_key: String) {
+        User(email, dapina, message_token, raindrop_key).also {
+            userDao.insert(it)
+            currentUser.user = it
+            messageService.sendToServer(email, message_token)
         }
     }
 }

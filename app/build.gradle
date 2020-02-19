@@ -9,11 +9,11 @@ apply plugin: 'kotlin-kapt'
 apply plugin: 'com.google.firebase.crashlytics'
 
 android {
-    compileSdkVersion 28
+    compileSdkVersion 29
     defaultConfig {
         applicationId "com.soulkey.applemint"
         minSdkVersion 26
-        targetSdkVersion 28
+        targetSdkVersion 29
         versionCode 1
         versionName "1.0"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
@@ -24,13 +24,13 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
     }
+    compileOptions {
+        targetCompatibility = "8"
+        sourceCompatibility = "8"
+    }
 }
 
 dependencies {
-    def rxkotlin_version = "2.4.0"
-    def expandableLayout_version = "2.9.2"
-    def lottieVersion = "3.2.0"
-
     implementation fileTree(dir: 'libs', include: ['*.jar'])
     implementation"org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
     implementation 'androidx.appcompat:appcompat:1.1.0'
@@ -56,6 +56,7 @@ dependencies {
     //Room
     implementation "androidx.room:room-runtime:2.2.3"
     implementation "androidx.room:room-ktx:2.2.3"
+    implementation 'androidx.room:room-rxjava2:2.2.3'
     kapt "androidx.room:room-compiler:2.2.3"
 
     //Koin
@@ -72,10 +73,11 @@ dependencies {
     implementation 'com.facebook.stetho:stetho-js-rhino:1.5.1'
 
     //RxKotlin
-    implementation "io.reactivex.rxjava2:rxkotlin:$rxkotlin_version"
+    implementation "io.reactivex.rxjava2:rxkotlin:2.4.0"
+    implementation 'io.reactivex.rxjava2:rxandroid:2.1.1'
 
     //ExpandableLayout
-    implementation "net.cachapa.expandablelayout:expandablelayout:$expandableLayout_version"
+    implementation "net.cachapa.expandablelayout:expandablelayout:2.9.2"
 
     //Material Dialog
     implementation 'com.afollestad.material-dialogs:core:3.1.1'
@@ -83,7 +85,7 @@ dependencies {
     implementation 'com.afollestad.material-dialogs:input:3.1.1'
 
     //lottie
-    implementation "com.airbnb.android:lottie:$lottieVersion"
+    implementation "com.airbnb.android:lottie:3.2.0"
 
     //Glide
     implementation 'com.github.bumptech.glide:glide:4.11.0'
@@ -91,6 +93,13 @@ dependencies {
 
     //Dropbox
     implementation 'com.dropbox.core:dropbox-core-sdk:3.1.1'
+
+    //Retrofit
+    implementation 'com.squareup.retrofit2:retrofit:2.7.1'
+    implementation 'com.squareup.retrofit2:converter-gson:2.7.1'
+    implementation 'com.squareup.okhttp3:okhttp:4.2.2'
+    implementation 'com.squareup.okhttp3:logging-interceptor:4.2.2'
+    implementation 'com.squareup.retrofit2:adapter-rxjava2:2.7.1'
 
     androidTestImplementation 'androidx.test:runner:1.2.0'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.2.0'

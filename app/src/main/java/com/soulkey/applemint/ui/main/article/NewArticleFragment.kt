@@ -43,7 +43,7 @@ class NewArticleFragment : Fragment() {
         })
 
         // Article Adapter 설정
-        articleAdapter = ArticleAdapter()
+        articleAdapter = ArticleAdapter(articleViewModel)
         articleViewModel.newArticles.observe(this, Observer {
             layout_view_empty.visibility = if (it.isEmpty()) View.VISIBLE else View.INVISIBLE
             articleAdapter.submitList(it)

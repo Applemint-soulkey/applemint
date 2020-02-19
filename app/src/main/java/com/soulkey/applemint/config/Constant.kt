@@ -5,6 +5,12 @@ import com.google.android.material.chip.Chip
 import com.google.android.material.chip.ChipGroup
 import com.soulkey.applemint.R
 
+object Constant {
+    const val CONNECT_TIMEOUT   = 180L     // seconds
+    const val READ_TIMEOUT      = 60L        // seconds
+    const val WRITE_TIMEOUT     = 60L       // seconds
+}
+
 fun typeTagMapper(type: String) : Int {
     return when(type) {
         "youtube" -> R.drawable.background_article_youtube_tag
