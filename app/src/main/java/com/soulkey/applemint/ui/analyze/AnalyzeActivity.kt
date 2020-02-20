@@ -26,7 +26,7 @@ class AnalyzeActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.analyze_activity)
-        viewModel.callAnalyze(intent.getStringExtra("id"))
+        viewModel.callAnalyze(intent.getStringExtra("id")!!)
 
         viewModel.targetTitle.observe(this, Observer { text ->
             et_content_analyze_title.setText(text)
@@ -35,7 +35,7 @@ class AnalyzeActivity : AppCompatActivity() {
 
         recycler_analyzed_media.adapter = mediaAdapter
         recycler_analyzed_media.layoutManager = GridLayoutManager(this, 2)
-        recycler_analyzed_media.addItemDecoration(GridSpaceingItemDecoration(2, resources.getDimensionPixelOffset(R.dimen.outline_margin), true, 0))
+        recycler_analyzed_media.addItemDecoration(GridSpacingItemDecoration(2, resources.getDimensionPixelOffset(R.dimen.outline_margin), true, 0))
         viewModel.mediaContents.observe(this, Observer { urlList ->
             urlList?.let {
                 mediaAdapter.urls = urlList
@@ -61,11 +61,7 @@ class AnalyzeActivity : AppCompatActivity() {
         btn_save_analyzed_media.setOnClickListener {
             viewModel.dapina()
             it.isEnabled = false
-            Toast.makeText(
-                it.context,
-                "Dapina is Requested! Check your Dropbox!",
-                Toast.LENGTH_SHORT
-            ).show()
+            Toast.makeText(it.context,"Dapina is Requested! Check your Dropbox!",Toast.LENGTH_SHORT).show()
         }
 
         iv_back_to_main.setOnClickListener {
@@ -73,7 +69,7 @@ class AnalyzeActivity : AppCompatActivity() {
         }
     }
 
-    inner class GridSpaceingItemDecoration(
+    inner class GridSpacingItemDecoration(
         private val spanCount: Int,
         private val spacing: Int,
         private val includeEdge: Boolean,

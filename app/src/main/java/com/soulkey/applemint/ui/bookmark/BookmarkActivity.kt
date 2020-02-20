@@ -4,7 +4,6 @@ import android.os.Bundle
 import android.view.View
 import android.widget.*
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.view.children
 import androidx.lifecycle.Observer
 import com.google.android.material.chip.Chip
 import com.google.android.material.chip.ChipGroup
@@ -45,6 +44,7 @@ class BookmarkActivity : AppCompatActivity() {
         })
 
         btn_save_bookmark.setOnClickListener {
+            disableAllView()
             val title = et_bookmark_title.text.toString()
             val url = et_bookmark_url.text.toString()
             val type = spinner_collection.selectedItem.toString()
@@ -57,10 +57,11 @@ class BookmarkActivity : AppCompatActivity() {
             }
             viewModel.sendToRaindrop(title, url, type, tags).subscribe({ response ->
                 if (response.isSuccessful){
-                    Toast.makeText(this, response.body().toString(), Toast.LENGTH_SHORT).show()
+                    Toast.makeText(this, "Save Bookmark to Raindrop!", Toast.LENGTH_SHORT).show()
+                    //Toast.makeText(this, response.body().toString(), Toast.LENGTH_SHORT).show()
                     finish()
                 } else {
-                    Toast.makeText(this, "Request Error:: 401", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(this, "Request Error:: ${response.code()}", Toast.LENGTH_SHORT).show()
                 }
             },{
                 Timber.v("onError:: ${it.localizedMessage}")
@@ -70,6 +71,16 @@ class BookmarkActivity : AppCompatActivity() {
         iv_back_to_main.setOnClickListener {
             onBackPressed()
         }
+    }
+
+    private fun disableAllView(){
+        btn_save_bookmark.isEnabled = false
+        iv_back_to_main.isEnabled = false
+        et_bookmark_title.isEnabled = false
+        et_bookmark_url.isEnabled = false
+        et_bookmark_add_tag.isEnabled = false
+        chip_group_bookmark_tags.isEnabled = false
+        spinner_collection.isEnabled = false
     }
 
     private fun addChip(text: String, chipGroup: ChipGroup){
