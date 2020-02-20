@@ -30,7 +30,10 @@
         <activity
             android:name=".ui.analyze.AnalyzeActivity"
             android:theme="@style/MaterialNoActionBar" />
-
+        <activity android:name=".ui.bookmark.BookmarkActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/MaterialNoActionBar"
+            android:windowSoftInputMode="adjustResize"/>
         <service android:name=".common.MessagingService" />
     </application>
 

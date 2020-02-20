@@ -9,5 +9,6 @@ data class User(
     @PrimaryKey
     var email: String,
     var dapina_key: String,
-    var message_token: String
+    var message_token: String,
+    var raindrop_token: String
 )

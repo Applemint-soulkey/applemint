@@ -4,19 +4,16 @@ import android.os.AsyncTask
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.dropbox.core.v2.DbxClientV2
-import com.google.android.gms.tasks.Task
 import com.google.firebase.functions.ktx.functions
 import com.google.firebase.ktx.Firebase
-import com.soulkey.applemint.data.ArticleRepository
 import timber.log.Timber
 
-class AnalyzeViewModel(private val dapinaClient: DbxClientV2, private val articleRepository: ArticleRepository) : ViewModel() {
+class AnalyzeViewModel(private val dapinaClient: DbxClientV2) : ViewModel() {
     private val savePrefixPath = "/test/"
     private val validFileRegex = Regex("[\\\\/:*?\"\"<>|]")
     private val targetFbId: MutableLiveData<String> by lazy { MutableLiveData<String>() }
     val targetTitle: MutableLiveData<String> by lazy {MutableLiveData<String>()}
     val mediaContents: MutableLiveData<List<String>> by lazy { MutableLiveData<List<String>>()}
-    val externalLinks: MutableLiveData<List<String>> by lazy { MutableLiveData<List<String>>()}
 
     fun callAnalyze(fb_id: String) {
         Firebase.functions.getHttpsCallable("analyze").call(hashMapOf("id" to fb_id))
@@ -28,7 +25,6 @@ class AnalyzeViewModel(private val dapinaClient: DbxClientV2, private val articl
                             targetTitle.value = result["title"] as String?
                             targetFbId.value = result["targetFbId"] as String?
                             mediaContents.value = result["midiContents"] as List<String>
-                            externalLinks.value = result["extContents"] as List<String>
                         } else {
                             targetTitle.value = "Analyzation is Fail.."
                         }
@@ -37,10 +33,6 @@ class AnalyzeViewModel(private val dapinaClient: DbxClientV2, private val articl
                     Timber.v("diver:/ Analyze Call is Failed..")
                 }
             }
-    }
-
-    fun updateTitle(): Task<Void>{
-        return articleRepository.updateArticleTitle(targetFbId.value!!, targetTitle.value!!)
     }
 
     private fun replaceFileName(path: String, targetName: String): String{

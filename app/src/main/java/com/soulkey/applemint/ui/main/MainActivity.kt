@@ -115,6 +115,7 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
                 )
             R.id.item_logout -> {
                 FirebaseAuth.getInstance().signOut()
+                mainViewModel.logout()
                 startActivity(Intent(applicationContext, LoginActivity::class.java))
                 finish()
             }

@@ -33,6 +33,10 @@ class LoginActivity : AppCompatActivity() {
             tv_login_update_msg.text = it
         })
 
+        loginViewModel.checkCollectionData().observe(this, Observer {
+            if (it.isNotEmpty()) loginViewModel.isCollectionUpdated.value = true
+        })
+
         loginViewModel.isUpdateComplete.observe(this, Observer {
             if (it) {
                 Handler().postDelayed({
@@ -51,7 +55,6 @@ class LoginActivity : AppCompatActivity() {
                 auth.signInWithEmailAndPassword(inputEmail, inputPassword).addOnCompleteListener {
                     if (it.isSuccessful){
                         loginViewModel.updateProcess.value = "Wait for Update.."
-
                         loginViewModel.loginProcess(inputEmail)
                     } else {
                         Toast.makeText(applicationContext, "Login Failed!", Toast.LENGTH_SHORT).show()

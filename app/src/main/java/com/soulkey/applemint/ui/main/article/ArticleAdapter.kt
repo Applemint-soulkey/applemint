@@ -25,12 +25,13 @@ import com.soulkey.applemint.R
 import com.soulkey.applemint.config.typeTagMapper
 import com.soulkey.applemint.model.Article
 import com.soulkey.applemint.ui.analyze.AnalyzeActivity
+import com.soulkey.applemint.ui.bookmark.BookmarkActivity
 import com.soulkey.applemint.ui.viewer.ViewerActivity
 import kotlinx.android.synthetic.main.item_article_background.view.*
 import kotlinx.android.synthetic.main.item_article_foreground.view.*
 import timber.log.Timber
 
-class ArticleAdapter: ListAdapter<Article, ArticleAdapter.ArticleViewHolder>(object :
+class ArticleAdapter(private val viewModel: ArticleViewModel): ListAdapter<Article, ArticleAdapter.ArticleViewHolder>(object :
     DiffUtil.ItemCallback<Article>(){
     override fun areItemsTheSame(oldItem: Article, newItem: Article): Boolean {
         return (oldItem.fb_id == newItem.fb_id)
@@ -64,7 +65,7 @@ class ArticleAdapter: ListAdapter<Article, ArticleAdapter.ArticleViewHolder>(obj
                 Handler().postDelayed( {
                     val intent: Intent = if (itemData.type == "youtube" || itemData.type == "twitch"){
                         Intent(Intent.ACTION_VIEW).setData(Uri.parse(itemData.url))
-                    }else{
+                    } else {
                         Intent(itemView.context, ViewerActivity::class.java).apply { putExtra("url", itemData.url) }
                     }
                     ContextCompat.startActivity(itemView.context, intent, null)
@@ -78,15 +79,24 @@ class ArticleAdapter: ListAdapter<Article, ArticleAdapter.ArticleViewHolder>(obj
                     cornerRadius(16f)
 
                     availableAction = if (itemData.type in analyzableType){
-                        listOf("Analyze", "Share", "Copy URL")
+                        listOf("Bookmark to Raindrop", "Analyze this Article", "Share", "Copy URL")
                     } else {
-                        listOf("Share", "Copy URL")
+                        listOf("Bookmark to Raindrop", "Share", "Copy URL")
                     }
 
                     listItems(items = availableAction) {_, _, text ->
                         Timber.v("diver:/ Select $text")
                         when(text) {
-                            "Analyze"-> {
+                            "Bookmark to Raindrop" -> {
+                                Intent(view.context, BookmarkActivity::class.java).also {
+                                    it.putExtra("title", itemData.content)
+                                    it.putExtra("url", itemData.url)
+                                    it.putExtra("collection", itemData.type)
+                                    ContextCompat.startActivity(view.context, it, null)
+                                }
+//                                viewModel.testRainDrop()
+                            }
+                            "Analyze this Article"-> {
                                 Intent(view.context, AnalyzeActivity::class.java).also {
                                     it.putExtra("id", itemData.fb_id)
                                     ContextCompat.startActivity(view.context, it, null)
@@ -103,7 +113,7 @@ class ArticleAdapter: ListAdapter<Article, ArticleAdapter.ArticleViewHolder>(obj
                             }
                             "Copy URL"-> {
                                 (view.context.getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager).also {
-                                    it.primaryClip = ClipData.newPlainText("auto_copy_text", itemData.url)
+                                    it.setPrimaryClip(ClipData.newPlainText("auto_copy_text", itemData.url))
                                     Toast.makeText(view.context, "URL is copied to Clipboard!", Toast.LENGTH_SHORT).show()
                                 }
                             }

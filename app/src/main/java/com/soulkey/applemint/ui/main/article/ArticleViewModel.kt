@@ -5,11 +5,27 @@ import android.widget.Toast
 import androidx.lifecycle.*
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.Query
+import com.google.gson.Gson
+import com.google.gson.JsonObject
+import com.soulkey.applemint.common.raindrop.RaindropClient
+import com.soulkey.applemint.common.raindrop.CreateRaindropResponse
 import com.soulkey.applemint.data.ArticleRepository
+import com.soulkey.applemint.data.RaindropCollectionRepository
 import com.soulkey.applemint.model.Article
+import io.reactivex.disposables.Disposable
+import okhttp3.ResponseBody
+import retrofit2.Call
+import retrofit2.Callback
+import retrofit2.Response
 import timber.log.Timber
 
-class ArticleViewModel(private val db: FirebaseFirestore, private val context: Context, private val articleRepo: ArticleRepository): ViewModel(){
+class ArticleViewModel(
+    private val context: Context,
+    private val db: FirebaseFirestore,
+    private val articleRepo: ArticleRepository,
+    private val raindropCollectionRepository: RaindropCollectionRepository,
+    private val raindropClient: RaindropClient
+) : ViewModel() {
     var articles: MutableLiveData<List<Article>> = MutableLiveData(listOf())
     var typeFilter: MutableLiveData<List<String>> = MutableLiveData(listOf())
     var newArticles: MediatorLiveData<List<Article>> = MediatorLiveData()
@@ -22,6 +38,25 @@ class ArticleViewModel(private val db: FirebaseFirestore, private val context: C
         newArticles.addSource(articles) { filterArticle(newArticles, "new") }
         readLaters.addSource(typeFilter){ filterArticle(readLaters, "keep") }
         readLaters.addSource(articles) { filterArticle(readLaters, "keep") }
+    }
+
+    fun testRainDrop(): Disposable {
+        val collectionId = raindropCollectionRepository.getIdByCollectionName("battlepage")
+        return raindropClient.createRaindrop(
+            "Raindrop TEST",
+            "http://v12.battlepage.com/??=Board.Etc.View&no=117232",
+            listOf("test"),
+            collectionId
+        )
+            .subscribe({ response->
+                if (response.isSuccessful){
+                    Timber.v("diver:/ ${response.body()?.itemDetail}")
+                } else {
+                    Timber.v("diver:/ ${response.errorBody().toString()}")
+                }
+            }, {
+                Timber.v("diver:/ retrofit fail:: ${it.localizedMessage}")
+            })
     }
 
     fun fetchArticles() {
