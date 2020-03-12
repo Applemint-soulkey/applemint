@@ -7,9 +7,17 @@ import com.soulkey.applemint.data.RaindropCollectionRepository
 import io.reactivex.Single
 import retrofit2.Response
 
-class BookmarkViewModel(private val raindropCollectionRepository: RaindropCollectionRepository, private val raindropClient: RaindropClient) : ViewModel() {
+class BookmarkViewModel(
+    private val raindropCollectionRepository: RaindropCollectionRepository,
+    private val raindropClient: RaindropClient
+) : ViewModel() {
     fun loadCollections() = raindropCollectionRepository.getCollections()
-    fun sendToRaindrop(title: String, url: String, collectionName: String, tags: List<String>): Single<Response<CreateRaindropResponse>> {
+    fun sendToRaindrop(
+        title: String,
+        url: String,
+        collectionName: String,
+        tags: List<String>
+    ): Single<Response<CreateRaindropResponse>> {
         val collectionId = raindropCollectionRepository.getIdByCollectionName(collectionName)
         return raindropClient.createRaindrop(title, url, tags, collectionId)
     }
