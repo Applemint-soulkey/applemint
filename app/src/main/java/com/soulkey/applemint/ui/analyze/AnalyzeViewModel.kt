@@ -38,8 +38,13 @@ class AnalyzeViewModel(private val dapinaClient: DbxClientV2) : ViewModel() {
     private fun replaceFileName(path: String, targetName: String): String{
         path.replace("\\", "/").split("/").also { pathBlocks->
             val fileName = pathBlocks[pathBlocks.size-1]
-            val extension = fileName.substring(fileName.indexOfLast {it == '.'})
+            var extension = ".jpg"
+            if (fileName.contains('.')) {
+                extension = fileName.substring(fileName.indexOfLast {it == '.'})
+            }
+            Timber.v("diver:/ extension:: $extension")
             val saveTitle = targetName.replace(validFileRegex, "_")
+            Timber.v("diver:/ analyzed name:: ${saveTitle+extension}")
             return saveTitle+extension
         }
     }

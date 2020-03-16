@@ -59,7 +59,6 @@ class LoginViewModel(
                             } else {
                                 Timber.v("diver:/ Response Error:: ${response.errorBody()}")
                             }
-                            Timber.v("diver:/ ")
                         }
                 }
             }
