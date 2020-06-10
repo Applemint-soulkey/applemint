@@ -29,6 +29,7 @@ import retrofit2.converter.gson.GsonConverterFactory
 import java.util.concurrent.TimeUnit
 
 val AppModule = module {
+
     //Firestore
     single { FirebaseFirestore.getInstance() }
 
