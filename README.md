@@ -1,6 +1,6 @@
 ## **Applemint-Android**
 
-This project is Android-Client for **Applemint** Project.
+This project is Android-Client for **Applemint** Project. (This project will be updated)
 
 > This source is only for personal :-)
 
